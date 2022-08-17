@@ -1,7 +1,7 @@
 const mysql = require("mysql2/promise")
 let instanceConfig;
 if (process.env.NODE_ENV === undefined || process.env.NODE_ENV === "DEV") {
-    console.log("development");
+    console.log("development =>>>");
     instanceConfig = {
         host: "localhost",
         port: "3306",
