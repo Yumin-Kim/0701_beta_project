@@ -1,0 +1,147 @@
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    /* FONT IMPORT */
+    @font-face {
+      font-family: FuturaBT-Book;
+      src: url(https://d1p4wrw087wab3.cloudfront.net/fonts/FuturaBT-Book.eot);
+      src: url(https://d1p4wrw087wab3.cloudfront.net/fonts/FuturaBT-Book.eot#iefix)
+          format("embedded-opentype"),
+        url(https://d1p4wrw087wab3.cloudfront.net/fonts/FuturaBT-Book.woff2)
+          format("woff2"),
+        url(https://d1p4wrw087wab3.cloudfront.net/fonts/FuturaBT-Book.woff)
+          format("woff"),
+        url(https://d1p4wrw087wab3.cloudfront.net/fonts/FuturaBT-Book.ttf)
+          format("truetype");
+    }
+    @font-face {
+      font-family: FuturaBT-Heavy;
+      src: url(https://d1p4wrw087wab3.cloudfront.net/fonts/FuturaBT-Heavy.eot);
+      src: url(https://d1p4wrw087wab3.cloudfront.net/fonts/FuturaBT-Heavy.eot#iefix)
+          format("embedded-opentype"),
+        url(https://d1p4wrw087wab3.cloudfront.net/fonts/FuturaBT-Heavy.woff2)
+          format("woff2"),
+        url(https://d1p4wrw087wab3.cloudfront.net/fonts/FuturaBT-Heavy.woff)
+          format("woff"),
+        url(https://d1p4wrw087wab3.cloudfront.net/fonts/FuturaBT-Heavy.ttf)
+          format("truetype");
+    }
+    /*END FONT IMPORT */
+
+    /*RESET STYLES*/
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    img {
+      border: 0 none;
+      height: auto;
+      line-height: 100%;
+      outline: none;
+      text-decoration: none;
+    }
+
+    a img {
+      border: 0 none;
+    }
+
+    .imageFix {
+      display: block;
+    }
+
+    table,
+    td {
+      border-collapse: collapse;
+    }
+
+    #bodyTable {
+      height: 100% !important;
+      margin: 0;
+      padding: 0;
+      width: 100% !important;
+    }
+
+    img {
+      border: 0 !important;
+    }
+    .icon {
+      padding: 10px 0 0 0;
+      width: 50px;
+    }
+    .hero_img {
+      width: 100%;
+      max-width: 500px;
+      height: auto;
+      display: block;
+    }
+    .social_proof {
+      width: 100%;
+      max-width: 300px;
+      height: auto;
+      display: block;
+    }
+    .preheader {
+      text-align: center;
+      font-size: 1px;
+      color: #f5f6f2;
+    }
+    .main {
+      max-width: 500px;
+      width: 70%;
+      text-align: center;
+    }
+    .content_container {
+      padding: 10px 0;
+    }
+
+    .content_container_2 {
+      padding: 0 0 15px 0;
+    }
+
+    .content_container_social_proof {
+      padding: 5px 0 25px 0;
+    }
+    .header {
+      padding-top: 40px;
+      color: #4e4e4e;
+      font-size: 20pt;
+      letter-spacing: 0px;
+      line-height: 29px;
+      width: 70%;
+      font-family: Helvetica, Arial;
+      overflow: visible;
+    }
+    .content {
+      width: 70%;
+      font-weight: normal;
+      font-size: 13pt;
+      line-height: 20px;
+      padding: 3px 20px 20px 20px;
+      color: #999999;
+    }
+    .subheading1 {
+      padding: 10px 20px 20px 20px;
+    }
+    .subheader {
+      color: #4e4e4e;
+      font-size: 15pt;
+      padding: 8px 0 5px 0;
+      font-family: Helvetica, Arial;
+    }
+    .subheader_social_proof {
+      color: #4e4e4e;
+      font-size: 15pt;
+      padding: 0px 0 5px 0;
+      font-family: Helvetica, Arial;
+    }
+    a {
+      text-decoration: none;
+      color: #999999;
+    }
+    body {
+      font-family: "FuturaBT-Book", Helvetica, Arial;
+      background-color: #f5f6f2;
+    }
+  </style>
+</head>
