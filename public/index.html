@@ -144,7 +144,12 @@
       }
     </style>
   </head>
-
+  <script>
+    /**
+     * 전역 변수
+     */
+    const member = location.search.replaceAll("?", "").split("=")[1];
+  </script>
   <body>
     <div id="topBar">
       <h3 id="menu-toggle">Menu</h3>
@@ -246,5 +251,6 @@
         }, 3000);
       }
     </script>
+    <script src="./src/map_script.js"></script>
   </body>
 </html>

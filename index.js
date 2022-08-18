@@ -11,6 +11,7 @@ const ece3000Router = require("./routes/ece3000.js")
 const ece8000Router = require("./routes/ece8000.js")
 const adminTestRouter = require("./routes/admin/test.js")
 const swaggerRouter = require("./config/swagger.js")
+const { tiles } = require("./config/tiles")
 /** 
  * 환경 변수
  */
@@ -21,6 +22,7 @@ app.use(cors())
 app.use(express.json())
 app.use(express.static("public"))
 app.use(logger('combined'))
+console.log(tiles[0][0]);
 // app.use(logger(function (tokens, req, res) {
 //     return [
 //         tokens.method(req, res),

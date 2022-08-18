@@ -62,8 +62,14 @@ module.exports = {
      * extrastr2 현재 가격
      */
     ece8110: () => `select extracode1 as 'purchaseway' , extrastr1 as 'walletaddress' , extrastr2 as 'currentamount' from Transactions where action = 8201`,
-    ece8120: ({ member, tile, tileInfo, tileLength }) => `insert into Transactions (action , status , extracode1,extracode2,extrastr3,member,land) 
-    values (7131 , 1310 , ${tile} , ${tileLength} , '${JSON.stringify(tileInfo)}' , ${member},${tile})`,
+    ece8120: {
+        requsetBuyTilesTransaction: ({ member, tile, tileInfo, tileLength }) => `insert into Transactions (action , status , extracode1,extracode2,extrastr3,member,land) 
+        values (7131 , 1310 , ${tile} , ${tileLength} , '${JSON.stringify(tileInfo)}' , ${member},${tile})`,
+        directBuyTilesTransaction: ({ member, tile, tileInfo, tileLength }) => `insert into Transactions (action , status , extracode1,extracode2,extrastr3,member,land) 
+        values (7132 , 1310 , ${tile} , ${tileLength} , '${JSON.stringify(tileInfo)}' , ${member},${tile})`,
+        insertTile_direct: ({ landIndex, member }) => `insert into Lands (landkey,member,extracode) values (${landIndex},${member},7110)`,
+        insertTile_requset: ({ landIndex, member }) => `insert into Lands (landkey,member,extracode) values (${landIndex},${member},7120)`,
+    },
     ece8210: () => `select extracode1 as 'purchaseway' , extrastr1 as 'walletaddress' , extrastr2 as 'currentamount' from Transactions where action = 8202`,
     /** 채굴기 구매 
      * action 채굴기 구매 요청

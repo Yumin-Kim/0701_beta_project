@@ -1,4 +1,4 @@
-let startLat = 33.10621;
+let startLat = 33.106102;
 const endPointLat = 33.57313;
 const point_lat = (endPointLat - startLat) / 0.00009
 let startLng = 126.11546;
@@ -6,17 +6,27 @@ const endPointLng = 127.00601;
 const point_lng = (endPointLng - startLng) / 0.00009;
 const point_lat_floor = Math.floor(point_lat);
 const point_lng_floor = Math.floor(point_lng);
-
-
-// const a = Array(point_lat_floor).fill().map(lat => {
-//   const prevlat = startLat;
-//   startLat = Number((startLat + 0.00009).toFixed(5))
-//   return Array(point_lng_floor).fill().map((v) => {
-//     const prevlng = startLng;
-//     startLng = Number((startLng + 0.00009).toFixed(5))
-//     return [prevlat, prevlng];
-//   })
-// })
+let toggle = 0;
+function AJAXRequestMethod({ method, requestURL, data }) {
+  return new Promise((res, rej) => {
+    const XHR = new XMLHttpRequest();
+    XHR.open(method, requestURL);
+    XHR.setRequestHeader("Content-Type", "application/json");
+    XHR.send(JSON.stringify(data));
+    XHR.onreadystatechange = target => {
+      try {
+        if (XHR.status === 200 && XHR.response.trim() !== "" && XHR.readyState == 4) {
+          res(JSON.parse(XHR.response));
+        }
+      } catch (error) {
+        console.log(XHR.response);
+        console.log(error)
+      }
+    };
+  });
+}
+const a = parseTile({ lng: 126.46573, lat: 33.50650 })
+console.log(a);
 
 
 mapboxgl.accessToken =
@@ -24,8 +34,9 @@ mapboxgl.accessToken =
 const map = new mapboxgl.Map({
   container: "map",
   style: "mapbox://styles/mapbox/satellite-streets-v11",
-  center: [126.46949, 33.5052],
-  zoom: 18,
+  center: [126.46573,
+    33.50650],
+  zoom: 17,
 });
 map.addControl(new mapboxgl.NavigationControl(), "bottom-right");
 //
@@ -1128,149 +1139,7 @@ const loadImageData = {
 }
 map.on("load", () => {
 
-  map.addSource('route', {
-    'type': 'geojson',
-    'data': {
-      'type': 'Feature',
-      'properties': {},
-      'geometry': {
-        'type': 'LineString',
-        'coordinates': [
-          [126.115461, 33.57313],
-          [127.006015, 33.57313],
-          [127.006015, 33.106217],
-          [126.115461, 33.106217],
-          [126.115461, 33.57313],
-        ]
-      }
-    }
-  });
 
-  map.addSource('route1', {
-    'type': 'geojson',
-    'data': {
-      'type': 'Feature',
-      'properties': {},
-      'geometry': {
-        'type': 'LineString',
-        'coordinates': [
-          [126.46565, 33.57413],
-          [126.46565, 33.10631],
-        ]
-      }
-    }
-  });
-  map.addSource('route2', {
-    'type': 'geojson',
-    'data': {
-      'type': 'Feature',
-      'properties': {},
-      'geometry': {
-        'type': 'LineString',
-        'coordinates': [
-          [126.46574, 33.57413],
-          [126.46574, 33.10631],
-        ]
-      }
-    }
-  });
-  // 0.00007
-  // 0.00007
-  map.addSource('route3', {
-    'type': 'geojson',
-    'data': {
-      'type': 'Feature',
-      'properties': {},
-      'geometry': {
-        'type': 'LineString',
-        'coordinates': [
-          [126.115461, 33.50659],
-          [127.006015, 33.50659],
-        ]
-      }
-    }
-  });
-  map.addSource('route4', {
-    'type': 'geojson',
-    'data': {
-      'type': 'Feature',
-      'properties': {},
-      'geometry': {
-        'type': 'LineString',
-        'coordinates': [
-          [126.115461, 33.50651],
-          [127.006015, 33.50651],
-        ]
-      }
-    }
-  });
-
-
-  map.addLayer({
-    'id': 'route',
-    'type': 'line',
-    'source': 'route',
-    'layout': {
-      'line-join': 'round',
-      'line-cap': 'round'
-    },
-    'paint': {
-      'line-color': '#888',
-      'line-width': 8
-    }
-  });
-  map.addLayer({
-    'id': 'route1',
-    'type': 'line',
-    'source': 'route1',
-    'layout': {
-      'line-join': 'round',
-      'line-cap': 'round'
-    },
-    'paint': {
-      'line-color': 'red',
-      'line-width': 1
-    }
-  });
-  map.addLayer({
-    'id': 'route2',
-    'type': 'line',
-    'source': 'route2',
-    'layout': {
-      'line-join': 'round',
-      'line-cap': 'round'
-    },
-    'paint': {
-      'line-color': 'orange',
-      'line-width': 1
-    }
-  });
-  map.addLayer({
-    'id': 'route3',
-    'type': 'line',
-    'source': 'route3',
-    'layout': {
-      'line-join': 'round',
-      'line-cap': 'round'
-    },
-    'paint': {
-      'line-color': 'blue',
-      'line-width': 1
-    }
-  });
-  map.addLayer({
-    'id': 'route4',
-    'type': 'line',
-    'source': 'route4',
-    'layout': {
-      'line-join': 'round',
-      'line-cap': 'round'
-    },
-    'paint': {
-      'line-color': 'yellow',
-      'line-width': 1
-    }
-  });
   // Select polygon source
   map.addSource(selectedCellsId, {
     type: "geojson",
@@ -1297,26 +1166,26 @@ map.on("load", () => {
     'type': 'geojson',
     'data': []
   });
-  map.loadImage(
-    'https://docs.mapbox.com/mapbox-gl-js/assets/colorado_flag.png',
-    (err, image) => {
-      // Throw an error if something goes wrong.
-      if (err) throw err;
+  // map.loadImage(
+  //   'https://docs.mapbox.com/mapbox-gl-js/assets/colorado_flag.png',
+  //   (err, image) => {
+  //     // Throw an error if something goes wrong.
+  //     if (err) throw err;
 
-      // Add the image to the map style.
-      map.addImage('pattern', image);
+  //     // Add the image to the map style.
+  //     map.addImage('pattern', image);
 
-      // Create a new layer and style it using `fill-pattern`.
-      map.addLayer({
-        'id': 'pattern-layer',
-        'type': 'fill',
-        'source': 'source',
-        'paint': {
-          'fill-pattern': 'pattern'
-        }
-      });
-    }
-  );
+  //     // Create a new layer and style it using `fill-pattern`.
+  //     map.addLayer({
+  //       'id': 'pattern-layer',
+  //       'type': 'fill',
+  //       'source': 'source',
+  //       'paint': {
+  //         'fill-pattern': 'pattern'
+  //       }
+  //     });
+  //   }
+  // );
   map.addLayer({
     id: selectedCellsId,
     source: selectedCellsId,
@@ -1385,16 +1254,79 @@ map.on("load", () => {
       selectedTiles(bboxes);
     }
   });
-
+  AJAXRequestMethod({
+    method: "POST",
+    requestURL: `http://localhost:3000/ece3000/ece3300`,
+    data: parseTile({ lng: 126.46573, lat: 33.50650 })
+  }).then((result) => {
+    console.log(result);
+    let { data } = result;
+    const geoJSON = data.reduce((prev, cur) => {
+      prev.push(cur.blockLocation)
+      return prev
+    }, [])
+    selectedTilesCustom_classname(geoJSON, "green")
+  }).catch((err) => {
+    console.log(err);
+  });
   const selectedTiles = (bboxes) => {
-    console.log("=======================SelectedTiles=====================")
-    console.log(bboxes)
+    toggle++;
     const parseData = bboxes.map((v, i) => {
       const [leftlng, leftlat, rightlng, rightlat] = v;
       return [leftlat.toFixed(5), leftlng.toFixed(5), rightlat.toFixed(5), rightlng.toFixed(5)]
     })
-    console.log(parseData)
-    console.log("=======================SelectedTiles=====================")
+    const firstlng = Number(bboxes[0][0].toFixed(5))
+    const firstlat = Number(bboxes[0][1].toFixed(5))
+    console.log(toggle);
+
+    if (bboxes.length > 1) {
+      const lastlng = Number(bboxes[bboxes.length - 1][0].toFixed(5))
+      const lastlat = Number(bboxes[bboxes.length - 1][1].toFixed(5))
+      const firstData = parseTile({ lat: firstlat, lng: firstlng })
+      const lastData = parseTile({ lat: lastlat, lng: lastlng })
+
+      if (toggle === 2) {
+        toggle = 0;
+        const data = bboxes.map((bbox) => {
+          const lng = Number(bbox[0].toFixed(5))
+          const lat = Number(bbox[1].toFixed(5))
+          return parseTile({ lat, lng })
+        })
+        AJAXRequestMethod({
+          method: "POST",
+          requestURL: `http://localhost:3000/ece8000/ece8120_rev?member=${member}`,
+          data: {
+            data
+          }
+        }).then((result) => {
+          console.log(result);
+          // let center = result.data;
+          // center = [...center, center[0] + 0.00009, center[1] - 0.00009]
+          // console.log("firstData", firstData);
+          selectedTilesCustom_classname([center], "blue")
+        }).catch((err) => {
+          console.log(err);
+        });
+        // AJAXRequestMethod({
+        //   method: "POST",
+        //   requestURL: "http://localhost:3000/ece3000",
+        //   data: lastData
+        // }).then((result) => {
+        //   let center = result.data;
+        //   center = [...center, center[0] + 0.00009, center[1] - 0.00009]
+        //   console.log("lastData", lastData);
+        //   selectedTilesCustom_classname([center], "green")
+        // }).catch((err) => {
+        //   console.log(err);
+        // });
+      }
+    }
+    /**
+     * 박스 하나만 선택하고 구매한 경우 
+     */
+    if (toggle == 2) {
+      console.log("Hello");
+    }
     tempSelectedCells = [];
     bboxes.forEach((bbox) => {
       const cellIndex = selectedCells.findIndex(
@@ -1512,12 +1444,6 @@ map.on("load", () => {
   })
   console.log(point);
   const testData1 = [
-    // [
-    //   126.46574,
-    //   33.506505,
-    //   126.46583,
-    //   33.506595
-    // ],
     [
       126.46573,
       33.50650,
@@ -1525,50 +1451,16 @@ map.on("load", () => {
       33.50659
     ]
   ]
-  selectedTilesCustom(testData1)
+  // selectedTilesCustom(testData1)
   // selectedTilesCustom(testData1)
   // selectedTilesCustom(userSelectData)
-  selectedTilesCustom_classname(testData, "blue")
-  selectedTilesCustom_classname(selectBlackBox, "black")
-  selectedTilesCustom_classname(selectGreenBox, "green")
+  // selectedTilesCustom_classname(testData, "blue")
+  // selectedTilesCustom_classname(selectBlackBox, "black")
   // selectedTilesCustom_loadImage(testData)
 });
-// map.on("click", () => {
-//   console.log("Hello")
-// })
-map.on('movestart', (e) => {
-  console.log('event type:', e.type);
-  let { lat, lng } = map.getCenter();
-  lng = Number(lng.toFixed(5))
-  lat = Number(lat.toFixed(5))
-  console.log(lat, lng);
-  // console.log(point_lat_floor);
-  // console.log(point_lng_floor);
-  const b1 = lat - startLat
-  const b2 = lng - startLng
-  console.log(Number(b2.toFixed(5)));
-  console.log(Number(b2.toFixed(5)) / 0.00009);
-  const c1 = Math.round(Number(b1.toFixed(5)) / 0.00009)
-  const c2 = Math.round(Number(b2.toFixed(5)) / 0.00009)
-  // console.log(c2 / 0.00009);
-  // console.log(c1 * point_lat_floor);
-  // console.log(c2);
-  console.log(c1 * point_lat_floor + c2);
-  // console.log(point_lat_floor * point_lng_floor);
 
-  // alert(lat, lng)
-  // event type: boxzoomstart
-});
-map.on("zoom", () => {
-  const zoomSize = map.getZoom();
 
-  console.log(zoomSize);
-  // if (!map.hasControl(grid)) {
-  //   map.addControl(grid);
-  // } else {
-  //   grid.update();
-  // }
-})
+
 
 function selectedTilesCustom(bboxes) {
   tempSelectedCells = [];
@@ -1673,3 +1565,11 @@ function selectedTilesCustom_loadImage(bboxes) {
     document.getElementById("has-details").classList.add("detail-show");
   }
 };
+
+function parseTile({ lat, lng }) {
+  lng = Number(lng.toFixed(5))
+  lat = Number(lat.toFixed(5))
+  const width = Math.round(Number(lng - startLng.toFixed(5)) / 0.00009)
+  const height = Math.round(Number(lat - startLat.toFixed(5)) / 0.00009)
+  return { width, height }
+}

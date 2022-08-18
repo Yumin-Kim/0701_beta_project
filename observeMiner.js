@@ -33,10 +33,18 @@ const interval_mining = async ({ instance }) => {
 function miningLogic({ minerCount }) {
     if (minerCount === 0 || minerCount === undefined) return;
     const unixTime = Math.floor(new Date().getTime() / 1000)
-    const mainLogic = (minerCount) => 2 * 1 / minerCount + minerCount ** (2 - minerCount)
-    return Math.round(Math.random(1 / unixTime + mainLogic(minerCount)));
+    const mainLogic = (minerCount) => minerCount
+    // return Math.round(Math.random(1 / unixTime + mainLogic(minerCount)));
 }
-setInterval(async () => {
-    const instance = await dbPool.getConnection(async conn => conn)
-    await interval_mining({ instance });
-}, 1000 * 5)
+// function miningLogic_1() {
+//     if (minerCount === 0 || minerCount === undefined) return;
+//     return Math.round(Math.random(1 / unixTime + mainLogic(minerCount)));
+// }
+const unixTime = Math.floor(new Date().getTime() / 1000)
+const mainLogic = (x) => x / unixTime
+console.log(mainLogic(Math.round(Math.random(0, 100) * 10)) * 100000000);
+console.log();
+// setInterval(async () => {
+//     const instance = await dbPool.getConnection(async conn => conn)
+//     await interval_mining({ instance });
+// }, 1000 * 5)
