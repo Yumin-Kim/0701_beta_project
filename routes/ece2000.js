@@ -100,7 +100,7 @@ router.post("/ece2330", async (req, res) => {
             throw new Error(ece2000.ece2330)
         }
     } catch (error) {
-        res.send(resultResponseFormat({ status: 1320, msg: ece2000.ece2330.success }))
+        res.send(resultResponseFormat({ status: 1320, msg: ece2000.ece2330.failure }))
     }
 })
 /**

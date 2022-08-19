@@ -28,6 +28,9 @@ module.exports = {
         updatePin: ({ pin, member }) => `UPDATE Members SET pin = hex(aes_encrypt('${pin}','ELC')) WHERE member = ${member};`,
         findByMember: ({ member }) => `select * from Members where member = ${member}`
     },
+    ece3300: {
+        findLandsByAroundLand: ({ minLandIndex, maxLandIndex }) => `(select * from Lands where landkey >= ${minLandIndex} and landkey <= ${maxLandIndex})`
+    },
     ece3400: {
         /**step1
          * 채굴 요청 시점 기록 
@@ -55,13 +58,36 @@ module.exports = {
         (select transaction from Transactions where action = 7224 and member = ${member}) as t
         on rt.transaction = t.transaction where member = ${member} and rt.transaction is not null group by rt.resource;`,
     },
+    ece3500: {
+        findByMemberResource: ({ member }) => `select sum(rt.amount) as 'amount',rt.resource from ResourceTransactions as rt left join 
+        (select transaction from Transactions where action = 7224 and member = ${member}) as t
+        on rt.transaction = t.transaction where member = ${member} and rt.transaction is not null group by rt.resource;`,
+        findMemberByMinerAndTiles: ({ member }) => `(select sum(extracode2) as 'amount',action from Transactions where member = ${member} and action = 7132)
+        union all
+        (select sum(extrastr1) as 'amount' , action from Transactions where member = ${member} and action = 7212)`,
+    },
+    ece5100: ({ member }) => `select sum(rt.amount) as 'amount',rt.resource from ResourceTransactions as rt left join 
+    (select transaction from Transactions where action = 7224 and member = ${member}) as t
+    on rt.transaction = t.transaction where member = ${member} and rt.transaction is not null group by rt.resource;`,
+    ece6100: {
+        findTransactionByResoureceTransactions: ({ member }) => `SELECT DATE_FORMAT(createdt, '%Y%m%d') as createdt,transaction,extracode1 as 'tileCount' , extracode2 as 'minerCount'  FROM Transactions where action = 7224 and member = ${member} group by createdt , transaction order by  transaction desc;`,
+        findResourceTrnsactionByResouce: ({ transaction }) => `SELECT * FROM  ResourceTransactions where transaction =${transaction}`
+    },
+    ece7100: ({ member }) => `select member, email,firstname,lastname,walletaddress,gender from Members where member = ${member}`,
+    ece7200: {
+        updateMemberInfo: ({ member, email, firstname, lastname, walletaddress, gender }) => `update Members set email = '${email}' , 
+      firstname = '${firstname}' ,lastname = '${lastname}' , walletaddress = '${walletaddress}' , gender = ${gender} where member = ${member}`,
+        updateMemberPin: ({ member, pin }) => `UPDATE Members SET pin = hex(aes_encrypt('${pin}','ELC')) WHERE member = ${member};`,
+        findByMember: ({ member }) => `select member, email,firstname,lastname,walletaddress,gender from Members where member = ${member}`,
+    },
+
     /** 토지 판매자 정보 제공
      * action 판매자 장보
      * extracode1 리플(현) 크레딧 중 하나
      * extrastr1 리플 주소
      * extrastr2 현재 가격
      */
-    ece8110: () => `select extracode1 as 'purchaseway' , extrastr1 as 'walletaddress' , extrastr2 as 'currentamount' from Transactions where action = 8201`,
+    ece8110: () => `select extracode1 as 'purchaseway' , extrastr1 as 'walletaddress' , extrastr2 as 'currentamount' from Transactions where action = 8201 order by transaction desc limit 1`,
     ece8120: {
         requsetBuyTilesTransaction: ({ member, tile, tileInfo, tileLength }) => `insert into Transactions (action , status , extracode1,extracode2,extrastr3,member,land) 
         values (7131 , 1310 , ${tile} , ${tileLength} , '${JSON.stringify(tileInfo)}' , ${member},${tile})`,
@@ -70,7 +96,7 @@ module.exports = {
         insertTile_direct: ({ landIndex, member }) => `insert into Lands (landkey,member,extracode) values (${landIndex},${member},7110)`,
         insertTile_requset: ({ landIndex, member }) => `insert into Lands (landkey,member,extracode) values (${landIndex},${member},7120)`,
     },
-    ece8210: () => `select extracode1 as 'purchaseway' , extrastr1 as 'walletaddress' , extrastr2 as 'currentamount' from Transactions where action = 8202`,
+    ece8210: () => `select extracode1 as 'purchaseway' , extrastr1 as 'walletaddress' , extrastr2 as 'currentamount' from Transactions where action = 8202 order by transaction desc limit 1`,
     /** 채굴기 구매 
      * action 채굴기 구매 요청
      * extracode1 리플 승인 대기
@@ -79,6 +105,7 @@ module.exports = {
      * extrastr2 사용자 지갑 명
      */
     ece8220: ({ member, miner, xrp, memberAddress }) => `insert into Transactions (action , status,member,extracode1,extracode2,extrastr1,extrastr2) values (7211  , 1310 , ${member}, 6101 ,${xrp},${miner},'${memberAddress}' );`,
+
     /*
         임의 토지 구매
         action 7110 소유

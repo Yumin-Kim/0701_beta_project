@@ -2,20 +2,19 @@ const { executeQuery } = require("../config/db");
 const { resultResponseFormat, resultMSG } = require("../config/result");
 const sql = require("../config/sql");
 const { parseIndexNumberToArray, convertArrayToLocation } = require("../config/tiles");
-const { intergrateMSG, ece4000 } = resultMSG
+const { intergrateMSG } = resultMSG
 const router = require("express").Router()
 
-router.get("/ece4100", async (req, res) => {
+router.get("/ece6100", async (req, res) => {
     try {
         const { member } = req.query;
         if (member === undefined) throw new Error(intergrateMSG.notSendclientInfo)
-        const result = await executeQuery(`select * from Lands where member = ${member}`)
-        const data = result.map((value, index) => {
-            const { land, landkey, member, createdt, updatedt } = value
-            const [width, height] = parseIndexNumberToArray(landkey)
-            const location = convertArrayToLocation(width, height)
-            return { land, blockLocation: [location[0], location[1], location[0] + 0.00009, location[1] - 0.00009], member, createdt, updatedt }
+        const resoureTransactionList = await executeQuery(sql.ece6100.findTransactionByResoureceTransactions({ member }))
+        const pendingQuery = await resoureTransactionList.map(async (value) => {
+            const resourceData = await executeQuery(sql.ece6100.findResourceTrnsactionByResouce({ transaction: value.transaction }))
+            return [value, { resourceData }]
         })
+        const data = await Promise.all(pendingQuery)
         res.send(resultResponseFormat({ status: 1310, msg: "내 토지 조회 완료", data }))
     } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))

@@ -65,8 +65,7 @@ router.post("/ece8120_rev", async (req, res) => {
 })
 router.get("/ece8210", async (req, res) => {
     try {
-        await executeQuery(sql.admin.insertMinerSellerInfo({}))
-        const [data] = await executeQuery(sql.ece8210())
+        const data = await executeQuery(sql.ece8210())
         res.send(resultResponseFormat({ data, status: 1310, msg: ece8000.ece8210.success }))
     } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
@@ -83,6 +82,7 @@ router.post("/ece8220", async (req, res) => {
         } else {
             memberAddress = address;
         }
+        if (memberAddress === null) throw new Error(ece8000.ece8220.notFoundMemberXRPWallerAddress);
         if (member === undefined || miner === undefined || xrp === undefined) throw new Error(intergrateMSG.failure)
         await executeQuery(sql.ece8220({ member, miner, xrp, memberAddress }))
         res.send(resultResponseFormat({ status: 1310, msg: ece8000.ece8220.success }))

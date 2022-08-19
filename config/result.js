@@ -73,10 +73,28 @@ module.exports = {
             ece3400: {
                 success: "채굴 완료 하였습니다.",
                 failure: "채굴할 자원이 없습니다."
+            },
+            ece3500: {
+                success: "사용자 채굴 관련 정보 전송 완료"
             }
         },
         ece4000: {
 
+        },
+        ece5000: {
+            ece5100: {
+                success: "자원 통계 정보 조회 성공",
+                failure: "자원 통계 정보 조회 실패"
+            },
+            ece5200: {
+                success: "자원 통계 택스트 정보 제공 성공",
+                failure: "자원 통계 택스트 정보 제공 실패"
+            }
+        },
+        ece7000: {
+            ece7100: {
+                success: "사용자 정보 조회 성공"
+            }
         },
         ece8000: {
             ece8110: {
@@ -93,7 +111,8 @@ module.exports = {
             },
             ece8220: {
                 success: "채굴기 구매 요청 승인",
-                failure: "채굴기 구매 요청 실패"
+                failure: "채굴기 구매 요청 실패",
+                notFoundMemberXRPWallerAddress: "사용자 리플 주소를 입력해주세요"
             }
         }
     }

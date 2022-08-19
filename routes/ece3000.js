@@ -11,7 +11,7 @@ router.post("/ece3300", async (req, res) => {
     const { width, height } = req.body
     const points = ece3300_getCenterPoint(width, height)
     console.log(points);
-    const getcenterLandquery = points.map(value => `(select * from Lands where landkey >= ${value[0]} and landkey <= ${value[1]})`)
+    const getcenterLandquery = points.map(value => sql.ece3300.findLandsByAroundLand({ minLandIndex: value[0], maxLandIndex: value[1] }))
     let selectQuery = getcenterLandquery.join(",")
     selectQuery = selectQuery.replaceAll(",", " union all ")
     const result = await executeQuery(selectQuery)
@@ -38,9 +38,16 @@ router.get("/ece3400", async (req, res) => {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
     }
 })
-router.post("/ece3410", async (req, res) => {
-    const { memberId } = req.body
-    const data = await requestAPI(`${MINERSERVER}?act=ece3420&member=${123}&transactionId=${12}&timestamp=${new Date().getTime()}`)
-    res.json(data)
+router.get("/ece3500", async (req, res) => {
+    try {
+        const { member } = req.query;
+        if (member === undefined) throw new Error(intergrateMSG.failure)
+        const currentResoureList = await executeQuery(sql.ece3500.findByMemberResource({ member }));
+        const getMemberTileAndMiner = await executeQuery(sql.ece3500.findMemberByMinerAndTiles({ member }))
+        res.send(resultResponseFormat({ data: { resoureList: currentResoureList, memberInfo: getMemberTileAndMiner }, status: 1310, msg: ece3000.ece3500.success }))
+    }
+    catch (error) {
+        res.send(resultResponseFormat({ status: 1320, msg: error.message }))
+    }
 })
 module.exports = router;

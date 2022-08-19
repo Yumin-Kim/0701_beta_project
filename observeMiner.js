@@ -1,11 +1,21 @@
 const { executeQuery, dbPool } = require("./config/db.js")
 const sql = require("./config/sql.js")
+const schedule = require('node-schedule');
 const resouceList = [7501, 7502, 7503, 7504, 7601]
+const TIMER_30S = '30 * * * * *'
+const TIMER_1S = '1 * * * * *'
+const TIMER_1H = '* * 1 * * *'
 const interval_mining = async ({ instance }) => {
     await instance.beginTransaction();
     const [selectContainByMiner] = await instance.query(sql.miner_getMinerOnTiles())
     if (selectContainByMiner.length !== 0) {
         console.log(`Miner Member Length : ${selectContainByMiner.length}`);
+        /**
+         * 마이닝 
+         * Transaction
+         * extracode1 >> tile count
+         * extracode2 >> miner count
+         */
         let bulkinsertByMineToResourceTransaction = `insert into ResourceTransactions (resource , amount ,tiles , minercount,member,transaction) values`
         const createResourceInsertQuerysOnPromise = await selectContainByMiner.map(async (resultMember) => {
             const [transactionRow] = await instance.query(`insert into Transactions (action , status ,extracode1 , extracode2 , member ) values (7223 , 1310 ,${resultMember.tileCount},${resultMember.minerCount} ,${resultMember.member})`)
@@ -33,17 +43,15 @@ const interval_mining = async ({ instance }) => {
 function miningLogic({ minerCount }) {
     if (minerCount === 0 || minerCount === undefined) return;
     const unixTime = Math.floor(new Date().getTime() / 1000)
-    const mainLogic = (minerCount) => minerCount
-    // return Math.round(Math.random(1 / unixTime + mainLogic(minerCount)));
+    const mainLogic = (x) => x / unixTime
+    return Math.floor(mainLogic(Math.floor(Math.random() * unixTime)) * minerCount);
 }
-// function miningLogic_1() {
-//     if (minerCount === 0 || minerCount === undefined) return;
-//     return Math.round(Math.random(1 / unixTime + mainLogic(minerCount)));
-// }
-const unixTime = Math.floor(new Date().getTime() / 1000)
-const mainLogic = (x) => x / unixTime
-console.log(mainLogic(Math.round(Math.random(0, 100) * 10)) * 100000000);
-console.log();
+(async () => {
+    const j = await schedule.scheduleJob(TIMER_1H, async () => {
+        const instance = await dbPool.getConnection(async conn => conn)
+        await interval_mining({ instance });
+    });
+})()
 // setInterval(async () => {
 //     const instance = await dbPool.getConnection(async conn => conn)
 //     await interval_mining({ instance });
