@@ -1,3 +1,4 @@
+
 const express = require("express");
 const cors = require("cors")
 const app = express();
@@ -8,6 +9,7 @@ const logger = require("morgan")
 const { executeQuery } = require("./config/db.js");
 const ece2000Router = require("./routes/ece2000.js")
 const ece3000Router = require("./routes/ece3000.js")
+const ece4000Router = require("./routes/ece4000.js")
 const ece8000Router = require("./routes/ece8000.js")
 const adminTestRouter = require("./routes/admin/test.js")
 const swaggerRouter = require("./config/swagger.js")
@@ -22,7 +24,6 @@ app.use(cors())
 app.use(express.json())
 app.use(express.static("public"))
 app.use(logger('combined'))
-console.log(tiles[0][0]);
 // app.use(logger(function (tokens, req, res) {
 //     return [
 //         tokens.method(req, res),
@@ -36,6 +37,7 @@ console.log(tiles[0][0]);
 app.use(swaggerRouter)
 app.use("/ece2000", ece2000Router)
 app.use("/ece3000", ece3000Router)
+app.use("/ece4000", ece4000Router)
 app.use("/ece8000", ece8000Router)
 
 //admin

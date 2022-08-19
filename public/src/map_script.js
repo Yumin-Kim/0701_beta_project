@@ -1,24 +1,23 @@
 map.on('movestart', (e) => {
-    console.log('event type:', e.type);
-    let { lat, lng } = map.getCenter();
-    console.log(lat, lng);
-    const { width, height } = parseTile({ lat, lng })
-
-    AJAXRequestMethod({
-        method: "POST",
-        requestURL: `http://localhost:3000/ece3000/ece3300`,
-        data: parseTile({ lng, lat })
-    }).then((result) => {
-        console.log(result);
-        let { data } = result;
-        const geoJSON = data.reduce((prev, cur) => {
-            prev.push(cur.blockLocation)
-            return prev
-        }, [])
-        selectedTilesCustom_classname(geoJSON, "green")
-    }).catch((err) => {
-        console.log(err);
-    });
+    setTimeout(() => {
+        let { lat, lng } = map.getCenter();
+        console.log(lat, lng);
+        AJAXRequestMethod({
+            method: "POST",
+            requestURL: `http://localhost:3000/ece3000/ece3300`,
+            data: parseTile({ lng, lat })
+        }).then((result) => {
+            console.log(result);
+            let { data } = result;
+            const geoJSON = data.reduce((prev, cur) => {
+                prev.push(cur.blockLocation)
+                return prev
+            }, [])
+            selectedTilesCustom_classname(geoJSON, "green")
+        }).catch((err) => {
+            console.log(err);
+        });
+    }, 1000)
 });
 
 

@@ -1,36 +1,29 @@
 const { executeQuery } = require("../config/db");
 const { resultResponseFormat, resultMSG } = require("../config/result");
 const sql = require("../config/sql");
+const { parseIndexNumberToArray } = require("../config/tiles");
 const { intergrateMSG, ece4000 } = resultMSG
 const router = require("express").Router()
 
-router.get("/", async (req, res) => {
+router.get("/ece4100", async (req, res) => {
     try {
         const { member } = req.query;
-        if (member === undefined) throw new Error(intergrateMSG.failure)
+        if (member === undefined) throw new Error(intergrateMSG.notSendclientInfo)
+        const result = await executeQuery(`select * from Lands where member = ${member}`)
+        const data = result.map((value, index) => {
+            const { land, landkey, member, createdt, updatedt } = value
+            const tmpArray = parseIndexNumberToArray(landkey)
+            const location = tiles[tmpArray[1]][tmpArray[0]]
+            // const location = convertArrayToLocation(tmpArray[0], tmpArray[1])
+
+            return { land, blockLocation: [location[0], location[1], location[0] + 0.00009, location[1] - 0.00009], member, createdt, updatedt }
+        })
+        res.send(resultResponseFormat({ status: 1310, msg: "내 토지 조회 완료", data }))
+
 
     } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
     }
 })
-// router.get("/")
-router.get("/ece3400", async (req, res) => {
-    try {
-        const { member } = req.query;
-        if (member === undefined) throw new Error(intergrateMSG.failure)
-        await executeQuery(sql.ece3400.insertRemainMiningTransaction({ member }))
-        const data = await executeQuery(sql.ece3400.findAllByCurrentMinigResource({ member }))
-        if (data.length === 0) throw new Error(ece3000.ece3400.failure)
-        await executeQuery(sql.ece3400.updateMiningResource({ member }))
-        res.send(resultResponseFormat({ data, msg: ece3000.ece3400.success, status: 1310 }))
-    }
-    catch (error) {
-        res.send(resultResponseFormat({ status: 1320, msg: error.message }))
-    }
-})
-router.post("/ece3410", async (req, res) => {
-    const { memberId } = req.body
-    const data = await requestAPI(`${MINERSERVER}?act=ece3420&member=${123}&transactionId=${12}&timestamp=${new Date().getTime()}`)
-    res.json(data)
-})
+
 module.exports = router;
