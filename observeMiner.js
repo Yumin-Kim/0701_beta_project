@@ -52,7 +52,4 @@ function miningLogic({ minerCount }) {
         await interval_mining({ instance });
     });
 })()
-// setInterval(async () => {
-//     const instance = await dbPool.getConnection(async conn => conn)
-//     await interval_mining({ instance });
-// }, 1000 * 5)
+

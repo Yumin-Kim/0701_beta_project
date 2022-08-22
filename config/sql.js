@@ -1,3 +1,4 @@
+const emailLimitCount = 600;
 module.exports = {
     utils: {
         findByMember: ({ member }) => `select * from Members where member = ${member}`
@@ -11,7 +12,7 @@ module.exports = {
         insertEmailAuthCodeOnMember: ({ member, validEmail, code }) => `insert into Transactions (action, status , member, extrastr1, extrastr2) values (9314 ,9120, ${member} ,'${validEmail}', '${code}');`,
         insertEmailAuthCode: ({ email, code }) => `insert into Transactions (action, status , extrastr1, extrastr2) values (9314 ,9110,'${email}', '${code}');`,
     },
-    ece2320: ({ email, code }) => `select  action,extrastr1 as 'email', member , status from Transactions where extrastr1 = '${email}' and extrastr2 = '${code}' and action = 9314 and timestampdiff(second, createdt, now()) < 180`,
+    ece2320: ({ email, code }) => `select  action,extrastr1 as 'email', member , status from Transactions where extrastr1 = '${email}' and extrastr2 = '${code}' and action = 9314 and timestampdiff(second, createdt, now()) < ${emailLimitCount}`,
     ece2323: ({ email, gender, firstname, lastname, pin }) => `INSERT INTO Members (email, firstname, lastname, gender, pin) VALUES ('${email}','${firstname}','${lastname}',${gender},hex(aes_encrypt('${pin}','ELC')));`,
     ece2324: ({ member }) => `select * from Members where member = ${member}`,
     ece2330: ({ member, pin }) => `SELECT * FROM Members where  CONVERT(AES_DECRYPT(unhex(pin), 'ELC') using utf8) = '${pin}' and member = ${member}`,
@@ -23,7 +24,7 @@ module.exports = {
          */
         insertEmailAuthCodeOnMember: ({ member, validEmail, code }) => `insert into Transactions (action, status , member, extrastr1, extrastr2) values (9315 ,9120, ${member} ,'${validEmail}', '${code}');`,
     },
-    ece2333: ({ email, code }) => `select  action,extrastr1 as 'email', member from Transactions where extrastr1 = '${email}' and extrastr2 = '${code}' and action = 9315 and timestampdiff(second, createdt, now()) < 180`,
+    ece2333: ({ email, code }) => `select  action,extrastr1 as 'email', member from Transactions where extrastr1 = '${email}' and extrastr2 = '${code}' and action = 9315 and timestampdiff(second, createdt, now()) < ${emailLimitCount}`,
     ece2334: {
         updatePin: ({ pin, member }) => `UPDATE Members SET pin = hex(aes_encrypt('${pin}','ELC')) WHERE member = ${member};`,
         findByMember: ({ member }) => `select * from Members where member = ${member}`
