@@ -6,8 +6,8 @@
   "scripts": {
     "db_prd": "NODE_ENV=PRD PORT=3000 node ./config/db.js",
     "db_dev": "NODE_ENV=DEV PORT=3000 nodemon ./config/db.js",
-    "prd": "NODE_ENV=PRD PORT=3000 node index.js",
-    "dev": "NODE_ENV=DEV PORT=3000 nodemon"
+    "dev": "NODE_ENV=DEV PORT=3000 nodemon",
+    "start": "NODE_ENV=PRD PORT=3000 node index.js"
   },
   "author": "",
   "license": "ISC",
