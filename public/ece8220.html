@@ -12,6 +12,7 @@
     />
     <script src="./lib/maplibre-grid.min.js"></script>
     <script src="./assets/js/vender/jquery.js"></script>
+    <script src="./src/global.js"></script>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"
@@ -29,23 +30,26 @@
     .ece8220_txt h4,
     .ece8220_txt p {
       margin: 0;
+      color: #fff;
     }
+
     .ece8220_txt h4 {
       font-style: bold;
-      font-size: 20px;
+      font-size: 24px;
       margin-bottom: 20px;
     }
     .ece8220_txt p {
       margin-bottom: 20px;
     }
     .cardviewbtn {
-      width: 150px;
+      border: #bcfff39e 1px solid;
       font-size: 16px;
       font-family: Helvetica, Arial, sans-serif;
       font-weight: normal;
       color: #ffffff;
       text-decoration: none;
-      background-color: #5d9cec;
+      background-color: #99e7ff24;
+      width: 150px;
       border-radius: 3px;
       -webkit-border-radius: 3px;
       -moz-border-radius: 3px;
@@ -53,27 +57,28 @@
     }
     .cardviewbtn_w100 {
       width: 100%;
+      border: #bcfff39e 1px solid;
       font-size: 16px;
       font-family: Helvetica, Arial, sans-serif;
       font-weight: normal;
       color: #ffffff;
-      border: 0px;
       text-decoration: none;
-      background-color: #5d9cec;
+      background-color: #99e7ff24;
       border-radius: 3px;
       -webkit-border-radius: 3px;
       -moz-border-radius: 3px;
       display: inline-block;
     }
     .cardviewbtn_right {
-      width: 150px;
       float: right;
       font-size: 16px;
       font-family: Helvetica, Arial, sans-serif;
       font-weight: normal;
       color: #ffffff;
       text-decoration: none;
-      background-color: #5d9cec;
+      border: #bcfff39e 1px solid;
+      background-color: #99e7ff24;
+      width: 150px;
       border-radius: 3px;
       -webkit-border-radius: 3px;
       -moz-border-radius: 3px;
@@ -81,7 +86,7 @@
     }
     .ece8210_title {
       margin: 0;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
     .row_margin img {
       width: 100%;
@@ -199,46 +204,59 @@
       -moz-animation: inputHighlighter 0.3s ease;
       animation: inputHighlighter 0.3s ease;
     }
-
-    /* ANIMATIONS ================ */
-    @-webkit-keyframes inputHighlighter {
-      from {
-        background: #5264ae;
-      }
-      to {
-        width: 0;
-        background: transparent;
-      }
+    body {
+      background-image: url("./assets/ecePageImage.png");
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+      background-size: cover;
+      width: 100vw;
+      height: 100vh;
     }
-    @-moz-keyframes inputHighlighter {
-      from {
-        background: #5264ae;
-      }
-      to {
-        width: 0;
-        background: transparent;
-      }
+    h1 {
+      font-size: 24px;
+      color: #ffffff;
     }
-    @keyframes inputHighlighter {
-      from {
-        background: #5264ae;
-      }
-      to {
-        width: 0;
-        background: transparent;
-      }
+    h3,
+    h4 {
+      color: #ffffff;
     }
   </style>
   <body>
+    <div class="resourceTag">
+      <p>보유 자원</p>
+      <p>물 : 00 물 : 00 물 : 00 물 : 00</p>
+    </div>
     <div id="topBar">
       <h3 id="menu-toggle">Menu</h3>
       <ul id="menu">
-        <li><a href="./index.html">메인화면</a></li>
-        <li><a href="./ece4000.html">내땅보기</a></li>
-        <li><a href="./ece5000.html">채굴 통계</a></li>
-        <li><a href="#">채굴 기록</a></li>
-        <li><a href="#">구매하기</a></li>
-        <li><a href="#">내정보</a></li>
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-home"></i>
+          <a class="manuLinkTag" href="./index.html">메인화면</a>
+        </li>
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-box-open"></i>
+          <a class="manuLinkTag" href="./ece4000.html">내땅보기</a>
+        </li>
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-chart-pie"></i>
+          <a class="manuLinkTag" href="./ece5000.html">채굴 통계</a>
+        </li>
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-pen-square"></i
+          ><a class="manuLinkTag" href="./ece6000.html">채굴 기록</a>
+        </li>
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-credit-card"></i>
+          <a class="manuLinkTag" href="./ece8210.html">구매하기</a>
+        </li>
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-address-card"></i>
+          <a class="manuLinkTag" href="./ece7000.html">내정보</a>
+        </li>
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-sign-out"></i>
+          <a class="manuLinkTag" href="./ece7000.html">로그아웃</a>
+        </li>
       </ul>
     </div>
     <div id="contents">
@@ -247,8 +265,8 @@
         <div>
           <button
             type="button"
-            onclick="location.href='./ece8210.html'"
-            class="cardviewbtn"
+            value="./ece8210.html"
+            class="cardviewbtn btn8000"
           >
             채굴기
           </button>
@@ -259,13 +277,11 @@
         <div class="ece8220_txt">
           <h3>채굴기 구매 수량</h3>
           <h4>100</h4>
-          <h3>전송 주소</h3>
-          <p>rsG1sNifXJxGS2nDQ9zHyoe1S5APrtwpjV</p>
           <h3>전송 XRP 가격</h3>
           <p>100XRP</p>
           <h3>Destination Tag</h3>
-          <p>da123423</p>
-          <p style="color: red; font-style: bold">
+          <p>rsG1sNifXJxGS2nDQ9zHyoe1S5APrtwpjV</p>
+          <p style="color: #57f4ffdf; font-style: bold">
             위의 주소로 리플을 송금하세요.<br />
             Destination Tag 가 없는 거래는 확인되지 않습니다.<br />
             리플 지갑 사용시 확인 해 주세요.
@@ -273,8 +289,8 @@
         </div>
         <button
           type="button"
-          onclick="location.href='./index.html'"
-          class="cardviewbtn_w100"
+          value="./index.html"
+          class="cardviewbtn_w100 btn8000"
         >
           메인페이지
         </button>

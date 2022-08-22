@@ -208,7 +208,7 @@ map.on("load", () => {
   });
   AJAXRequestMethod({
     method: "POST",
-    requestURL: `http://localhost:3000/ece3000/ece3300`,
+    requestURL: `${serverURL}/ece3000/ece3300`,
     data: parseTile(centerLocation)
   }).then((result) => {
     console.log(result);
@@ -246,7 +246,7 @@ map.on("load", () => {
         })
         AJAXRequestMethod({
           method: "POST",
-          requestURL: `http://localhost:3000/ece8000/ece8120_rev?member=${member}`,
+          requestURL: `${serverURL}/ece8000/ece8120_rev?member=${member}`,
           data: {
             data
           }
@@ -261,7 +261,7 @@ map.on("load", () => {
         });
         // AJAXRequestMethod({
         //   method: "POST",
-        //   requestURL: "http://localhost:3000/ece3000",
+        //   requestURL: "${serverURL}/ece3000",
         //   data: lastData
         // }).then((result) => {
         //   let center = result.data;

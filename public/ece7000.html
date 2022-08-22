@@ -11,6 +11,7 @@
     />
     <script src="./lib/maplibre-grid.min.js"></script>
     <script src="./assets/js/vender/jquery.js"></script>
+    <script src="./src/global.js"></script>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"
@@ -19,37 +20,59 @@
     <link href="./style.css" rel="stylesheet" />
   </head>
   <link rel="stylesheet" href="./ece7000.css" />
+  <style>
+    body {
+      background-image: url("./assets/ecePageImage.png");
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+      background-size: cover;
+      width: 100vw;
+      height: 100vh;
+    }
+    h1 {
+      font-size: 24px;
+      color: #ffffff;
+    }
+    h3,
+    p {
+      color: #ffffff;
+    }
+  </style>
   <body>
+    <div class="resourceTag">
+      <p>보유 자원</p>
+      <p>물 : 00 물 : 00 물 : 00 물 : 00</p>
+    </div>
     <div id="topBar">
       <h3 id="menu-toggle">Menu</h3>
       <ul id="menu">
         <li>
           <i class="sc-searchbox-placeholder-icon fas fa-home"></i>
-          <a href="./index.html">메인화면</a>
+          <a class="manuLinkTag" href="./index.html">메인화면</a>
         </li>
         <li>
           <i class="sc-searchbox-placeholder-icon fas fa-box-open"></i>
-          <a href="./ece4000.html">내땅보기</a>
+          <a class="manuLinkTag" href="./ece4000.html">내땅보기</a>
         </li>
         <li>
           <i class="sc-searchbox-placeholder-icon fas fa-chart-pie"></i>
-          <a href="./ece5000.html">채굴 통계</a>
+          <a class="manuLinkTag" href="./ece5000.html">채굴 통계</a>
         </li>
         <li>
           <i class="sc-searchbox-placeholder-icon fas fa-pen-square"></i
-          ><a href="./ece6000.html">채굴 기록</a>
+          ><a class="manuLinkTag" href="./ece6000.html">채굴 기록</a>
         </li>
         <li>
           <i class="sc-searchbox-placeholder-icon fas fa-credit-card"></i>
-          <a href="./ece8000.html">구매하기</a>
+          <a class="manuLinkTag" href="./ece8210.html">구매하기</a>
         </li>
         <li>
           <i class="sc-searchbox-placeholder-icon fas fa-address-card"></i>
-          <a href="./ece7000.html">내정보</a>
+          <a class="manuLinkTag" href="./ece7000.html">내정보</a>
         </li>
         <li>
           <i class="sc-searchbox-placeholder-icon fas fa-sign-out"></i>
-          <a href="#">로그아웃</a>
+          <a class="manuLinkTag" href="./ece7000.html">로그아웃</a>
         </li>
       </ul>
     </div>
@@ -69,14 +92,15 @@
         </div>
         <button
           type="button"
-          onclick="location.href='./index.html'"
-          class="cardviewbtn_w100"
+          value="./index.html"
+          class="cardviewbtn_w100 btn7000"
         >
           메인 페이지
         </button>
         <button
           type="button"
-          onclick="location.href='./index.html'"
+          id="updatememberInfo"
+          onclick="test()"
           class="cardviewbtn_w100"
         >
           변경

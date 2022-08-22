@@ -1,8 +1,12 @@
-const colors = ["#1e81b0", "#76b5c5", "#873e23", "#eab676", "#b603fc"]
+const colors = ["#239DF5", "#824949", "#A8A8A8", "#A62C2C", "#32C981"]
 var options = {
     series: [{
         data: [21, 22, 10, 28, 16]
     }],
+    markers: {
+        colors: ['#000000',]
+    },
+
     chart: {
         height: 350,
         type: 'bar',
@@ -10,7 +14,8 @@ var options = {
             click: function (chart, w, e) {
                 // console.log(chart, w, e)
             }
-        }
+        },
+        foreColor: '#ffffff'
     },
     colors: colors,
     plotOptions: {
@@ -23,7 +28,10 @@ var options = {
         enabled: false
     },
     legend: {
-        show: false
+        show: false,
+        style: {
+            colors: ["#000000"]
+        }
     },
     xaxis: {
         categories: [

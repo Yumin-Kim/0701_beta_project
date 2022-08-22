@@ -11,11 +11,15 @@
     />
     <script src="./lib/maplibre-grid.min.js"></script>
     <script src="./assets/js/vender/jquery.js"></script>
+    <script src="./src/global.js"></script>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"
     />
-    <link rel="stylesheet"  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"
+    />
 
     <link
       rel="stylesheet"
@@ -491,15 +495,14 @@ body {
 
     .sc-timeline-info {
       padding-top: 8px;
+      padding-left: 10px;
       flex-grow: 1;
     }
     .sc-timeline-title {
-      --fore-color: #000000;
-
       margin: 0;
-
-      color: var(--fore-color);
+      color: #ffffff;
       font-weight: 600;
+      padding-bottom: 8px;
     }
     .sc-timeline-details {
       display: flex;
@@ -508,6 +511,7 @@ body {
     }
     .sc-timeline-time {
       line-height: 1.6;
+      color: #ffffff;
     }
 
     .sc-timeline-duration {
@@ -687,38 +691,57 @@ body {
     button[sc-style*="block"] {
       width: 100%;
     }
+    body {
+      background-image: url("./assets/ecePageImage.png");
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+      background-size: cover;
+      width: 100vw;
+      height: 100vh;
+    }
+    h1 {
+      font-size: 24px;
+      color: #ffffff;
+    }
+    h3 {
+      color: #ffffff;
+    }
   </style>
   <body>
+    <div class="resourceTag">
+      <p>보유 자원</p>
+      <p>물 : 00 물 : 00 물 : 00 물 : 00</p>
+    </div>
     <div id="topBar">
       <h3 id="menu-toggle">Menu</h3>
       <ul id="menu">
         <li>
           <i class="sc-searchbox-placeholder-icon fas fa-home"></i>
-          <a href="./index.html">메인화면</a>
+          <a class="manuLinkTag" href="./index.html">메인화면</a>
         </li>
         <li>
           <i class="sc-searchbox-placeholder-icon fas fa-box-open"></i>
-          <a href="./ece4000.html">내땅보기</a>
+          <a class="manuLinkTag" href="./ece4000.html">내땅보기</a>
         </li>
         <li>
           <i class="sc-searchbox-placeholder-icon fas fa-chart-pie"></i>
-          <a href="./ece5000.html">채굴 통계</a>
+          <a class="manuLinkTag" href="./ece5000.html">채굴 통계</a>
         </li>
         <li>
           <i class="sc-searchbox-placeholder-icon fas fa-pen-square"></i
-          ><a href="./ece6000.html">채굴 기록</a>
+          ><a class="manuLinkTag" href="./ece6000.html">채굴 기록</a>
         </li>
         <li>
           <i class="sc-searchbox-placeholder-icon fas fa-credit-card"></i>
-          <a href="./ece8000.html">구매하기</a>
+          <a class="manuLinkTag" href="./ece8210.html">구매하기</a>
         </li>
         <li>
           <i class="sc-searchbox-placeholder-icon fas fa-address-card"></i>
-          <a href="./ece7000.html">내정보</a>
+          <a class="manuLinkTag" href="./ece7000.html">내정보</a>
         </li>
         <li>
           <i class="sc-searchbox-placeholder-icon fas fa-sign-out"></i>
-          <a href="./ece7000.html">로그아웃</a>
+          <a class="manuLinkTag" href="./ece7000.html">로그아웃</a>
         </li>
       </ul>
     </div>
@@ -727,55 +750,105 @@ body {
         <h1>채굴 통계</h1>
         <div id="chart"></div>
       </div>
-      <div class="row_margin">
+      <div class="row_margin" style="height: 55vh">
         <h1>총 채굴 정보</h1>
-        <div style="margin-bottom: 30px;">
+        <div style="margin-bottom: 30px">
           <div class="sc-timeline-item" event="launch">
-            <i class="sc-timeline-icon fas fa-dice-d6"></i> 
-            <div class="sc-timeline-info">
+            <i
+              class="sc-timeline-icon"
+              style="
+                background-image: url('./assets/watericon.png');
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: cover;
+              "
+            ></i>
+            <div
+              class="sc-timeline-info"
+              style="background: #5786ff4d; color: #ffffff"
+            >
               <div class="sc-timeline-details">
                 <span class="sc-timeline-time">물</span>
-                <span class="sc-timeline-duration">2022.07.04<span>
               </div>
               <h3 class="sc-timeline-title">100</h3>
             </div>
           </div>
           <div class="sc-timeline-item" event="launch">
-            <i class="sc-timeline-icon fas fa-water"></i> 
-            <div class="sc-timeline-info">
+            <i
+              class="sc-timeline-icon"
+              style="
+                background-image: url('./assets/wood.png');
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: cover;
+              "
+            ></i>
+            <div
+              class="sc-timeline-info"
+              style="background: #cfaf3d3d; color: #ffffff"
+            >
               <div class="sc-timeline-details">
                 <span class="sc-timeline-time">목재</span>
-                <span class="sc-timeline-duration">2022.07.04<span>
               </div>
               <h3 class="sc-timeline-title">100</h3>
             </div>
           </div>
           <div class="sc-timeline-item" event="launch">
-            <i class="sc-timeline-icon fas fa-tree"></i> 
-            <div class="sc-timeline-info">
+            <i
+              class="sc-timeline-icon"
+              style="
+                background-image: url('./assets/ironstone.png');
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: cover;
+              "
+            ></i>
+            <div
+              class="sc-timeline-info"
+              style="background: #9d9d9d4f; color: #ffffff"
+            >
               <div class="sc-timeline-details">
                 <span class="sc-timeline-time">철광석</span>
-                <span class="sc-timeline-duration">2022.07.04<span>
               </div>
               <h3 class="sc-timeline-title">100</h3>
             </div>
           </div>
           <div class="sc-timeline-item" event="launch">
-            <i class="sc-timeline-icon fas fa-mountain"></i> 
-            <div class="sc-timeline-info">
+            <i
+              class="sc-timeline-icon"
+              style="
+                background-image: url('./assets/coal.png');
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: cover;
+              "
+            ></i>
+            <div
+              class="sc-timeline-info"
+              style="background: #fd464649; color: #ffffff"
+            >
               <div class="sc-timeline-details">
                 <span class="sc-timeline-time">석탄</span>
-                <span class="sc-timeline-duration">2022.07.04<span>
               </div>
               <h3 class="sc-timeline-title">100</h3>
             </div>
           </div>
           <div class="sc-timeline-item" event="launch">
-            <i class="sc-timeline-icon fas fa-layer-group"></i> 
-            <div class="sc-timeline-info">
+            <i
+              class="sc-timeline-icon"
+              style="
+                background-image: url('./assets/cr.png');
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: cover;
+              "
+            ></i>
+            <div
+              class="sc-timeline-info"
+              style="background: #41d22b43; color: #ffffff"
+            >
               <div class="sc-timeline-details">
                 <span class="sc-timeline-time">크립토나이트</span>
-                <span class="sc-timeline-duration">2022.07.04<span>
               </div>
               <h3 class="sc-timeline-title">100</h3>
             </div>

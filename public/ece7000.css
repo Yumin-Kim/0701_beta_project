@@ -251,16 +251,14 @@ header.collapsing-parallax + .site-main {
   transition: 0.3s ease-in-out background;
 }
 .cardviewbtn {
+  border: #bcfff39e 1px solid;
   font-size: 16px;
   font-family: Helvetica, Arial, sans-serif;
   font-weight: normal;
   color: #ffffff;
   text-decoration: none;
-  background-color: #5d9cec;
-  border-top: 8px solid #5d9cec;
-  border-bottom: 8px solid #5d9cec;
-  border-left: 25px solid #5d9cec;
-  border-right: 25px solid #5d9cec;
+  background-color: #99e7ff24;
+  width: 150px;
   border-radius: 3px;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
@@ -278,11 +276,9 @@ header.collapsing-parallax + .site-main {
   font-weight: normal;
   color: #ffffff;
   text-decoration: none;
-  background-color: #f85858;
-  border-top: 8px solid #f85858;
-  border-bottom: 8px solid #f85858;
-  border-left: 25px solid #f85858;
-  border-right: 25px solid #f85858;
+  border: #bcfff39e 1px solid;
+  background-color: #99e7ff24;
+  width: 150px;
   border-radius: 3px;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
@@ -660,13 +656,13 @@ button[sc-style*="block"] {
 }
 .cardviewbtn_w100 {
   width: 100%;
+  border: #bcfff39e 1px solid;
   font-size: 16px;
   font-family: Helvetica, Arial, sans-serif;
   font-weight: normal;
   color: #ffffff;
-  border: 0px;
   text-decoration: none;
-  background-color: #5d9cec;
+  background-color: #99e7ff24;
   border-radius: 3px;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;

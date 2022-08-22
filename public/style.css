@@ -34,16 +34,17 @@ body {
 #topBar{
   position: relative;
   width: 100%;
-  height: 60px;
-  background-color: #4fbfff;
+  height: 75px;
+  /* background-color: #4fbfff; */
 }
 #menu, .sub-menu {
   display: none;
   list-style: none;
 }
 #menu{
-  background:#4fbfff;
-  width : 50%;
+  /* background:#ff554f; */
+  background-image: url("./assets/ece2000_menu.png");
+  width : 60%;
   position:absolute;
   z-index: 10;
   height: 100vh;
@@ -51,7 +52,7 @@ body {
 }
 #menu-toggle{
   position: absolute;
-  top: 0%;
+  top: 13%;
   left: 4%;
 }
 /*Change toggle size by adjusting width & height*/
@@ -68,7 +69,7 @@ body {
   top: 0;
   left: 0;
   width: 100%;
-  height: 20%;
+  height: 8%;
   -webkit-transition:all .2s;
    -moz-transition:all .2s;
      -o-transition:all .2s;
@@ -440,4 +441,22 @@ body {
 }
 .z-indexMap{
   opacity: 0.1;
+}
+.resourceTag{
+  position: absolute;
+        color: #fff;
+        z-index: 100;
+        margin: 0 auto;
+        width: 59vw;
+        box-sizing: border-box;
+        padding: 8px 0;
+        height: 6vh;
+        top: 10px;
+        left: 50%;
+        transform: translate(-50%, 0%);
+        background: #57f5ff33;
+}
+.resourceTag p{
+  text-align: center;
+  margin :0;
 }
