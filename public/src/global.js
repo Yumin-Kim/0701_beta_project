@@ -2,7 +2,8 @@
  * 전역 변수
  */
 const member = location.search.replaceAll("?", "").split("=")[1];
-const serverURL = "http://localhost:3000"
+// const serverURL = "http://localhost:3000"
+const serverURL = "http://13.209.96.192:3000"
 window.onload = () => {
     const aLinkTag = document.getElementsByClassName("manuLinkTag")
     Array(aLinkTag.length).fill().forEach((v, i) => {
