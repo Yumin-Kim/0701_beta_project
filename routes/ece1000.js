@@ -7,11 +7,10 @@ const router = require("express").Router()
 /**
  * 세션확인
  */
-router.post("/ece1100", async (req, res) => {
+router.get("/", async (req, res) => {
     try {
-        const { member } = req.query;
-        if (member === undefined) throw new Error(intergrateMSG.failure)
-
+        const data = await executeQuery(`select * from Code`)
+        res.send(resultResponseFormat({ status: 1310, msg: "코드 테이블 조회 성공", data }))
     } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
     }

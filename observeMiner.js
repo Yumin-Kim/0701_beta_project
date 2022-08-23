@@ -47,7 +47,7 @@ function miningLogic({ minerCount }) {
     return Math.floor(mainLogic(Math.floor(Math.random() * unixTime)) * minerCount);
 }
 (async () => {
-    const j = await schedule.scheduleJob(TIMER_1H, async () => {
+    const j = await schedule.scheduleJob(TIMER_30S, async () => {
         const instance = await dbPool.getConnection(async conn => conn)
         await interval_mining({ instance });
     });

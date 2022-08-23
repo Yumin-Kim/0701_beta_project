@@ -7,6 +7,7 @@ const logger = require("morgan")
  * 사용자 정의 
  */
 const { executeQuery } = require("./config/db.js");
+const ece1000Router = require("./routes/ece1000.js")
 const ece2000Router = require("./routes/ece2000.js")
 const ece3000Router = require("./routes/ece3000.js")
 const ece4000Router = require("./routes/ece4000.js")
@@ -29,6 +30,7 @@ app.use(express.static("public"))
 app.use(logger('combined'))
 /** */
 app.use(swaggerRouter)
+app.use("/ece1000", ece1000Router)
 app.use("/ece2000", ece2000Router)
 app.use("/ece3000", ece3000Router)
 app.use("/ece4000", ece4000Router)

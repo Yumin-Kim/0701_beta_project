@@ -71,8 +71,8 @@ module.exports = {
     (select transaction from Transactions where action = 7224 and member = ${member}) as t
     on rt.transaction = t.transaction where member = ${member} and rt.transaction is not null group by rt.resource;`,
     ece6100: {
-        findTransactionByResoureceTransactions: ({ member }) => `SELECT DATE_FORMAT(createdt, '%Y%m%d') as createdt,transaction,extracode1 as 'tileCount' , extracode2 as 'minerCount'  FROM Transactions where action = 7224 and member = ${member} group by createdt , transaction order by  transaction desc;`,
-        findResourceTrnsactionByResouce: ({ transaction }) => `SELECT * FROM  ResourceTransactions where transaction =${transaction}`
+        findTransactionByResoureceTransactions: ({ member }) => `SELECT DATE_FORMAT(createdt, '%Y.%m.%d') as createdt,transaction,extracode1 as 'tileCount' , extracode2 as 'minerCount'  FROM Transactions where action = 7224 and member = ${member} group by createdt , transaction order by  transaction desc;`,
+        findResourceTrnsactionByResouce: ({ transaction }) => `SELECT resource,amount,tiles,minercount FROM  ResourceTransactions where transaction =${transaction}`
     },
     ece7100: ({ member }) => `select member, email,firstname,lastname,walletaddress,gender from Members where member = ${member}`,
     ece7200: {

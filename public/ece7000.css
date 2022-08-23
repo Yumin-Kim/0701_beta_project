@@ -352,8 +352,6 @@ a {
 .sc-searchbox-field {
   height: 42px;
   width: 100%;
-  padding: 16px 16px 16px 48px;
-
   background-color: rgba(0, 0, 0, 0.05);
   border-radius: 40px;
   border: 0;

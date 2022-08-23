@@ -17,6 +17,14 @@ router.post("/sellerinfo_miner", async (req, res) => {
 router.get("/buytiles", async (req, res) => {
     const data = await executeQuery(sql.xrpWebsocket.updateTileByAllMember_NoCash());
     res.send(resultResponseFormat({ data, status: 1310, msg: "타일 구매 정보 업데이트" }))
+})
+
+
+router.get("/buytiles_rev", async (req, res) => {
+    const a = await executeQuery('select extrastr3 from Transactions where action = 7131')
+    console.log(a);
+    // const data = await executeQuery(sql.xrpWebsocket.updateTileByAllMember_NoCash());
+    // res.send(resultResponseFormat({ data, status: 1310, msg: "타일 구매 정보 업데이트" }))
 
 })
 // router.get("/")

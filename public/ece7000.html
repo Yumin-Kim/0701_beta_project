@@ -21,6 +21,39 @@
   </head>
   <link rel="stylesheet" href="./ece7000.css" />
   <style>
+    .sc-searchbox {
+      position: relative;
+    }
+    .sc-searchbox-field {
+      border-radius: 0;
+      height: 42px;
+      width: 100%;
+      background-color: #57f5ff75;
+      border: 0;
+      outline: aliceblue;
+      color: #fff;
+    }
+    .sc-searchbox-placeholder {
+      position: absolute;
+      color: #fff;
+      display: flex;
+
+      height: 100%;
+      width: 100%;
+      align-items: center;
+      justify-content: center;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      transition: ease-in-out 0.2s;
+    }
+    .selectBtn {
+      border: #bcfff3 2px solid;
+    }
+    .alert {
+      color: #57f5ff;
+      display: none;
+    }
     body {
       background-image: url("./assets/ecePageImage.png");
       background-attachment: fixed;
@@ -41,7 +74,7 @@
   <body>
     <div class="resourceTag">
       <p>보유 자원</p>
-      <p>물 : 00 물 : 00 물 : 00 물 : 00</p>
+      <p id="resourceText">물 : 00 물 : 00 물 : 00 물 : 00</p>
     </div>
     <div id="topBar">
       <h3 id="menu-toggle">Menu</h3>
@@ -80,15 +113,39 @@
       <div class="row_margin">
         <h1>내정보</h1>
         <h3>이메일</h3>
-        <p>Test@gmail.com</p>
+        <div class="sc-searchbox">
+          <input type="email" id="email" class="sc-searchbox-field" />
+          <div class="sc-searchbox-placeholder"></div>
+          <div style="background-color: #94e5ff; height: 1px"></div>
+          <p class="alert" id="erroremail">이메일을 입력해주세요</p>
+        </div>
         <h3>성</h3>
-        <p>홍</p>
+        <div class="sc-searchbox">
+          <input type="text" id="firstname" class="sc-searchbox-field" />
+          <div class="sc-searchbox-placeholder"></div>
+          <div style="background-color: #94e5ff; height: 1px"></div>
+          <p class="alert" id="errorfirstname">성을 입력해주세요</p>
+        </div>
         <h3>이름</h3>
-        <p>길동</p>
+        <div class="sc-searchbox">
+          <input type="text" id="lastname" class="sc-searchbox-field" />
+          <div class="sc-searchbox-placeholder"></div>
+          <div style="background-color: #94e5ff; height: 1px"></div>
+          <p class="alert" id="errorlastname">이름을 입력해주세요</p>
+        </div>
         <h3>성별</h3>
         <div>
-          <button type="button" class="cardviewbtn">남성</button>
-          <button type="button" class="cardviewbtn_right">여성</button>
+          <button type="button" value="9211" id="btn9211" class="cardviewbtn">
+            남성
+          </button>
+          <button
+            type="button"
+            value="9212"
+            id="btn9212"
+            class="cardviewbtn_right"
+          >
+            여성
+          </button>
         </div>
         <button
           type="button"
@@ -97,17 +154,13 @@
         >
           메인 페이지
         </button>
-        <button
-          type="button"
-          id="updatememberInfo"
-          onclick="test()"
-          class="cardviewbtn_w100"
-        >
+        <button type="button" id="updatememberInfo" class="cardviewbtn_w100">
           변경
         </button>
       </div>
     </div>
     <script src="./main.js"></script>
     <script src="./src/jquery_main.js"></script>
+    <script src="./src/eceFolder/ece7000.js"></script>
   </body>
 </html>

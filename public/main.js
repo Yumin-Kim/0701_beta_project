@@ -6,28 +6,9 @@ const endPointLng = 127.00601;
 const point_lng = (endPointLng - startLng) / 0.00009;
 const point_lat_floor = Math.floor(point_lat);
 const point_lng_floor = Math.floor(point_lng);
-let centerLocation = { lng: 126.46573, lat: 33.50650 }
 let toggle = 0;
-function AJAXRequestMethod({ method, requestURL, data }) {
-  return new Promise((res, rej) => {
-    const XHR = new XMLHttpRequest();
-    XHR.open(method, requestURL);
-    XHR.setRequestHeader("Content-Type", "application/json");
-    XHR.send(JSON.stringify(data));
-    XHR.onreadystatechange = target => {
-      try {
-        if (XHR.status === 200 && XHR.response.trim() !== "" && XHR.readyState == 4) {
-          res(JSON.parse(XHR.response));
-        }
-      } catch (error) {
-        console.log(XHR.response);
-        console.log(error)
-      }
-    };
-  });
-}
 const a = parseTile({ lng: 126.46573, lat: 33.50650 })
-console.log(a);
+console.log(centerPoint);
 
 
 mapboxgl.accessToken =
@@ -35,9 +16,8 @@ mapboxgl.accessToken =
 const map = new mapboxgl.Map({
   container: "map",
   style: "mapbox://styles/mapbox/satellite-streets-v11",
-  center: [126.46573,
-    33.50650],
-  zoom: 18,
+  center: centerPoint,
+  zoom: 17.5,
 });
 map.addControl(new mapboxgl.NavigationControl(), "bottom-right");
 

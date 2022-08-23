@@ -691,7 +691,7 @@
   <body>
     <div class="resourceTag">
       <p>보유 자원</p>
-      <p>물 : 00 물 : 00 물 : 00 물 : 00</p>
+      <p id="resourceText">물 : 00 물 : 00 물 : 00 물 : 00</p>
     </div>
     <div id="topBar">
       <h3 id="menu-toggle">Menu</h3>
@@ -729,12 +729,12 @@
     <div id="contents">
       <div class="row_margin">
         <h1>내땅보기</h1>
-        <h3>닉네임 : Guest</h3>
-        <h4>현재 타일 수량 : Made up of 100 tiles</h4>
-        <p class="sc-timeline-details">
+        <h3 id="name">닉네임 : Guest</h3>
+        <h4 id="tilecount">현재 타일 수량 : Made up of 100 tiles</h4>
+        <!-- <p class="sc-timeline-details">
           <span class="sc-timeline-time">구매가 : 40000 USD</span>
           <span class="sc-timeline-duration">현재가 : 30000 USD</span>
-        </p>
+        </p> -->
         <h4>검색기능</h4>
         <div class="sc-searchbox">
           <input required type="text" class="sc-searchbox-field" />
@@ -742,8 +742,15 @@
           <div style="background-color: #94e5ff; height: 1px"></div>
         </div>
       </div>
-      <div class="row">
-        <div class="cardview">
+      <div class="row" id="ece4000">
+        <div id="" class="cardview">
+          <section class="content">
+            <h1 style="text-align: center; font-size: 18px">
+              구매한 타일이 존재하지 않습니다.
+            </h1>
+          </section>
+        </div>
+        <!-- <div class="cardview">
           <img
             style="
               background-image: url(https://images.unsplash.com/photo-1509395062183-67c5ad6faff9?ixlib=rb-0.3.5&q=85&fm=jpg&crop=entropy&cs=srgb&ixid=eyJhcHBfaWQiOjE0NTg5fQ&s=c1bf7fae077ff9688f62d7a89487a343);
@@ -775,10 +782,11 @@
             </p>
             <a href="#">READ MORE</a>
           </section>
-        </div>
+        </div> -->
       </div>
     </div>
     <script src="./main.js"></script>
     <script src="./src/jquery_main.js"></script>
+    <script src="./src/eceFolder/ece4000.js"></script>
   </body>
 </html>

@@ -224,7 +224,7 @@
   <body>
     <div class="resourceTag">
       <p>보유 자원</p>
-      <p>물 : 00 물 : 00 물 : 00 물 : 00</p>
+      <p id="resourceText">물 : 00 물 : 00 물 : 00 물 : 00</p>
     </div>
     <div id="topBar">
       <h3 id="menu-toggle">Menu</h3>
@@ -276,12 +276,12 @@
       <div class="row_margin">
         <div class="ece8220_txt">
           <h3>채굴기 구매 수량</h3>
-          <h4>100</h4>
+          <h4 id="miner">100</h4>
           <h3>전송 XRP 가격</h3>
-          <p>100XRP</p>
+          <p id="xrp">100XRP</p>
           <h3>Destination Tag</h3>
-          <p>rsG1sNifXJxGS2nDQ9zHyoe1S5APrtwpjV</p>
-          <p style="color: #57f4ffdf; font-style: bold">
+          <p id="admin">rsG1sNifXJxGS2nDQ9zHyoe1S5APrtwpjV</p>
+          <p style="color: #57f4ffdf; font-style: bold; font-size: 16px">
             위의 주소로 리플을 송금하세요.<br />
             Destination Tag 가 없는 거래는 확인되지 않습니다.<br />
             리플 지갑 사용시 확인 해 주세요.
@@ -298,6 +298,6 @@
     </div>
     <script src="./main.js"></script>
     <script src="./src/jquery_main.js"></script>
-    <script src="./src/chart.js"></script>
+    <script src="./src/eceFolder/ece8000.js"></script>
   </body>
 </html>

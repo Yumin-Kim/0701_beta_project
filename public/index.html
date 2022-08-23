@@ -31,7 +31,9 @@
         box-sizing: border-box;
         padding: 20px 20px;
         width: 70vw;
-        background-color: #ffffff;
+        /* background-color: #ffffff; */
+        color: #fff;
+        background-image: url("./assets/ecePageImage.png");
         border-radius: 8px;
         margin-top: 10px;
       }
@@ -42,7 +44,7 @@
       }
       .miningbox {
         z-index: 10;
-        border: #ffffff 4px solid;
+        border: #57f4ffa0 4px solid;
         position: absolute;
         right: 0;
         margin-top: 10px;
@@ -63,7 +65,7 @@
         font-weight: normal;
         color: #ffffff;
         text-decoration: none;
-        background-color: #5d9cec;
+        background-color: #57f5ff33;
         border: 0px;
         border-radius: 3px;
         -webkit-border-radius: 3px;
@@ -151,7 +153,7 @@
   <body>
     <div class="resourceTag">
       <p>보유 자원</p>
-      <p>물 : 00 물 : 00 물 : 00 물 : 00</p>
+      <p id="resourceText">물 : 00 물 : 00 물 : 00 물 : 00</p>
     </div>
     <div id="topBar">
       <h3 id="menu-toggle">Menu</h3>
@@ -194,8 +196,8 @@
       </div>
       <div class="floatDiv">
         <h3>ELC 제주 아일랜드 채굴기</h3>
-        <p>채굴 완료 까지 00:00 입니다</p>
-        <button class="cardviewbtn_index">채굴 완료</button>
+        <p style="font-size: 11px" id="timer">채굴 완료 까지 00:00 입니다</p>
+        <button id="mining" class="cardviewbtn_index">채굴 완료</button>
       </div>
     </div>
     <div id="snackbar">
@@ -254,5 +256,6 @@
       }
     </script>
     <script src="./src/map_script.js"></script>
+    <script src="./src/eceFolder/ece3000.js"></script>
   </body>
 </html>

@@ -4,7 +4,7 @@ map.on('movestart', (e) => {
         console.log(lat, lng);
         AJAXRequestMethod({
             method: "POST",
-            requestURL: `http://${serverURL}:3000/ece3000/ece3300`,
+            requestURL: `${serverURL}/ece3000/ece3300`,
             data: parseTile({ lng, lat })
         }).then((result) => {
             console.log(result);
