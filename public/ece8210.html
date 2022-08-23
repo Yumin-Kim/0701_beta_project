@@ -187,7 +187,7 @@
         </li>
         <li>
           <i class="sc-searchbox-placeholder-icon fas fa-sign-out"></i>
-          <a class="manuLinkTag" href="./ece7000.html">로그아웃</a>
+          <a onclick="console.log('logout')">로그아웃</a>
         </li>
       </ul>
     </div>
@@ -209,21 +209,18 @@
         <h3 class="ece8210_title">채굴기 구매 기록</h3>
         <div class="ece8210_history_template">
           <div class="ece8210_history">
+            <span style="text-align: center; display: block"
+              >구매 내역이 존재하지 않습니다.</span
+            >
+          </div>
+          <!-- <div class="ece8210_history">
             <span style="float: left">2022.07.04</span>
             <span style="float: right">
               <span>10개</span>
               <span>100XRP</span>
               <h4>승인완료</h4>
             </span>
-          </div>
-          <div class="ece8210_history">
-            <span style="float: left">2022.07.04</span>
-            <span style="float: right">
-              <span>10개</span>
-              <span>100XRP</span>
-              <h4>승인완료</h4>
-            </span>
-          </div>
+          </div> -->
         </div>
         <h3 class="ece8210_title">* 채굴기 수량 입력</h3>
         <div class="container">
@@ -250,7 +247,12 @@
             </p>
           </div>
         </div>
-        <button type="button" id="ece8210_ece8220" class="cardviewbtn_w100">
+        <button
+          type="button"
+          style="margin-bottom: 30px"
+          id="ece8210_ece8220"
+          class="cardviewbtn_w100"
+        >
           구매하기
         </button>
       </div>

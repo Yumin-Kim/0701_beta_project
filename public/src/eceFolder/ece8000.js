@@ -16,6 +16,16 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
         }
         $('#resourceText').text(bannerList)
         await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece3000/ece3500?member=${member}` })
+        let sellMinerList = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8211?member=${member}` })
+        if (sellMinerList.data.length !== 0) {
+            sellMinerList = sellMinerList.data
+            sellMinerList = sellMinerList.map((v) => {
+                return innerHTML_MinerHistory({ createdt: v.createdt.split("T")[0], status: selectCodeNameTpCodeTable({ data, codeName: v.action }), xrp: v.xrp, minerCount: v.minercount })
+            })
+            sellMinerList = sellMinerList.join(",").replaceAll(",", "")
+            $(".ece8210_history_template").html(sellMinerList)
+        }
+        console.log(sellMinerList);
         $("#ece8210_ece8220").click(async () => {
             console.log("asdasd");
             const address = $("#address").val()
@@ -64,5 +74,20 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
 
         }
     })
-
-
+//     return `<div class="ece8210_history">
+//     <span style="float: left">${createdt}</span>
+//     <span style="float: right">
+//       <span style="font-size:12px">${minerCount}</span>
+//       <span style="font-size:12px">${xrp}XRP</span>
+//       <h4>${status}</h4>
+//     </span>
+//   </div>`
+function innerHTML_MinerHistory({ createdt, status, xrp, minerCount }) {
+    return `<div class="ece8210_history">
+            <span style="float: left">${createdt}</span>
+            <span style="float: right">
+              <span style="font-size:12px">${xrp}XRP</span>
+              <h4>${status.slice(4)}</h4>
+            </span>
+          </div>`
+}

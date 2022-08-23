@@ -71,6 +71,16 @@ router.get("/ece8210", async (req, res) => {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
     }
 })
+router.get("/ece8211", async (req, res) => {
+    try {
+        const { member } = req.query;
+        if (member === undefined) throw new Error(intergrateMSG.failure)
+        const data = await executeQuery(`select action,extracode1,extracode2 as "xrp",extrastr1 as "minercount" ,createdt from Transactions where action in (7211 , 7212) and member = ${member} order by transaction desc`)
+        res.send(resultResponseFormat({ data, status: 1310, msg: ece8000.ece8210.success }))
+    } catch (error) {
+        res.send(resultResponseFormat({ status: 1320, msg: error.message }))
+    }
+})
 router.post("/ece8220", async (req, res) => {
     try {
         const { member } = req.query;
