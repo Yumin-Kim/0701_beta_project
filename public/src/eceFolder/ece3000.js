@@ -75,6 +75,7 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                         return `${description}: ${v.amount}`
                     })
                     bannerList = bannerList.join(",").replaceAll(",", " ")
+                    $('#resourceText').text(bannerList)
                 }
             }
             $("#mining").css("display", "none")

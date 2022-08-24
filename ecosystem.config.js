@@ -3,6 +3,12 @@ module.exports = {
     name: "elc_application",
     script: 'npm',
     args: "start",
+  }, {
+    name: "elc_miner",
+    script: "./observeMiner.js",
+    env: {
+      "NODE_ENV": "PRD"
+    },
   }],
 
   // deploy : {

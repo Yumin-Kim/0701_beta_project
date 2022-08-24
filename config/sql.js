@@ -62,7 +62,7 @@ module.exports = {
     ece3500: {
         findByMemberResource: ({ member }) => `select sum(rt.amount) as 'amount',rt.resource from ResourceTransactions as rt left join 
         (select transaction from Transactions where action = 7224 and member = ${member}) as t
-        on rt.transaction = t.transaction where member = ${member} and rt.transaction is not null group by rt.resource;`,
+        on rt.transaction = t.transaction where member = ${member} and rt.transaction is not null and t.transaction is not null group by rt.resource;`,
         findMemberByMinerAndTiles: ({ member }) => `(select sum(extracode2) as 'amount',action from Transactions where member = ${member} and action = 7132)
         union all
         (select sum(extrastr1) as 'amount' , action from Transactions where member = ${member} and action = 7212)`,

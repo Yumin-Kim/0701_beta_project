@@ -2,7 +2,7 @@ const { executeQuery, dbPool } = require("./config/db.js")
 const sql = require("./config/sql.js")
 const schedule = require('node-schedule');
 const resouceList = [7501, 7502, 7503, 7504, 7601]
-const TIMER_30S = '59 * * * * *'
+const TIMER_1M = '59 * * * * *'
 const TIMER_1S = '1 * * * * *'
 const TIMER_1H = '59 59 * * * *'
 const interval_mining = async ({ instance }) => {
@@ -23,7 +23,7 @@ const interval_mining = async ({ instance }) => {
                 if (index === resouceList.length - 1) {
                     return ele[index] = `(${ele},${Math.floor(Math.random() * 3)},${resultMember.tileCount},${resultMember.minerCount},${resultMember.member},${transactionRow.insertId})`
                 } else {
-                    return ele[index] = `(${ele},${miningLogic({ minerCount: Number(resultMember.minerCount) }) * Number(resultMember.tileCount)},${resultMember.tileCount},${resultMember.minerCount},${resultMember.member},${transactionRow.insertId})`
+                    return ele[index] = `(${ele},${miningLogic({ minerCount: Number(resultMember.minerCount), tileCount: Number(resultMember.tileCount) })},${resultMember.tileCount},${resultMember.minerCount},${resultMember.member},${transactionRow.insertId})`
                 }
             })
             return resourceInsertQuery.join(",")
@@ -40,14 +40,18 @@ const interval_mining = async ({ instance }) => {
     await instance.release();
 }
 // 타일 갯수 평균 >> 상위 30프로는
-function miningLogic({ minerCount }) {
+function miningLogic({ minerCount, tileCount }) {
     if (minerCount === 0 || minerCount === undefined) return;
     const unixTime = Math.floor(new Date().getTime() / 1000)
     const mainLogic = (x) => x / unixTime
-    return Math.floor(mainLogic(Math.floor(Math.random() * unixTime)) * minerCount);
+    return Math.floor(mainLogic(Math.floor(Math.random() * unixTime) * minerCount * tileCount));
 }
 (async () => {
-    const j = await schedule.scheduleJob(TIMER_30S, async () => {
+    console.log(`=======================================`);
+    console.log(`[${process.env.NODE_ENV}] start mining`);
+    console.log(`Mining ${TIMER_1M}`);
+    console.log(`=======================================`);
+    const j = await schedule.scheduleJob(TIMER_1M, async () => {
         const instance = await dbPool.getConnection(async conn => conn)
         await interval_mining({ instance });
     });
