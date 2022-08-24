@@ -49,9 +49,9 @@ function miningLogic({ minerCount, tileCount }) {
 (async () => {
     console.log(`=======================================`);
     console.log(`[${process.env.NODE_ENV}] start mining`);
-    console.log(`Mining ${TIMER_1M}`);
+    console.log(`Mining ${TIMER_1H}`);
     console.log(`=======================================`);
-    const j = await schedule.scheduleJob(TIMER_1M, async () => {
+    const j = await schedule.scheduleJob(TIMER_1H, async () => {
         const instance = await dbPool.getConnection(async conn => conn)
         await interval_mining({ instance });
     });
