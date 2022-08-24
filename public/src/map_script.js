@@ -17,7 +17,7 @@ map.on('movestart', (e) => {
         }).catch((err) => {
             console.log(err);
         });
-    }, 1000)
+    }, 2000)
 });
 
 
