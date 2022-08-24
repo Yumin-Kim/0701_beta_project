@@ -10,7 +10,7 @@ const router = require("express").Router()
 router.post("/ece3300", async (req, res) => {
     const { width, height } = req.body
     const points = ece3300_getCenterPoint(width, height)
-    // console.log(points);
+    console.log(points);
     const getcenterLandquery = points.map(value => sql.ece3300.findLandsByAroundLand({ minLandIndex: value[0], maxLandIndex: value[1] }))
     let selectQuery = getcenterLandquery.join(",")
     selectQuery = selectQuery.replaceAll(",", " union all ")

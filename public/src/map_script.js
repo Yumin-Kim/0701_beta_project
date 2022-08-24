@@ -1,5 +1,6 @@
 map.on('movestart', (e) => {
-    setTimeout(() => {
+    console.log(map.getCenter());
+    const clearMapTimer = setTimeout(() => {
         let { lat, lng } = map.getCenter();
         console.log(lat, lng);
         AJAXRequestMethod({
@@ -7,6 +8,7 @@ map.on('movestart', (e) => {
             requestURL: `${serverURL}/ece3000/ece3300`,
             data: parseTile({ lng, lat })
         }).then((result) => {
+            clearTimeout(clearMapTimer)
             console.log(result);
             let { data } = result;
             const geoJSON = data.reduce((prev, cur) => {

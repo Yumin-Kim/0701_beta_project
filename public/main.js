@@ -454,7 +454,7 @@ function selectedTilesCustom_classname(bboxes, className) {
 
   const newSelectedCells = [...tempSelectedCells];
   console.log("SelectedTitles");
-  console.log(newSelectedCells);
+  console.log(`select tiles length ${newSelectedCells.length}`);
   const source = map.getSource(className);
   source.setData({
     type: "FeatureCollection",
