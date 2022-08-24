@@ -450,11 +450,14 @@ body {
         width: 71vw;
         box-sizing: border-box;
         padding: 8px 0;
-        height: 6vh;
+        height: 7vh;
         top: 10px;
         left: 50%;
         transform: translate(-50%, 0%);
         background: #57f5ff33;
+}
+#resourceText{
+  font-size: 10px;
 }
 .resourceTag p{
   text-align: center;

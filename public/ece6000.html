@@ -176,6 +176,17 @@
       <div class="row_margin">
         <h1>채굴 기록</h1>
         <div id="template"></div>
+        <div
+          class="notebooks"
+          ng-app="notebooks"
+          ng-controller="NotebookListCtrl"
+        >
+          <ul id="notebook_ul">
+            <li>
+              <p>채굴 기록이 존재하지 않습니다.</p>
+            </li>
+          </ul>
+        </div>
         <!-- <div
           class="notebooks"
           ng-app="notebooks"
