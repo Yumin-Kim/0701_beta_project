@@ -21,8 +21,8 @@ if (querystring.split("=").length > 2) {
 } else {
     centerLocation = { lng: 126.46573, lat: 33.50650 }
 }
-const serverURL = "http://localhost:3000";
-// const serverURL = "http://13.209.96.192:3000"
+// const serverURL = "http://localhost:3000";
+const serverURL = "http://13.209.96.192:3000"
 function AJAXRequestMethod({ method, requestURL, data }) {
     return new Promise((res, rej) => {
         const XHR = new XMLHttpRequest();

@@ -5,7 +5,7 @@ const endPointLng = 127.00601;
 const sliceNumber = 0.00009
 const point_lat = Math.round(Number((endPointLat - startLat).toFixed(5)) / sliceNumber)
 const point_lng = Math.round(Number((endPointLng - startLng).toFixed(5)) / sliceNumber);
-const distance = 50;
+const distance = 100;
 // 3888
 // 4414
 

@@ -41,6 +41,8 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
             })
             innerHTMLText = innerHTMLText.join(",").replace(",", "")
             $("#template").html(innerHTMLText)
+        } else {
+            $("#ece6000_txt").text("채굴한 내역이 존재하지 않습니다.")
         }
     })
 
