@@ -4,7 +4,7 @@ const { resultResponseFormat, resultMSG } = require("../config/result.js");
 const sql = require("../config/sql.js");
 const { ece2000, intergrateMSG } = resultMSG
 const router = require("express").Router()
-const MAINSENDER = "dbals0@naver.com"
+const MAINSENDER = ' ecoinsbay" <ecoinsbay@ecoinsbay.net>'
 const SENDMAILTITLE = "ELC Miner on our jejuiland 인증 코드"
 /**
  * 이메일 인증 코드 요청

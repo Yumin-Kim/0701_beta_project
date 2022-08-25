@@ -33,7 +33,7 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                         let minutes = today.getMinutes();  // 분
                         let seconds = today.getSeconds();  // 초
                         $("#timer").text(`채굴 완료 까지 ${60 - Number(minutes)}:${60 - Number(seconds)} 남았습니다.`)
-                        if (60 - Number(minutes) < minerTimer) {
+                        if (minutes === 0 && seconds === 0) {
                             $("#timer").text("채굴하기를 눌러주세요")
                             $("#mining").css("display", "block")
                             clearInterval(clearTimer)
