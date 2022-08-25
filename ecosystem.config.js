@@ -9,6 +9,12 @@ module.exports = {
     env: {
       "NODE_ENV": "PRD"
     },
+  }, {
+    name: "elc_XRP_WS_Appliaction",
+    script: "./xrp.ws.js",
+    env: {
+      "NODE_ENV": "PRD"
+    }
   }],
 
   // deploy : {

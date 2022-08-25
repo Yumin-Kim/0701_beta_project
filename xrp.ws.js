@@ -1,82 +1,134 @@
-// 채굴기 구매시 구매승인 상태 변경
-// 토지 구매시 구매 승인 상태 변경 => 
 const WebSocket = require('ws');
 const xrpl = require('xrpl')
+const sql = require("./config/sql.js")
+const { executeQuery } = require("./config/db.js")
 /**
- * 계좌 조회
- * 해당 계좌 트랜잭션 유무 파악
- * 
+ * rUfu2PWiaaRPGW7xt17zHLJVcKnqeaoHVv
+ * rLdEdyo4YYMUaCAGwPJauDSiheoSdqxczM 
+ * rGHfaBmr2hvZwuDkFc8N2YCigo36BJ1yqd
  */
-// const generateXRP_wallet = {
-//     publicKey: 'EDEEE94E57402D49CF9020EBEE2F223D5412325C665227A03DC2AF489958565AF8',
-//     privateKey: 'ED3B82EDACC451FBA9649E0CEAB9770104E25E83FF9AF547FDBED29F865CC3F501',
-//     classicAddress: 'rLGEbCCZRTZcw7Wt7uGCP9VAUj9hCNf5uu',
-//     seed: 'sEdS1tXNWnvGD3eJsTzWcFHR8w15Y5K'
-// }
-async function main() {
-    const client = new xrpl.Client("wss://s.altnet.rippletest.net:51233")
-    await client.connect();
-    const fund_result = await client.fundWallet()
-    const test_wallet_fund = fund_result.wallet
-    // const test_wallet = xrpl.Wallet.generate()
-    const response = await client.request({
-        "command": "account_info",
-        "account": fund_result.wallet.address,
-        "ledger_index": "validated"
-    })
-    console.log(response);
-    client.request({
-        "command": "subscribe",
-        "streams": ["ledger"]
-    })
-    client.on("ledgerClosed", async (ledger) => {
-        console.log(`Ledger #${ledger.ledger_index} validated with ${ledger.txn_count} transactions!`)
-    })
-    // console.log(test_wallet);
-    // console.log(test_wallet_fund);
-    client.disconnect()
+const fundWalletTest = {
+    wallet: {
+        publicKey: 'EDABDFDF9AAE8B29ACE58806DBCDD68FAF48D3ED05B4595DAF9F6F15D24A3E7B96',
+        privateKey: 'ED53227ABE7E7862EA266789715CB616BC0087043FE83C752E5A84BC1BEFA4036B',
+        classicAddress: 'rs1ReurnZAWtc5HR44xSn2HgTxwFG24tE1',
+        seed: 'sEdTkywtuR2nU7WRa3ngEEbpQHBzAiY'
+    },
+    balance: 1000
 }
-async function do_subscribe() {
-    const sub_response = await api_request({
-        command: "subscribe",
-        accounts: ["rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe"]
-    })
-    if (sub_response.status === "success") {
-        console.log("Successfully subscribed!")
-    } else {
-        console.error("Error subscribing: ", sub_response)
-    }
+const generateWalletTest = {
+    wallet: {
+        publicKey: 'ED08806197E294D7689FE6BA8FD62F2FACB80C217E016D505764CAE60A5A46BE54',
+        privateKey: 'EDAE77442EA6EEB5E99CF12607B7A23A9A17537BC761A1DB314FECA50F2A1F978E',
+        classicAddress: 'rrpDRARtXvcQ26ZvHCPuC5fUYumvAe7UhX',
+        seed: 'sEdSvCwZh82XvHEfhzwt7xqGuQaYCuB'
+    },
+    balance: 1000
 }
-// Add do_subscribe() to the 'open' listener for socket
+const XRPWSURL = process.env.NODE_ENV !== "PRD" ? "wss://s.altnet.rippletest.net:51233" : "wss://s1.ripple.com:51233"
+let XRPWALLETADDRESS;
 
-const log_tx = function (tx) {
-    console.log(tx.transaction.TransactionType + " transaction sent by " +
-        tx.transaction.Account +
-        "\n  Result: " + tx.meta.TransactionResult +
-        " in ledger " + tx.ledger_index +
-        "\n  Validated? " + tx.validated)
-}
-// main()
 
-const ws = new WebSocket('wss://s.altnet.rippletest.net:51233', {
+const ws = new WebSocket(XRPWSURL, {
     perMessageDeflate: false
 });
-ws.on('open', function () {
-    console.log('connected');
-    const command = {
-        "id": "Example watch one account and all new ledgers",
-        "command": "subscribe",
-        "streams": [
-            "ledger"
-        ],
-        "accounts": [
-            "r3GghreSS8HhT84iVtfaQNER6N65Pv3hAn"
-        ]
-    }
-    ws.send(JSON.stringify(command));
-});
 
-ws.on('message', function (event) {
-    console.log('Got message from server:', JSON.parse(event))
-    const parsed_data = JSON.parse(event)
-});
+
+
+async function main() {
+    const client = new xrpl.Client(XRPWSURL)
+    await client.connect();
+    const test_wallet = await xrpl.Wallet.generate()
+    // const fund_result = await client.fundWallet()
+    const wallet1 = await xrpl.Wallet.fromSeed(test_wallet.seed)
+    // const wallet2 = xrpl.Wallet.fromSeed(fundWalletTest.wallet.seed)
+    console.log('wallet1 >>>', wallet1.address);
+    // let to = await client.getBalances("rwXh4bPAjbaRW6AuvBs1c7Rm9z8zm13FfG");
+
+    // console.log('wallet2 >>>', to);
+    // await sendTransaction({ client, wallet1, wallet2, price: "1000000" })
+    client.disconnect()
+    process.exit()
+}
+// main()
+(async () => {
+    const [data] = await executeQuery(sql.ece8210())
+    let { walletaddress, currentamount } = data
+    XRPWALLETADDRESS = walletaddress
+    currentamount = Number(currentamount) * 1000000
+    var to = "rUfu2PWiaaRPGW7xt17zHLJVcKnqeaoHVv";
+    var amount = 1
+    const requestMinerRecipt = await executeQuery(`select * from Transactions where action = 7211 and extrastr2 = '${to}' order by transaction desc`);
+    let selectMember = {};
+    const a = requestMinerRecipt.map((v) => {
+        if (v.extracode2 === amount) {
+            return { member: v.member, minerCount: v.extrastr1, amount: v.extrastr1, }
+        }
+    })
+    console.log(a);
+    // ws.on('open', function () {
+    //     console.log(`[XRP INFO Admin Address] ${XRPWALLETADDRESS}`);
+    //     console.log(`[XRP INFO URL] ${XRPWSURL}`);
+    //     const command = {
+    //         "id": "Example watch one account and all new ledgers",
+    //         "command": "subscribe",
+    //         "streams": [
+    //             "ledger"
+    //         ],
+    //         "accounts": [
+    //             XRPWALLETADDRESS
+    //         ]
+    //     }
+
+    //     ws.send(JSON.stringify(command));
+    // });
+
+    // ws.on('message', async (event) => {
+    //     const parsed_data = JSON.parse(event)
+    //     if (parsed_data.transaction !== undefined && parsed_data.type === "transaction") {
+    //         console.log("[WebSocket XRP]Sign Transaction");
+    //         const { Account: from, Amount: amount, Destination: to, hash: txHash, validated } = parsed_data.transaction
+
+    //         console.log(from);
+    //         console.log(amount);
+    //         console.log(to);
+    //         console.log(txHash);
+    //         // await executeQuery(`select `)
+    //     }
+    // });
+
+})()
+
+
+async function sendTransaction({ client, wallet1, wallet2, price }) {
+    let from = await client.getBalances(wallet1.address);
+    let to = await client.getBalances(wallet2.address);
+    console.log("===================Before Sign Transaction===============");
+    console.log(from);
+    console.log(to);
+    console.log("===================Before Sign Transaction===============");
+    const prepared = await client.autofill({
+        "TransactionType": "Payment",
+        "Account": wallet1.address,
+        "Amount": xrpl.xrpToDrops(price),
+        "Destination": wallet2.address
+    })
+    const max_ledger = prepared.LastLedgerSequence
+    console.log("Prepared transaction instructions:", prepared)
+    console.log("Transaction cost:", xrpl.dropsToXrp(prepared.Fee), "XRP")
+    console.log("Transaction expires after ledger:", max_ledger)
+
+
+    const signed = wallet1.sign(prepared)
+    console.log("Identifying hash:", signed.hash)
+    console.log("Signed blob:", signed.tx_blob)
+
+    const tx = await client.submitAndWait(signed.tx_blob)
+
+    console.log("Transaction result:", tx.result.meta.TransactionResult)
+    console.log("Balance changes:", JSON.stringify(xrpl.getBalanceChanges(tx.result.meta), null, 2))
+    from = await client.getBalances(wallet1.address);
+    to = await client.getBalances(wallet2.address);
+    console.log(from);
+    console.log(to);
+}
