@@ -28,13 +28,12 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                         }
                     })
                     resoureInner = resoureInner.join(",").replaceAll(",", "").replace("undefined", "");
-
                     let innerHTML_1 = textInnerHTML({ minerCount: defaultInfo.minerCount, tileCount: defaultInfo.tileCount, spAmount })
                     innerHTML_1 += resoureInner;
                     innerHTML_1 += endInnerHTML1();
                     return innerHTML_1
                 })
-                historyUlTag += historyUlTag.join(",").replace(",", "")
+                historyUlTag = historyUlTag.join(",").replaceAll(",", "")
                 title += historyUlTag
                 title += endulInnerHTM2()
                 return title

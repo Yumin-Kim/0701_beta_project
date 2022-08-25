@@ -52,7 +52,7 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
             }
             if (valid) {
                 const { data: adminInfo } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8210?member=${member}` })
-                const xrp = Number(adminInfo[0].currentamount) * minerCount
+                const xrp = (Number(adminInfo[0].currentamount) * minerCount).toFixed(2)
                 const requestMiner = await AJAXRequestMethod({ method: "POST", requestURL: `${serverURL}/ece8000/ece8220?member=${member}`, data: { miner: minerCount, xrp, address } })
                 if (requestMiner.status === 1310) {
                     console.log("rere");

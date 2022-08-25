@@ -42,8 +42,8 @@ router.get("/ece3401", async (req, res) => {
         if (member === undefined) throw new Error(intergrateMSG.failure)
         const instance = await dbPool.getConnection(async conn => conn)
         await instance.beginTransaction();
-        await executeQuery(sql.ece3400.insertRemainMiningTransaction({ member }))
-        const data = await executeQuery(sql.ece3400.findAllByCurrentMinigResource({ member }))
+        await instance.query(sql.ece3400.insertRemainMiningTransaction({ member }))
+        const [data] = await instance.query(sql.ece3400.findAllByCurrentMinigResource({ member }))
         instance.rollback();
         instance.release();
         if (data.length !== 0) {

@@ -65,7 +65,7 @@ module.exports = {
         on rt.transaction = t.transaction where member = ${member} and rt.transaction is not null and t.transaction is not null group by rt.resource;`,
         findMemberByMinerAndTiles: ({ member }) => `(select sum(extracode2) as 'amount',action from Transactions where member = ${member} and action = 7132)
         union all
-        (select sum(extrastr1) as 'amount' , action from Transactions where member = ${member} and action = 7212)`,
+        (select sum(extracode2) as 'amount' , action from Transactions where member = ${member} and action = 7212)`,
     },
     ece5100: ({ member }) => `select sum(rt.amount) as 'amount',rt.resource from ResourceTransactions as rt left join 
     (select transaction from Transactions where action = 7224 and member = ${member}) as t
@@ -101,11 +101,11 @@ module.exports = {
     /** 채굴기 구매 
      * action 채굴기 구매 요청
      * extracode1 리플 승인 대기
-     * extracode2 가격
-     * extrastr1 채굴기 갯수
+     * extracode2 채굴기 갯수
+     * extrastr1 리플 가격
      * extrastr2 사용자 지갑 명
      */
-    ece8220: ({ member, miner, xrp, memberAddress }) => `insert into Transactions (action , status,member,extracode1,extracode2,extrastr1,extrastr2) values (7211  , 1310 , ${member}, 6101 ,${xrp},${miner},'${memberAddress}' );`,
+    ece8220: ({ member, miner, xrp, memberAddress }) => `insert into Transactions (action , status,member,extracode1,extracode2,extrastr1,extrastr2) values (7211  , 1310 , ${member}, 6101 ,${miner},${xrp},'${memberAddress}' );`,
 
     /*
         임의 토지 구매
@@ -129,7 +129,7 @@ module.exports = {
     miner_buyToSuccessMiner: ({ member, miner, xrp }) => `insert into Transactions (action , status,member,extracode1,extrastr1,extrastr2) values (7212  , 1310 , ${member}, 6102 ,${miner},${xrp} );`,
     // miningToResource:()=>`insert ingo ResourceTrnasctions(action , status , member , )`
     miner_getMinerOnTiles: () => `    select t2.member , sum(t1.extracode2) as 'tileCount',t2.minerCount  from Transactions as t1 left join 
-    (select member , sum(convert(extrastr1 , signed)) as 'minerCount' from Transactions where action = 7212   group by member) as t2
+    (select member , sum(extracode2) as 'minerCount' from Transactions where action = 7212   group by member) as t2
     on t1.member = t2.member where t1.action = 7132  and t2.minerCount is not null  group by t1.member`,
     admin: {
         insertTileSellerInfo: ({ xrpWallet, xrp }) => `insert into Transactions (action ,status,extracode1,extrastr1,extrastr2) values(8201,1310,6520,'${xrpWallet}','${xrp}')`,

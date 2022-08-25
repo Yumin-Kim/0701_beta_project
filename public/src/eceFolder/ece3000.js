@@ -25,6 +25,7 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
             } else {
                 const { data } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece3000/ece3401?member=${member}` })
                 // 누적 채굴 X
+                console.log("test", data);
                 if (data.length === 0) {
                     $("#mining").css("display", "none")
                     const clearTimer = window.setInterval(() => {
@@ -38,7 +39,6 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                             clearInterval(clearTimer)
                         }
                     }, 1000)
-
                 } else {
                     $("#timer").text("채굴하기를 눌러주세요")
                 }
