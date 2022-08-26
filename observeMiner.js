@@ -5,7 +5,8 @@ const resouceList = [7501, 7502, 7503, 7504, 7601]
 const TIMER_1M = '59 * * * * *'
 const TIMER_1S = '1 * * * * *'
 const TIMER_1H = '59 59 * * * *'
-const CURRENT_CONFIG_TIME = TIMER_1H
+const CURRENT_CONFIG_TIME = TIMER_1M;
+
 const interval_mining = async ({ instance }) => {
     await instance.beginTransaction();
     const [selectContainByMiner] = await instance.query(sql.miner_getMinerOnTiles())

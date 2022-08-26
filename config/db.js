@@ -34,14 +34,14 @@ const executeQuery = async (dbquery) => {
     try {
         await instance.beginTransaction()
         const [result] = await instance.query(dbquery);
-        instance.commit();
+        await instance.commit();
         return result;
     } catch (error) {
         console.log(error)
-        instance.rollback();
+        await instance.rollback();
         process.exit()
     } finally {
-        instance.release()
+        await instance.release()
     }
 }
 const executeQueryList = async (sqlList) => {
