@@ -11,7 +11,7 @@ module.exports = {
     },
   }, {
     name: "elc_XRP_WS_Testnet_Application",
-    script: "./observeMiner.js"
+    script: "./xrp.ws.js"
   }
     // {
     //   name: "elc_XRP_WS_Appliaction",
