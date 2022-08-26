@@ -5,6 +5,7 @@ const resouceList = [7501, 7502, 7503, 7504, 7601]
 const TIMER_1M = '59 * * * * *'
 const TIMER_1S = '1 * * * * *'
 const TIMER_1H = '59 59 * * * *'
+const CURRENT_CONFIG_TIME = TIMER_1S
 const interval_mining = async ({ instance }) => {
     await instance.beginTransaction();
     const [selectContainByMiner] = await instance.query(sql.miner_getMinerOnTiles())
@@ -49,9 +50,9 @@ function miningLogic({ minerCount, tileCount }) {
 (async () => {
     console.log(`=======================================`);
     console.log(`[${process.env.NODE_ENV}] start mining`);
-    console.log(`Mining ${TIMER_1H}`);
+    console.log(`Mining ${CURRENT_CONFIG_TIME}`);
     console.log(`=======================================`);
-    const j = await schedule.scheduleJob(TIMER_1H, async () => {
+    const j = await schedule.scheduleJob(CURRENT_CONFIG_TIME, async () => {
         const instance = await dbPool.getConnection(async conn => conn)
         await interval_mining({ instance });
     });

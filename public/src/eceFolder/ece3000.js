@@ -25,18 +25,26 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
             } else {
                 const { data } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece3000/ece3401?member=${member}` })
                 // 누적 채굴 X
-                console.log("test", data);
                 if (data.length === 0) {
                     $("#mining").css("display", "none")
+                    let check = false;
                     const clearTimer = window.setInterval(() => {
                         let today = new Date();
                         let minutes = today.getMinutes();  // 분
                         let seconds = today.getSeconds();  // 초
-                        $("#timer").text(`채굴 완료 까지 ${60 - Number(minutes)}:${60 - Number(seconds)} 남았습니다.`)
-                        if (minutes === 0 && seconds === 0) {
+                        if (!check) {
+                            $("#timer").text(`채굴 완료 까지 ${60 - Number(minutes)}:${60 - Number(seconds)} 남았습니다.`);
+                            if (seconds === 59 && minutes === 59) {
+                                check = true;
+                                console.log("Check");
+                                console.log(check);
+                            }
+                        }
+                        else {
                             $("#timer").text("채굴하기를 눌러주세요")
                             $("#mining").css("display", "block")
                             clearInterval(clearTimer)
+
                         }
                     }, 1000)
                 } else {
@@ -79,16 +87,24 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                 }
             }
             $("#mining").css("display", "none")
-            console.log("Hello");
+            let check = false;
             const clearTimer = window.setInterval(() => {
                 let today = new Date();
                 let minutes = today.getMinutes();  // 분
                 let seconds = today.getSeconds();  // 초
-                $("#timer").text(`채굴 완료 까지 ${60 - Number(minutes)}:${60 - Number(seconds)} 남았습니다.`)
-                if (60 - Number(minutes) < minerTimer) {
+                if (!check) {
+                    $("#timer").text(`채굴 완료 까지 ${60 - Number(minutes)}:${60 - Number(seconds)} 남았습니다.`);
+                    if (seconds === 59 && minutes === 59) {
+                        check = true;
+                        console.log("Check");
+                        console.log(check);
+                    }
+                }
+                else {
                     $("#timer").text("채굴하기를 눌러주세요")
                     $("#mining").css("display", "block")
                     clearInterval(clearTimer)
+
                 }
             }, 1000)
         })
