@@ -24,7 +24,7 @@ router.post("/ece7200", async (req, res) => {
         }
         await executeQuery(sql.ece7200.updateMemberInfo({ member, email, lastname, firstname, walletaddress, gender }))
         const data = await executeQuery(sql.ece7200.findByMember({ member }))
-        res.send(resultResponseFormat({ status: 1310, msg: ece7000.ece7100.success, data }))
+        await res.send(resultResponseFormat({ status: 1310, msg: ece7000.ece7100.success, data }))
     } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
     }

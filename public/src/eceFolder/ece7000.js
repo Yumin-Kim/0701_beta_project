@@ -62,7 +62,8 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
             }
             if (valid) {
                 const updateMemberInfo = await AJAXRequestMethod({ method: "POST", requestURL: `${serverURL}/ece7000/ece7200?member=${member}`, data: { email, firstname, lastname, gender, walletaddress } })
-
+                $("#btn9211").removeClass("selectBtn")
+                $("#btn9212").removeClass("selectBtn")
                 $("#firstname").val(updateMemberInfo.data[0].firstname)
                 $("#lastname").val(updateMemberInfo.data[0].lastname)
                 $("#email").val(updateMemberInfo.data[0].email)

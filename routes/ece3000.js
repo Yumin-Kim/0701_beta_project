@@ -20,7 +20,7 @@ router.post("/ece3300", async (req, res) => {
         const location = convertArrayToLocation(width, height)
         return { land, blockLocation: [location[0], location[1], location[0] + 0.00009, location[1] - 0.00009], member, createdt, updatedt }
     })
-    res.json({ data, msg: ece3000.ece3200.msg })
+    await res.json({ data, msg: ece3000.ece3200.msg })
 })
 router.get("/ece3400", async (req, res) => {
     try {
@@ -30,7 +30,7 @@ router.get("/ece3400", async (req, res) => {
         const data = await executeQuery(sql.ece3400.findAllByCurrentMinigResource({ member }))
         if (data.length === 0) throw new Error(ece3000.ece3400.failure)
         await executeQuery(sql.ece3400.updateMiningResource({ member }))
-        res.send(resultResponseFormat({ data, msg: ece3000.ece3400.success, status: 1310 }))
+        await res.send(resultResponseFormat({ data, msg: ece3000.ece3400.success, status: 1310 }))
     }
     catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
@@ -47,9 +47,9 @@ router.get("/ece3401", async (req, res) => {
         instance.rollback();
         instance.release();
         if (data.length !== 0) {
-            res.send(resultResponseFormat({ data, msg: ece3000.ece3400.success, status: 1310 }))
+            await res.send(resultResponseFormat({ data, msg: ece3000.ece3400.success, status: 1310 }))
         } else {
-            res.send(resultResponseFormat({ data, msg: ece3000.ece3400.failure, status: 1320 }))
+            await res.send(resultResponseFormat({ data, msg: ece3000.ece3400.failure, status: 1320 }))
         }
     }
     catch (error) {
@@ -62,7 +62,7 @@ router.get("/ece3500", async (req, res) => {
         if (member === undefined) throw new Error(intergrateMSG.failure)
         const currentResoureList = await executeQuery(sql.ece3500.findByMemberResource({ member }));
         const getMemberTileAndMiner = await executeQuery(sql.ece3500.findMemberByMinerAndTiles({ member }))
-        res.send(resultResponseFormat({ data: { resoureList: currentResoureList, memberInfo: getMemberTileAndMiner }, status: 1310, msg: ece3000.ece3500.success }))
+        await res.send(resultResponseFormat({ data: { resoureList: currentResoureList, memberInfo: getMemberTileAndMiner }, status: 1310, msg: ece3000.ece3500.success }))
     }
     catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))

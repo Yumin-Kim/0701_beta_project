@@ -23,7 +23,7 @@ router.post("/ece2310", async (req, res) => {
             await executeQuery(sql.ece2310.insertEmailAuthCode({ email, code }))
         }
         const result = await sendMail({ from: MAINSENDER, to: email, code, subject: SENDMAILTITLE, router: "ece2310" })
-        res.send(resultResponseFormat({ status: 1310, msg: ece2000.ece2310.success, extraData: result }))
+        await res.send(resultResponseFormat({ status: 1310, msg: ece2000.ece2310.success, extraData: result }))
     }
     catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
@@ -40,9 +40,9 @@ router.post("/ece2320", async (req, res) => {
         const { status } = data;
         // 비회원
         if (status === 9110) {
-            res.send(resultResponseFormat({ data, msg: ece2000.ece2320.notFoundMember, status: 9110 }))
+            await res.send(resultResponseFormat({ data, msg: ece2000.ece2320.notFoundMember, status: 9110 }))
         } else {
-            res.send(resultResponseFormat({ data, msg: ece2000.ece2320.success, status: 9120 }))
+            await res.send(resultResponseFormat({ data, msg: ece2000.ece2320.success, status: 9120 }))
         }
     }
     catch (error) {
@@ -69,7 +69,7 @@ router.post("/ece2323", async (req, res) => {
         const [member] = await executeQuery(sql.ece2310.findByMember({ email }));
         if (member !== undefined) throw new Error(ece2000.ece2323.validEmail)
         const { affectedRows, insertId } = await executeQuery(sql.ece2323({ email, firstname, lastname, pin, gender }))
-        if (affectedRows === 1) res.send(resultResponseFormat({ data: { member: insertId }, msg: ece2000.ece2323.success, status: 1310 }))
+        if (affectedRows === 1) await res.send(resultResponseFormat({ data: { member: insertId }, msg: ece2000.ece2323.success, status: 1310 }))
         else new Error(ece2000.ece2323.faliure)
     } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
@@ -82,7 +82,7 @@ router.post("/ece2324", async (req, res) => {
     try {
         const { member } = req.body
         const [memberInfo] = await executeQuery(sql.ece2324({ member }))
-        res.send(resultResponseFormat({ data: memberInfo, msg: ece2000.ece2324.success, status: 1310 }))
+        await res.send(resultResponseFormat({ data: memberInfo, msg: ece2000.ece2324.success, status: 1310 }))
     } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: ece2000.ece2324.failure }))
     }
@@ -95,7 +95,7 @@ router.post("/ece2330", async (req, res) => {
         const { member, email, pin } = req.body
         const [data] = await executeQuery(sql.ece2330({ member, pin }))
         if (data !== undefined) {
-            res.send(resultResponseFormat({ data, status: 1310, msg: ece2000.ece2330.success }))
+            await res.send(resultResponseFormat({ data, status: 1310, msg: ece2000.ece2330.success }))
         } else {
             throw new Error(ece2000.ece2330)
         }
@@ -118,7 +118,7 @@ router.post("/ece2332", async (req, res) => {
             await executeQuery(sql.ece2332.insertEmailAuthCodeOnMember({ member, validEmail, code }))
             const result = await sendMail({ from: MAINSENDER, to: email, code, subject: SENDMAILTITLE, router: "ece2332" })
             console.log(code);
-            res.send(resultResponseFormat({ status: 1310, msg: ece2000.ece2332.success, extraData: result }))
+            await res.send(resultResponseFormat({ status: 1310, msg: ece2000.ece2332.success, extraData: result }))
         } else {
             throw new Error(ece2000.ece2332.failure)
         }
@@ -137,7 +137,7 @@ router.post("/ece2333", async (req, res) => {
         const [data] = await executeQuery(sql.ece2333({ code, email }))
         console.log(ece2000.ece2333.failure);
         if (data === undefined) throw new Error(ece2000.ece2333.failure)
-        res.send(resultResponseFormat({ data, msg: ece2000.ece2333.success, status: 1310 }))
+        await res.send(resultResponseFormat({ data, msg: ece2000.ece2333.success, status: 1310 }))
     }
     catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
@@ -153,7 +153,7 @@ router.post("/ece2334", async (req, res) => {
         const { affectedRows } = await executeQuery(sql.ece2334.updatePin({ pin, member }))
         if (affectedRows === undefined) throw new Error(ece2000.ece2334.failure)
         const [data] = await executeQuery(sql.ece2334.findByMember({ member }))
-        res.send(resultResponseFormat({ data, msg: ece2000.ece2334.success, status: 1310 }))
+        await res.send(resultResponseFormat({ data, msg: ece2000.ece2334.success, status: 1310 }))
     }
     catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
