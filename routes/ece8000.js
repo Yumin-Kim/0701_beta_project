@@ -84,20 +84,41 @@ router.get("/ece8211", async (req, res) => {
 router.post("/ece8220", async (req, res) => {
     try {
         const { member } = req.query;
-        const { miner, xrp, address } = req.body;
+        const { miner, xrp } = req.body;
         let memberAddress;
-        if (address === undefined) {
-            const [memberInfo] = await executeQuery(sql.utils.findByMember({ member }))
-            memberAddress = memberInfo.walletaddress
-        } else {
-            memberAddress = address;
-        }
         if (memberAddress === null) throw new Error(ece8000.ece8220.notFoundMemberXRPWallerAddress);
         if (member === undefined || miner === undefined || xrp === undefined) throw new Error(intergrateMSG.failure)
-        await executeQuery(sql.ece8220({ member, miner, xrp, memberAddress }))
-        res.send(resultResponseFormat({ status: 1310, msg: ece8000.ece8220.success }))
+        const code = generateRandomCode(9)
+        await executeQuery(sql.ece8220({ member, miner, xrp, code }))
+        res.send(resultResponseFormat({ status: 1310, msg: ece8000.ece8220.success, data: code }))
     } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
     }
 })
+// router.post("/ece8220", async (req, res) => {
+//     try {
+//         const { member } = req.query;
+//         const { miner, xrp, address } = req.body;
+//         let memberAddress;
+//         if (address === undefined) {
+//             const [memberInfo] = await executeQuery(sql.utils.findByMember({ member }))
+//             memberAddress = memberInfo.walletaddress
+//         } else {
+//             memberAddress = address;
+//         }
+//         if (memberAddress === null) throw new Error(ece8000.ece8220.notFoundMemberXRPWallerAddress);
+//         if (member === undefined || miner === undefined || xrp === undefined) throw new Error(intergrateMSG.failure)
+//         await executeQuery(sql.ece8220({ member, miner, xrp, memberAddress }))
+//         res.send(resultResponseFormat({ status: 1310, msg: ece8000.ece8220.success }))
+//     } catch (error) {
+//         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
+//     }
+// })
+function generateRandomCode(n) {
+    let str = ''
+    for (let i = 0; i < n; i++) {
+        str += Math.floor(Math.random() * 10)
+    }
+    return str
+}
 module.exports = router;

@@ -15,7 +15,10 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
             bannerList = bannerList.join(",").replaceAll(",", " ")
         }
         $('#resourceText').text(bannerList)
-        await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece3000/ece3500?member=${member}` })
+        const { data: adminXRP } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8210?member=${member}` })
+        const [admin] = adminXRP
+        console.log(admin);
+        $("#message").html(`현재 채굴기 개당 가격은 ${admin.currentamount}XRP 입니다.`)
         let sellMinerList = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8211?member=${member}` })
         if (sellMinerList.data.length !== 0) {
             sellMinerList = sellMinerList.data
@@ -27,19 +30,8 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
         }
         console.log(sellMinerList);
         $("#ece8210_ece8220").click(async () => {
-            console.log("asdasd");
-            const address = $("#address").val()
             const minerCount = $("#minerCount").val()
             let valid = true
-            if (address.trim() === "") {
-                $("#erroraddress").fadeIn()
-            } else if (address.length < 30) {
-                $("#erroraddress").html("최소 30자리 이상의 주소를 입력해주세요 ")
-                $("#erroraddress").fadeIn()
-                valid = false;
-            } else {
-                $("#erroraddress").fadeOut()
-            }
             if (minerCount.trim() === "") {
                 valid = false;
                 $("#errorminer").fadeIn()
@@ -53,15 +45,14 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
             if (valid) {
                 const { data: adminInfo } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8210?member=${member}` })
                 const xrp = (Number(adminInfo[0].currentamount) * minerCount).toFixed(2)
-                const requestMiner = await AJAXRequestMethod({ method: "POST", requestURL: `${serverURL}/ece8000/ece8220?member=${member}`, data: { miner: minerCount, xrp, address } })
+                const requestMiner = await AJAXRequestMethod({ method: "POST", requestURL: `${serverURL}/ece8000/ece8220?member=${member}`, data: { miner: minerCount, xrp } })
                 if (requestMiner.status === 1310) {
-                    console.log("rere");
-                    location.href = `./ece8220.html?member=${member}&xrp=${xrp}&miner=${minerCount}`
+                    location.href = `./ece8220.html?member=${member}&xrp=${xrp}&miner=${minerCount}&dt=${requestMiner.data}`
                 }
             }
         })
         const a = querystring.split("&")
-        const ece8210_data = { miner: null, xrp: null }
+        const ece8210_data = { miner: null, xrp: null, dt: null }
         a.forEach(v => {
             const [key, value] = v.split("=");
             ece8210_data[`${key}`] = value
@@ -71,6 +62,7 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
             $("#admin").html(adminInfo[0].walletaddress)
             $("#xrp").html(ece8210_data.xrp + "XRP")
             $("#miner").html(ece8210_data.miner)
+            $("#dt").html(ece8210_data.dt)
 
         }
     })
@@ -84,7 +76,8 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
 //   </div>`
 function innerHTML_MinerHistory({ createdt, status, xrp, minerCount }) {
     return `<div class="ece8210_history">
-            <span style="float: left">${createdt}</span>
+            <span style="float: left">[${createdt}]</span>
+            <span style="float: left; margin-left:10px">${minerCount}대</span>
             <span style="float: right">
               <span style="font-size:12px">${xrp}XRP</span>
               <h4>${status.slice(4)}</h4>

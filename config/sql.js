@@ -105,7 +105,8 @@ module.exports = {
      * extrastr1 리플 가격
      * extrastr2 사용자 지갑 명
      */
-    ece8220: ({ member, miner, xrp, memberAddress }) => `insert into Transactions (action , status,member,extracode1,extracode2,extrastr1,extrastr2) values (7211  , 1310 , ${member}, 6101 ,${miner},${xrp},'${memberAddress}' );`,
+    // ece8220: ({ member, miner, xrp, memberAddress }) => `insert into Transactions (action , status,member,extracode1,extracode2,extrastr1,extrastr2) values (7211  , 1310 , ${member}, 6101 ,${miner},${xrp},'${memberAddress}' );`,
+    ece8220: ({ member, miner, xrp, code }) => `insert into Transactions (action , status,member,extracode1,extracode2,extrastr1,extrastr2) values (7211  , 1310 , ${member}, 6101 ,${miner},${xrp},'${code}' );`,
 
     /*
         임의 토지 구매

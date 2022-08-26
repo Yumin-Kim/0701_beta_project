@@ -31,7 +31,7 @@ const ws = new WebSocket(XRPWSURL, {
                 "ledger"
             ],
             "accounts": [
-                XRPWALLETADDRESS
+                `${XRPWALLETADDRESS}`
             ]
         }
 
@@ -40,10 +40,11 @@ const ws = new WebSocket(XRPWSURL, {
 
     ws.on('message', async (event) => {
         const parsed_data = JSON.parse(event)
+        // console.log(parsed_data);
         if (parsed_data.transaction !== undefined && parsed_data.type === "transaction") {
             console.log("[WebSocket XRP]Sign Transaction");
-            const { Account: to, Amount: amount, Destination: from, hash: txHash, validated } = parsed_data.transaction
-            const requestMinerRecipt = await executeQuery(`select * from Transactions where action = 7211 and extrastr2 = '${to}' order by transaction desc`);
+            const { Account: to, Amount: amount, Destination: from, hash: txHash, validated, DestinationTag } = parsed_data.transaction
+            const requestMinerRecipt = await executeQuery(`select * from Transactions where action = 7211 and extrastr2 = '${DestinationTag}' order by transaction desc`);
             const mapRequestMinerReceipt = requestMinerRecipt.map((v) => {
                 // extrastr1 >> 1000000 === 1xrp
                 if (Number(v.extrastr1) * 1000000 === Number(amount)) {
@@ -85,7 +86,6 @@ const ws = new WebSocket(XRPWSURL, {
                 await executeQuery(`insert into Transactions (action , status, extracode1,extrastr1,extrastr2) 
                 values (6104,1310,${amount} , '${txHash}' , '${from}')`)
             }
-            // await executeQuery(`select `)
         }
     });
 

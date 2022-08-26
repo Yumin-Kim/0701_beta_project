@@ -90,6 +90,9 @@
       margin: 0;
     }
     .ece8210_history_template {
+      overflow-x: hidden;
+      overflow-y: scroll;
+      height: 25vh;
       margin-bottom: 30px;
     }
     * {
@@ -151,6 +154,10 @@
     }
     .alert {
       color: #57f5ff;
+    }
+    #message {
+      color: #57f5ff;
+      margin: 0;
     }
   </style>
   <body>
@@ -230,9 +237,12 @@
             <p class="alert" id="errorminer">
               구매할 채굴기 수량을 입력해주세요
             </p>
+            <p id="message" style="margin-top: 10px; font-size: 12px">
+              개량 가격 :
+            </p>
           </div>
         </div>
-        <h3 class="ece8210_title">* 입금 리플 지갑 주소명</h3>
+        <!-- <h3 class="ece8210_title">* 입금 리플 지갑 주소명</h3>
         <div class="container">
           <div class="group">
             <input
@@ -246,7 +256,7 @@
               입금할 리플 지갑 주소를 입력해주세요
             </p>
           </div>
-        </div>
+        </div> -->
         <button
           type="button"
           style="margin-bottom: 30px"
