@@ -14,7 +14,8 @@ router.get("/ece6100", async (req, res) => {
             const resourceData = await executeQuery(sql.ece6100.findResourceTrnsactionByResouce({ transaction: value.transaction }))
             return [value, { resourceData }]
         })
-        const data = await pendingQuery.reduce(async (prev, cur) => {
+        const resolveList = await Promise.all(pendingQuery)
+        const data = await resolveList.reduce(async (prev, cur) => {
             const prevData = await prev.then();
             const curData = await cur
             const { createdt } = curData[0]

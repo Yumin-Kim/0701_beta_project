@@ -8,7 +8,7 @@
     "db_dev": "NODE_ENV=DEV PORT=3000 nodemon ./config/db.js",
     "dev": "NODE_ENV=DEV PORT=3000 nodemon",
     "miner_pd": "NODE_ENV=PRD TIME=1S node ./observeMiner.js",
-    "start": "NODE_ENV=PRD PORT=3000 node index.js"
+    "start": "NODE_ENV=PRD PORT=3000 nodemon index.js"
   },
   "author": "",
   "license": "ISC",

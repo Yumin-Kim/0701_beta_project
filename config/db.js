@@ -22,7 +22,8 @@ if (process.env.NODE_ENV === undefined || process.env.NODE_ENV === "DEV") {
         database: "wicfaie",
         charset: "UTF8_GENERAL_CI",
         waitForConnections: true,
-        connectionLimit: 45,
+        connectionLimit: 60,
+        queueLimit: 1000
     };
 }
 const dbPool = mysql.createPool(instanceConfig);
