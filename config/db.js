@@ -12,7 +12,6 @@ if (process.env.NODE_ENV === undefined || process.env.NODE_ENV === "DEV") {
         waitForConnections: true,
         connectionLimit: 45,
         queueLimit: 30,
-        acquireTimeout: 60000,
     };
 } else {
     instanceConfig = {
@@ -24,7 +23,6 @@ if (process.env.NODE_ENV === undefined || process.env.NODE_ENV === "DEV") {
         charset: "UTF8_GENERAL_CI",
         waitForConnections: true,
         connectionLimit: 45,
-        acquireTimeout: 60000,
     };
 }
 const dbPool = mysql.createPool(instanceConfig);
