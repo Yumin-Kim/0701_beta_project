@@ -1,5 +1,6 @@
 const { executeQuery, dbPool } = require("../../config/db");
 const { resultResponseFormat, resultMSG } = require("../../config/result");
+const { parseArrayToIndexNumber } = require('../../config/tiles.js');
 const sql = require("../../config/sql");
 const { intergrateMSG, ece4000 } = resultMSG
 const router = require("express").Router()
@@ -21,10 +22,17 @@ router.get("/buytiles", async (req, res) => {
 
 
 router.get("/buytiles_rev", async (req, res) => {
-    const a = await executeQuery('select extrastr3 from Transactions where action = 7131')
-    console.log(a);
-    // const data = await executeQuery(sql.xrpWebsocket.updateTileByAllMember_NoCash());
-    // res.send(resultResponseFormat({ data, status: 1310, msg: "타일 구매 정보 업데이트" }))
+    const a = await executeQuery(`select transaction , extrastr3 as "data", member from Transactions where action =7131`)
+    const buyTiles_AffectRowList = await a.map(async ({ data, member, transaction }) => {
+        let bulkupInsert = `insert into Lands (landkey,member,extracode) values `
+        const insertQuery = JSON.parse(data).map((landIndex) => `(${landIndex},${member},7120)`)
+        bulkupInsert += insertQuery.join(",")
+        const { affectedRows: bulkAffectRows } = await executeQuery(bulkupInsert)
+        const { affectedRows: updateAffectRow } = await executeQuery(`update Transactions set action = 7132 where transaction = ${transaction}`)
+        return { bulkAffectRows, updateAffectRow, transaction, member }
+    })
+    const ResolveList = await Promise.all(buyTiles_AffectRowList)
+    res.send(resultResponseFormat({ data: ResolveList, status: 1310, msg: "타일 구매 정보 모두 업데이트" }))
 
 })
 // router.get("/")

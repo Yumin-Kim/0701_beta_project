@@ -23,18 +23,21 @@ router.get("/ece8110", async (req, res) => {
 router.post("/ece8120", async (req, res) => {
     try {
         const { member } = req.query;
-        const { data } = req.body;
+        const { data, xrp } = req.body;
         if (member === undefined || data === undefined) throw new Error(intergrateMSG.failure)
         const indexingNumberTilesList = data.map(({ width, height }) => {
             return parseArrayToIndexNumber(width, height)
         })
-        await executeQuery(sql.ece8120.requsetBuyTilesTransaction({ member, tile: indexingNumberTilesList[0], tileInfo: JSON.stringify(indexingNumberTilesList), tileLength: indexingNumberTilesList.length }))
-        let bulkupInsert = `insert into Lands (landkey,member,extracode) values `
-        const insertQuery = indexingNumberTilesList.map((landIndex) => `(${landIndex},${member},7120)`)
-        bulkupInsert += insertQuery.join(",")
-        const { affectedRows } = await executeQuery(bulkupInsert)
+        const code = generateRandomCode(9)
+        const { insertId, affectedRows } = await executeQuery(sql.ece8120.requsetBuyTilesTransaction({ code, xrp, member, tile: indexingNumberTilesList[0], tileInfo: JSON.stringify(indexingNumberTilesList), tileLength: indexingNumberTilesList.length }))
+        // await executeQuery(`insert into Transactions (action , status,member,extracode1,extracode2,extrastr1,extrastr2) values (7134  , 1310 , ${member}, 6101 ,${insertId},${xrp},'${code}' );`)
+        // 구매 승인 후 bulk
+        // let bulkupInsert = `insert into Lands (landkey,member,extracode) values `
+        // const insertQuery = indexingNumberTilesList.map((landIndex) => `(${landIndex},${member},7120)`)
+        // bulkupInsert += insertQuery.join(",")
+        // const { affectedRows } = await executeQuery(bulkupInsert)
         if (affectedRows === undefined) throw new Error(ece8000.ece8120.failure);
-        res.send(resultResponseFormat({ status: 1310, msg: ece8000.ece8120.success }))
+        res.send(resultResponseFormat({ status: 1310, msg: ece8000.ece8120.success, data: code }))
     } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
     }

@@ -22,6 +22,7 @@ if (process.env.NODE_ENV === undefined || process.env.NODE_ENV === "DEV") {
         database: "wicfaie",
         charset: "UTF8_GENERAL_CI",
         waitForConnections: true,
+        // 설정 주의 70 일시 오류 발생
         connectionLimit: 60,
         queueLimit: 1000
     };

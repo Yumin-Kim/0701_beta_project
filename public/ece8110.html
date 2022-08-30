@@ -148,6 +148,45 @@
       #topBar {
         background-image: url("./assets/ece2000.png");
       }
+      .ece8110_box {
+        padding: 10px 30px;
+        margin: 20px 15px;
+        background-color: #57f4ff45;
+        box-sizing: border-box;
+      }
+      .ece8110_container {
+        position: absolute;
+        z-index: 1000000;
+        background-image: url("./assets/ece8110_bg.png");
+        bottom: 0;
+        color: #fff;
+        width: 100vw;
+      }
+      .ece8110_box h2,
+      .ece8110_box p {
+        margin: 0;
+      }
+      .ece8110_box h2 {
+        margin-bottom: 18px;
+      }
+      .ece8110_box p {
+        font-size: 12px;
+        margin-bottom: 8px;
+      }
+      .cardviewbtn_w100 {
+        width: 100%;
+        border: #bcfff39e 1px solid;
+        font-size: 16px;
+        font-family: Helvetica, Arial, sans-serif;
+        font-weight: normal;
+        color: #ffffff;
+        text-decoration: none;
+        background-color: #99e7ff24;
+        border-radius: 3px;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        display: inline-block;
+      }
     </style>
   </head>
   <body>
@@ -211,7 +250,21 @@
       <p>특수 자원 2</p>
     </div>
     <div id="map"></div>
-
+    <div class="ece8110_container">
+      <div class="ece8110_box">
+        <h2>
+          토지 구매
+          <span style="font-size: 10px">타일은 2개이상 구매가능합니다</span>
+        </h2>
+        <p id="selectlocation">좌표 :</p>
+        <p>선택한 타일 수 : <span id="selecttile">선택해주세요</span></p>
+        <p>
+          가격 :<span id="selecttileprice">선택해주세요</span> (타일당 가격
+          <span id="adminxrp"></span>XRP)
+        </p>
+        <button id="ece8110_ece8120" class="cardviewbtn_w100">구매하기</button>
+      </div>
+    </div>
     <div style="display: none" id="top-bar">
       <div class="selected-row">
         <div class="left-part">
@@ -261,6 +314,6 @@
       }
     </script>
     <script src="./src/map_script.js"></script>
-    <script src="./src/eceFolder/ece3000.js"></script>
+    <script src="./src/eceFolder/ece8000.js"></script>
   </body>
 </html>

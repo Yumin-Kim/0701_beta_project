@@ -90,8 +90,8 @@ module.exports = {
      */
     ece8110: () => `select extracode1 as 'purchaseway' , extrastr1 as 'walletaddress' , extrastr2 as 'currentamount' from Transactions where action = 8201 order by transaction desc limit 1`,
     ece8120: {
-        requsetBuyTilesTransaction: ({ member, tile, tileInfo, tileLength }) => `insert into Transactions (action , status , extracode1,extracode2,extrastr3,member,land) 
-        values (7131 , 1310 , ${tile} , ${tileLength} , '${JSON.stringify(tileInfo)}' , ${member},${tile})`,
+        requsetBuyTilesTransaction: ({ member, tile, tileInfo, tileLength, xrp, code }) => `insert into Transactions (action , status , extracode1,extracode2,extrastr1 , extrastr2 , extrastr3,member,land) 
+        values (7131 , 1310 , ${tile} , ${tileLength} ,'${xrp}','${code}' ,'${JSON.stringify(tileInfo)}' , ${member},${tile})`,
         directBuyTilesTransaction: ({ member, tile, tileInfo, tileLength }) => `insert into Transactions (action , status , extracode1,extracode2,extrastr3,member,land) 
         values (7132 , 1310 , ${tile} , ${tileLength} , '${JSON.stringify(tileInfo)}' , ${member},${tile})`,
         insertTile_direct: ({ landIndex, member }) => `insert into Lands (landkey,member,extracode) values (${landIndex},${member},7110)`,

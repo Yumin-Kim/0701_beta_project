@@ -65,6 +65,22 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
             $("#dt").html(ece8210_data.dt)
 
         }
+        $("#ece8110_ece8120").click(async () => {
+            //타일수 , 가격 , 멤버 , 타일 정보 
+            const tileInfo = ece8110_data;
+            const tileLength = $("#selecttile").text().split(" ")[0];
+            const price = $("#selecttileprice").text().split(" ")[0]
+            const requestData = {
+                data: tileInfo,
+                xrp: price
+            }
+            const ece8120Code = await AJAXRequestMethod({ method: "POST", requestURL: `${serverURL}/ece8000/ece8120?member=${member}`, data: requestData })
+            console.log(ece8120Code);
+            if (ece8120Code.status === 1310) {
+                location.href = `./ece8120.html?member=${member}&xrp=${price}&miner=${tileLength}&dt=${ece8120Code.data}`
+            }
+
+        })
     })
 //     return `<div class="ece8210_history">
 //     <span style="float: left">${createdt}</span>

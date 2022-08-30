@@ -6,10 +6,9 @@ const endPointLng = 127.00601;
 const point_lng = (endPointLng - startLng) / 0.00009;
 const point_lat_floor = Math.floor(point_lat);
 const point_lng_floor = Math.floor(point_lng);
+let ece8110_data;
 let toggle = 0;
 const a = parseTile({ lng: 126.46573, lat: 33.50650 })
-console.log(centerPoint);
-
 
 mapboxgl.accessToken =
   "pk.eyJ1Ijoid20xMTE4MTExOCIsImEiOiJja3k5ZGR5ajcwNTl5MnhwZDQ1Nzk5Z2ZhIn0.HRjY1eXlyQlUABFgqz6plQ";
@@ -169,28 +168,34 @@ map.on("load", () => {
     },
   });
   let activeSelecting = false;
-  map.on(MaplibreGrid.GRID_CLICK_EVENT, ({ bbox }) => {
-    console.log(bbox);
-    // const popup = new mapboxgl.Popup({ closeOnClick: false })
-    //   .setLngLat(centerPoint)
-    //   .setHTML('<h1>Hello World!</h1>')
-    //   .addTo(map);
-    if (activeSelecting) {
-      activeSelecting = false;
-      document.getElementById("has-resource").classList.add("resource-show");
-      selectedCells = [...selectedCells, ...tempSelectedCells];
-    } else {
+  console.log();
+  if (location.pathname.replace("/", "").split(".")[0] === "ece8110") {
+    $("#adminxrp").text(`${tileAdminInfo.currentamount}`)
+    map.on(MaplibreGrid.GRID_CLICK_EVENT, ({ bbox }) => {
       console.log(bbox);
-      activeSelecting = true;
-      console.log("activeSelecting False");
-      selectedTiles([bbox]);
-    }
-  });
-  map.on(MaplibreGrid.GRID_MOUSE_MOVE_EVENT, ({ bboxes }) => {
-    // if (bboxes.length > 0) {
-    //   selectedTiles(bboxes);
-    // }
-  });
+      // const popup = new mapboxgl.Popup({ closeOnClick: false })
+      //   .setLngLat(centerPoint)
+      //   .setHTML('<h1>Hello World!</h1>')
+      //   .addTo(map);
+      if (activeSelecting) {
+        activeSelecting = false;
+        document.getElementById("has-resource").classList.add("resource-show");
+        selectedCells = [...selectedCells, ...tempSelectedCells];
+      } else {
+        console.log(bbox);
+        activeSelecting = true;
+        console.log("activeSelecting False");
+        selectedTiles([bbox]);
+      }
+    });
+    map.on(MaplibreGrid.GRID_MOUSE_MOVE_EVENT, ({ bboxes }) => {
+      if (bboxes.length > 0) {
+        console.log("Hello");
+        selectedTiles(bboxes);
+      }
+    });
+  }
+
   AJAXRequestMethod({
     method: "POST",
     requestURL: `${serverURL}/ece3000/ece3300`,
@@ -221,41 +226,27 @@ map.on("load", () => {
       const lastlat = Number(bboxes[bboxes.length - 1][1].toFixed(5))
       const firstData = parseTile({ lat: firstlat, lng: firstlng })
       const lastData = parseTile({ lat: lastlat, lng: lastlng })
-
+      console.log(firstData);
+      console.log(lastData);
       if (toggle === 2) {
         toggle = 0;
-        const data = bboxes.map((bbox) => {
+        ece8110_data = bboxes.map((bbox) => {
           const lng = Number(bbox[0].toFixed(5))
           const lat = Number(bbox[1].toFixed(5))
           return parseTile({ lat, lng })
         })
-        AJAXRequestMethod({
-          method: "POST",
-          requestURL: `${serverURL}/ece8000/ece8120_rev?member=${member}`,
-          data: {
-            data
-          }
-        }).then((result) => {
-          console.log(result);
-          // let center = result.data;
-          // center = [...center, center[0] + 0.00009, center[1] - 0.00009]
-          // console.log("firstData", firstData);
-          selectedTilesCustom_classname([center], "blue")
-        }).catch((err) => {
-          console.log(err);
-        });
         // AJAXRequestMethod({
         //   method: "POST",
-        //   requestURL: "${serverURL}/ece3000",
-        //   data: lastData
+        //   requestURL: `${serverURL}/ece8000/ece8120_rev?member=${member}`,
+        //   data: {
+        //     data
+        //   }
         // }).then((result) => {
-        //   let center = result.data;
-        //   center = [...center, center[0] + 0.00009, center[1] - 0.00009]
-        //   console.log("lastData", lastData);
-        //   selectedTilesCustom_classname([center], "green")
+        //   console.log(result);
         // }).catch((err) => {
         //   console.log(err);
         // });
+
       }
     }
     /**
@@ -291,7 +282,13 @@ map.on("load", () => {
 
     const newSelectedCells = [...selectedCells, ...tempSelectedCells];
     console.log("SelectedTitles");
-    console.log(newSelectedCells);
+    //선택한 타일 좌표값 ece8110
+    $("#selecttile").text(`${newSelectedCells.length} Tiles`)
+    $("#selectlocation").text(`좌표 : ${newSelectedCells[newSelectedCells.length - 1].geometry.bbox[1].toFixed(5)} ,${newSelectedCells[newSelectedCells.length - 1].geometry.bbox[0].toFixed(5)}`);
+    $("#selecttileprice").text(`${Number(tileAdminInfo.currentamount) * newSelectedCells.length} XRP`)
+    // console.log(newSelectedCells[newSelectedCells.length - 1].geometry.bbox[0]);
+    // console.log(newSelectedCells[newSelectedCells.length - 1].geometry.bbox[1]);
+    console.log(newSelectedCells.length);
     const source = map.getSource(selectedCellsId);
     source.setData({
       type: "FeatureCollection",
