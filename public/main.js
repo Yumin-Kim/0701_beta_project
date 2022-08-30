@@ -134,7 +134,7 @@ map.on("load", () => {
     type: "fill",
     paint: {
       "fill-color": "green",
-      "fill-opacity": 0.9,
+      "fill-opacity": 0.4,
       "fill-outline-color": "transparent",
     },
   });
@@ -170,6 +170,11 @@ map.on("load", () => {
   });
   let activeSelecting = false;
   map.on(MaplibreGrid.GRID_CLICK_EVENT, ({ bbox }) => {
+    console.log(bbox);
+    // const popup = new mapboxgl.Popup({ closeOnClick: false })
+    //   .setLngLat(centerPoint)
+    //   .setHTML('<h1>Hello World!</h1>')
+    //   .addTo(map);
     if (activeSelecting) {
       activeSelecting = false;
       document.getElementById("has-resource").classList.add("resource-show");
@@ -182,9 +187,9 @@ map.on("load", () => {
     }
   });
   map.on(MaplibreGrid.GRID_MOUSE_MOVE_EVENT, ({ bboxes }) => {
-    if (bboxes.length > 0) {
-      selectedTiles(bboxes);
-    }
+    // if (bboxes.length > 0) {
+    //   selectedTiles(bboxes);
+    // }
   });
   AJAXRequestMethod({
     method: "POST",

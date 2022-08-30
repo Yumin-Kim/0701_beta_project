@@ -92,7 +92,7 @@
     .ece8210_history_template {
       overflow-x: hidden;
       overflow-y: scroll;
-      height: 25vh;
+      height: 36vh;
       margin-bottom: 30px;
     }
     * {
@@ -213,6 +213,19 @@
         </div>
       </div>
       <div class="row_margin">
+        <h3 class="ece8210_title">* 채굴기 수량 입력</h3>
+        <div class="container">
+          <div class="group">
+            <input id="minerCount" type="number" />
+            <div style="background-color: #94e5ff; height: 1px"></div>
+            <p class="alert" id="errorminer">
+              구매할 채굴기 수량을 입력해주세요
+            </p>
+            <p id="message" style="margin-top: 10px; font-size: 12px">
+              개량 가격 :
+            </p>
+          </div>
+        </div>
         <h3 class="ece8210_title">채굴기 구매 기록</h3>
         <div class="ece8210_history_template">
           <div class="ece8210_history">
@@ -229,19 +242,7 @@
             </span>
           </div> -->
         </div>
-        <h3 class="ece8210_title">* 채굴기 수량 입력</h3>
-        <div class="container">
-          <div class="group">
-            <input id="minerCount" type="number" />
-            <div style="background-color: #94e5ff; height: 1px"></div>
-            <p class="alert" id="errorminer">
-              구매할 채굴기 수량을 입력해주세요
-            </p>
-            <p id="message" style="margin-top: 10px; font-size: 12px">
-              개량 가격 :
-            </p>
-          </div>
-        </div>
+
         <!-- <h3 class="ece8210_title">* 입금 리플 지갑 주소명</h3>
         <div class="container">
           <div class="group">

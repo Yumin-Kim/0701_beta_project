@@ -11,7 +11,8 @@ if (process.env.NODE_ENV === undefined || process.env.NODE_ENV === "DEV") {
         charset: "UTF8_GENERAL_CI",
         waitForConnections: true,
         connectionLimit: 45,
-        queueLimit: 20,
+        queueLimit: 30,
+        acquireTimeout: 60000,
     };
 } else {
     instanceConfig = {
@@ -23,7 +24,7 @@ if (process.env.NODE_ENV === undefined || process.env.NODE_ENV === "DEV") {
         charset: "UTF8_GENERAL_CI",
         waitForConnections: true,
         connectionLimit: 45,
-        queueLimit: 10,
+        acquireTimeout: 60000,
     };
 }
 const dbPool = mysql.createPool(instanceConfig);
@@ -41,7 +42,7 @@ const executeQuery = async (dbquery) => {
         await instance.rollback();
         process.exit()
     } finally {
-        await instance.release()
+        instance.release()
     }
 }
 const executeQueryList = async (sqlList) => {

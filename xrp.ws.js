@@ -2,7 +2,7 @@ const WebSocket = require('ws');
 const xrpl = require('xrpl')
 const sql = require("./config/sql.js")
 const { executeQuery } = require("./config/db.js")
-const XRPWSURL = process.env.NODE_ENV !== "PRD" ? "wss://s.altnet.rippletest.net:51233" : "wss://s1.ripple.com:51233"
+const XRPWSURL = process.env.NODE_ENV === "PRD" ? "wss://s.altnet.rippletest.net:51233" : "wss://s1.ripple.com:51233"
 let XRPWALLETADDRESS;
 // Address
 // raNdXUYutrKKiHjBcb9ZKnrKp5dFry75tE
@@ -10,7 +10,6 @@ let XRPWALLETADDRESS;
 // snbkmm3TDbtL4QKwVK6kWCtASDo8m
 // Balance
 // 1,000 XRP
-
 const ws = new WebSocket(XRPWSURL, {
     perMessageDeflate: false
 });
@@ -31,7 +30,8 @@ const ws = new WebSocket(XRPWSURL, {
                 "ledger"
             ],
             "accounts": [
-                `${XRPWALLETADDRESS}`
+                // `${XRPWALLETADDRESS}`
+                "raQwCVAJVqjrVm1Nj5SFRcX8i22BhdC9WA"
             ]
         }
 
@@ -77,6 +77,8 @@ const ws = new WebSocket(XRPWSURL, {
                 })
             } else {
                 /**
+// extracode1 BIGIN T(20) 변경
+                 * 
                       * 사용자 입금 내용 한번 더 기록
                       * action : 6104
                       * extracode1 입금 xrp >> 1000000
@@ -84,7 +86,7 @@ const ws = new WebSocket(XRPWSURL, {
                       * extrastr2 from
                       */
                 await executeQuery(`insert into Transactions (action , status, extracode1,extrastr1,extrastr2) 
-                values (6104,1310,${amount} , '${txHash}' , '${from}')`)
+                values (6104,1310,${amount} , '${txHash}' , '${to}')`)
             }
         }
     });
