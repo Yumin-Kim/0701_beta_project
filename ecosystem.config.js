@@ -10,8 +10,11 @@ module.exports = {
       "NODE_ENV": "PRD"
     },
   }, {
-    name: "elc_XRP_WS_Testnet_Application",
-    script: "./xrp.ws.js"
+    name: "elc_XRP_WS",
+    script: "./xrp.ws.js",
+    env: {
+      "NODE_ENV": "PRD"
+    },
   }
     // {
     //   name: "elc_XRP_WS_Appliaction",

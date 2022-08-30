@@ -7,7 +7,8 @@
     "db_prd": "NODE_ENV=PRD PORT=3000 node ./config/db.js",
     "db_dev": "NODE_ENV=DEV PORT=3000 nodemon ./config/db.js",
     "dev": "NODE_ENV=DEV PORT=3000 nodemon",
-    "miner_pd": "NODE_ENV=PRD TIME=1S node ./observeMiner.js",
+    "miner_test": "NODE_ENV=PRD TIME=1S node ./observeMiner.js",
+    "xrpws_test": "NODE_ENV=PRD  nodemon ./xrp.ws.js",
     "start": "NODE_ENV=PRD PORT=3000 node index.js"
   },
   "author": "",

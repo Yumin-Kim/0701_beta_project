@@ -11,7 +11,7 @@ let toggle = 0;
 const a = parseTile({ lng: 126.46573, lat: 33.50650 })
 
 mapboxgl.accessToken =
-  "pk.eyJ1Ijoid20xMTE4MTExOCIsImEiOiJja3k5ZGR5ajcwNTl5MnhwZDQ1Nzk5Z2ZhIn0.HRjY1eXlyQlUABFgqz6plQ";
+  "pk.eyJ1IjoiZGJhbHMwIiwiYSI6ImNsNXM0ZGt3ZTBqdHEzaW4weHVvMnR5bmcifQ.r8jA3ImPlpp6W5K0EcwkMw";
 const map = new mapboxgl.Map({
   container: "map",
   style: "mapbox://styles/mapbox/satellite-streets-v11",
@@ -194,6 +194,36 @@ map.on("load", () => {
         selectedTiles(bboxes);
       }
     });
+  } else {
+    map.on(MaplibreGrid.GRID_CLICK_EVENT, async ({ bbox }) => {
+      const { data: ece3200Data, status } = await AJAXRequestMethod({
+        method: "POST",
+        requestURL: `${serverURL}/ece3000/ece3200`,
+        data: parseTile({ lng: bbox[0], lat: bbox[1] })
+      })
+      if (status === 1310) {
+        const { landInfo, memberInfo } = ece3200Data
+        const geoJSON = landInfo.reduce((prev, cur) => {
+          prev.push(cur.blockLocation)
+          return prev
+        }, [])
+        selectedTilesCustom_classname(geoJSON, "blue")
+        // await
+        const popup = new mapboxgl.Popup({ closeOnClick: true })
+          .setLngLat([bbox[0].toFixed(5), bbox[1].toFixed(5)])
+          .setHTML(`<p style="margin:0px">${memberInfo.email}</p>`)
+          .addTo(map);
+      }
+      activeSelecting = true;
+      selectedTiles([bbox]);
+      // }
+    });
+    map.on(MaplibreGrid.GRID_MOUSE_MOVE_EVENT, ({ bboxes }) => {
+      if (bboxes.length > 0) {
+        console.log("Hello");
+        // selectedTiles(bboxes);
+      }
+    });
   }
 
   AJAXRequestMethod({
@@ -235,18 +265,6 @@ map.on("load", () => {
           const lat = Number(bbox[1].toFixed(5))
           return parseTile({ lat, lng })
         })
-        // AJAXRequestMethod({
-        //   method: "POST",
-        //   requestURL: `${serverURL}/ece8000/ece8120_rev?member=${member}`,
-        //   data: {
-        //     data
-        //   }
-        // }).then((result) => {
-        //   console.log(result);
-        // }).catch((err) => {
-        //   console.log(err);
-        // });
-
       }
     }
     /**

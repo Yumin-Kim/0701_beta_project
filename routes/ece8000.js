@@ -30,12 +30,6 @@ router.post("/ece8120", async (req, res) => {
         })
         const code = generateRandomCode(9)
         const { insertId, affectedRows } = await executeQuery(sql.ece8120.requsetBuyTilesTransaction({ code, xrp, member, tile: indexingNumberTilesList[0], tileInfo: JSON.stringify(indexingNumberTilesList), tileLength: indexingNumberTilesList.length }))
-        // await executeQuery(`insert into Transactions (action , status,member,extracode1,extracode2,extrastr1,extrastr2) values (7134  , 1310 , ${member}, 6101 ,${insertId},${xrp},'${code}' );`)
-        // 구매 승인 후 bulk
-        // let bulkupInsert = `insert into Lands (landkey,member,extracode) values `
-        // const insertQuery = indexingNumberTilesList.map((landIndex) => `(${landIndex},${member},7120)`)
-        // bulkupInsert += insertQuery.join(",")
-        // const { affectedRows } = await executeQuery(bulkupInsert)
         if (affectedRows === undefined) throw new Error(ece8000.ece8120.failure);
         res.send(resultResponseFormat({ status: 1310, msg: ece8000.ece8120.success, data: code }))
     } catch (error) {
@@ -78,7 +72,7 @@ router.get("/ece8211", async (req, res) => {
     try {
         const { member } = req.query;
         if (member === undefined) throw new Error(intergrateMSG.failure)
-        const data = await executeQuery(`select action,extracode1,extrastr1 as "xrp",extracode2 as "minercount" ,createdt from Transactions where action in (7211 , 7212) and member = ${member} order by transaction desc`)
+        const data = await executeQuery(sql.ece8211({ member }))
         res.send(resultResponseFormat({ data, status: 1310, msg: ece8000.ece8210.success }))
     } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
@@ -98,25 +92,6 @@ router.post("/ece8220", async (req, res) => {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
     }
 })
-// router.post("/ece8220", async (req, res) => {
-//     try {
-//         const { member } = req.query;
-//         const { miner, xrp, address } = req.body;
-//         let memberAddress;
-//         if (address === undefined) {
-//             const [memberInfo] = await executeQuery(sql.utils.findByMember({ member }))
-//             memberAddress = memberInfo.walletaddress
-//         } else {
-//             memberAddress = address;
-//         }
-//         if (memberAddress === null) throw new Error(ece8000.ece8220.notFoundMemberXRPWallerAddress);
-//         if (member === undefined || miner === undefined || xrp === undefined) throw new Error(intergrateMSG.failure)
-//         await executeQuery(sql.ece8220({ member, miner, xrp, memberAddress }))
-//         res.send(resultResponseFormat({ status: 1310, msg: ece8000.ece8220.success }))
-//     } catch (error) {
-//         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
-//     }
-// })
 function generateRandomCode(n) {
     let str = ''
     for (let i = 0; i < n; i++) {

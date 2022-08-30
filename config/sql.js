@@ -98,6 +98,7 @@ module.exports = {
         insertTile_requset: ({ landIndex, member }) => `insert into Lands (landkey,member,extracode) values (${landIndex},${member},7120)`,
     },
     ece8210: () => `select extracode1 as 'purchaseway' , extrastr1 as 'walletaddress' , extrastr2 as 'currentamount' from Transactions where action = 8202 order by transaction desc limit 1`,
+    ece8211: ({ member }) => `select action,extracode1,extrastr1 as "xrp",extracode2 as "minercount" ,createdt from Transactions where action in (7211 , 7212) and member = ${member} order by transaction desc`,
     /** 채굴기 구매 
      * action 채굴기 구매 요청
      * extracode1 리플 승인 대기
@@ -107,7 +108,10 @@ module.exports = {
      */
     // ece8220: ({ member, miner, xrp, memberAddress }) => `insert into Transactions (action , status,member,extracode1,extracode2,extrastr1,extrastr2) values (7211  , 1310 , ${member}, 6101 ,${miner},${xrp},'${memberAddress}' );`,
     ece8220: ({ member, miner, xrp, code }) => `insert into Transactions (action , status,member,extracode1,extracode2,extrastr1,extrastr2) values (7211  , 1310 , ${member}, 6101 ,${miner},${xrp},'${code}' );`,
-
+    ece9100: {
+        findTransactionList: ({ member }) => `select transaction , DATE_FORMAT(createdt, '%Y.%m.%d') as createdt from Transactions where action in (7131 , 7132 , 7212,7211) and member = ${member}  group by createdt,transaction order by transaction desc;`,
+        selectDetailTransaction: ({ transaction }) => `select action , extracode1,extracode2,extrastr1,extrastr2,extrastr3,member from Transactions where transaction = ${transaction}`
+    },
     /*
         임의 토지 구매
         action 7110 소유
@@ -137,6 +141,37 @@ module.exports = {
         insertMinerSellerInfo: ({ xrpWallet, xrp }) => `insert into Transactions (action ,status,extracode1,extrastr1,extrastr2) values(8202,1310,6520,'${xrpWallet}','${xrp}')`,
     },
     xrpWebsocket: {
+        v1: {
+            updateECE8220: ({ transaction }) => `
+            update Transactions 
+            set action = 7212 , extracode1 = 6102 , updatedt=NOW() 
+            where transaction = ${transaction};
+            `,
+            updateECE8120: ({ transaction }) => `
+            update Transactions 
+            set action = 7132 , extracode1 = 6102 , updatedt=NOW() 
+            where transaction = ${transaction};
+            `,
+            /** 사용자 입금 내용 한번 더 기록  extracode1 BIGIN T(20) 변경
+             * 
+             * action : 6104
+             * extracode1 입금 xrp >> 1000000
+             * extrastr1 txHash
+             * extrastr2 from
+             */
+            notSelectMemberAndObserveTransaction: ({ to, amount, txHash }) => `insert into Transactions (action , status, extracode1,extrastr1,extrastr2) 
+            values (6104,1310,${amount} , '${txHash}' , '${to}')`,
+            /** 사용자 입금 내용 한번 더 기록
+             * action : 6102
+             * extracode1 transaction id
+             * extracode2 입금 xrp >> 1000000
+             * extrastr1 txHash
+             * extrastr2 from
+             * member member ID
+             */
+            findMemberAndObserveTransaction: ({ transaction, xrpAmout, txHash, from, member }) => `insert into Transactions (action , status, extracode1,extracode2,extrastr1,extrastr2,member) 
+            values (6102,1310,${transaction},${xrpAmout} , '${txHash}' , '${from}' ,${member})`
+        },
         /** 토지 구매 승인
          *  
          */

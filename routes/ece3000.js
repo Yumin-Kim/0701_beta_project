@@ -1,11 +1,37 @@
 const { executeQuery, dbPool } = require("../config/db");
 const { resultResponseFormat, resultMSG } = require("../config/result");
 const sql = require("../config/sql");
-const { ece3300_getCenterPoint, parseIndexNumberToArray, tiles, convertArrayToLocation } = require("../config/tiles");
+const { ece3300_getCenterPoint, parseIndexNumberToArray, tiles, convertArrayToLocation, parseArrayToIndexNumber, ece3200_getCenterPoint } = require("../config/tiles");
 const { intergrateMSG, ece3000 } = resultMSG
 const { requestAPI } = require("../config/utils");
 const MINERSERVER = 'http://127.0.0.1:5010'
 const router = require("express").Router()
+
+router.post("/ece3200", async (req, res) => {
+    try {
+        const { width, height } = req.body
+        const points = parseArrayToIndexNumber(width, height)
+        const [selectLandMemberInfo] = await executeQuery(`select * from Lands where landkey = ${points} limit 1`);
+        console.log(selectLandMemberInfo);
+        if (selectLandMemberInfo === undefined) throw new Error("선택한타일은 사용자가 존재하지 않습니다.")
+        const [memberInfo] = await executeQuery(`select member , email , firstname , lastname from Members where member = ${selectLandMemberInfo.member}`)
+        const memberCenterLocation = ece3200_getCenterPoint(width, height)
+        let getcenterLandquery = memberCenterLocation.map(value => `(select * from Lands where landkey >= ${value[0]} and landkey <= ${value[1]} and member = ${selectLandMemberInfo.member})`)
+        getcenterLandquery = getcenterLandquery.join(",")
+        getcenterLandquery = getcenterLandquery.replaceAll(",", " union all ")
+        const result = await executeQuery(getcenterLandquery)
+        const landInfo = result.map((value, index) => {
+            const { land, landkey, member, createdt, updatedt } = value
+            const [width, height] = parseIndexNumberToArray(landkey)
+            const location = convertArrayToLocation(width, height)
+            return { land, blockLocation: [location[0], location[1], location[0] + 0.00009, location[1] - 0.00009], member, createdt, updatedt }
+        })
+        await res.send(resultResponseFormat({ status: 1310, data: { landInfo, memberInfo }, msg: "선탣한 근처 타일 정보 제공" }))
+    } catch (error) {
+        res.send(resultResponseFormat({ data: null, extraData: error, msg: "선택한 타일은 사용자가 존재하지 않습니다.", status: 1320 }))
+    }
+
+})
 
 router.post("/ece3300", async (req, res) => {
     const { width, height } = req.body
@@ -20,7 +46,7 @@ router.post("/ece3300", async (req, res) => {
         const location = convertArrayToLocation(width, height)
         return { land, blockLocation: [location[0], location[1], location[0] + 0.00009, location[1] - 0.00009], member, createdt, updatedt }
     })
-    await res.json({ data, msg: ece3000.ece3200.msg })
+    await res.send({ data, msg: "타일 불러오기 성공" })
 })
 router.get("/ece3400", async (req, res) => {
     try {
