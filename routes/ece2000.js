@@ -159,6 +159,23 @@ router.post("/ece2334", async (req, res) => {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
     }
 })
+
+/**
+ * 로그인
+ */
+router.post("/ece2400", async (req, res) => {
+    try {
+        const { email, pin } = req.body
+        const [data] = await executeQuery(sql.ece2400({ email, pin }))
+        if (data !== undefined) {
+            await res.send(resultResponseFormat({ data, status: 1310, msg: ece2000.ece2400.success }))
+        } else {
+            throw new Error(ece2000.ece2400.failure)
+        }
+    } catch (error) {
+        res.send(resultResponseFormat({ status: 1320, msg: error.message }))
+    }
+})
 function generateRandomCode(n) {
     let str = ''
     for (let i = 0; i < n; i++) {

@@ -64,6 +64,10 @@ module.exports = {
             ece2334: {
                 success: "비밀번호 재설정 완료",
                 failure: "비밀번호 재설정 실패하였습니다."
+            },
+            ece2400: {
+                success: "로그인 성공",
+                failure: "로그인 실패"
             }
         },
         ece3000: {
