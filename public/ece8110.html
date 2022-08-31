@@ -82,7 +82,7 @@
         border-radius: 2px;
         padding: 16px;
         position: fixed;
-        z-index: 1;
+        z-index: 100000000;
         left: 10%;
         bottom: 30px;
         font-size: 17px;
@@ -186,6 +186,7 @@
         -webkit-border-radius: 3px;
         -moz-border-radius: 3px;
         display: inline-block;
+        margin-bottom: 18px;
       }
     </style>
   </head>
@@ -251,7 +252,7 @@
     <div id="map"></div>
     <div class="ece8110_container">
       <div class="ece8110_box">
-        <h2>
+        <h2 style="margin-top: 18px">
           토지 구매
           <span style="font-size: 10px">타일은 2개이상 구매가능합니다</span>
         </h2>
@@ -261,6 +262,13 @@
           가격 :<span id="selecttileprice">선택해주세요</span> (타일당 가격
           <span id="adminxrp"></span>XRP)
         </p>
+        <button
+          id="remove-selected"
+          class="cardviewbtn_w100"
+          style="margin-top: 10px"
+        >
+          선택 타일 삭제
+        </button>
         <button id="ece8110_ece8120" class="cardviewbtn_w100">구매하기</button>
       </div>
     </div>
@@ -284,7 +292,7 @@
       </div>
       <div class="detail-row" id="has-details">
         <button class="details-button" id="show-details">DETAILS</button>
-        <button class="clear-selection" id="remove-selected">
+        <button class="clear-selection" id="remove-selected1">
           <img src="./assets/icons/trash.svg" />
           clear selection
         </button>

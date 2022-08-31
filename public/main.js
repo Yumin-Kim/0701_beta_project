@@ -168,11 +168,9 @@ map.on("load", () => {
     },
   });
   let activeSelecting = false;
-  console.log();
   if (location.pathname.replace("/", "").split(".")[0] === "ece8110") {
     $("#adminxrp").text(`${tileAdminInfo.currentamount}`)
     map.on(MaplibreGrid.GRID_CLICK_EVENT, ({ bbox }) => {
-      console.log(bbox);
       // const popup = new mapboxgl.Popup({ closeOnClick: false })
       //   .setLngLat(centerPoint)
       //   .setHTML('<h1>Hello World!</h1>')
@@ -182,15 +180,12 @@ map.on("load", () => {
         document.getElementById("has-resource").classList.add("resource-show");
         selectedCells = [...selectedCells, ...tempSelectedCells];
       } else {
-        console.log(bbox);
         activeSelecting = true;
-        console.log("activeSelecting False");
         selectedTiles([bbox]);
       }
     });
     map.on(MaplibreGrid.GRID_MOUSE_MOVE_EVENT, ({ bboxes }) => {
       if (bboxes.length > 0) {
-        console.log("Hello");
         selectedTiles(bboxes);
       }
     });
@@ -220,7 +215,6 @@ map.on("load", () => {
     });
     map.on(MaplibreGrid.GRID_MOUSE_MOVE_EVENT, ({ bboxes }) => {
       if (bboxes.length > 0) {
-        console.log("Hello");
         // selectedTiles(bboxes);
       }
     });
@@ -231,8 +225,8 @@ map.on("load", () => {
     requestURL: `${serverURL}/ece3000/ece3300`,
     data: parseTile(centerLocation)
   }).then((result) => {
-    console.log(result);
-    let { data } = result;
+    let { data, extraData } = result;
+    locationIndexingList = extraData;
     const geoJSON = data.reduce((prev, cur) => {
       prev.push(cur.blockLocation)
       return prev
@@ -249,15 +243,12 @@ map.on("load", () => {
     })
     const firstlng = Number(bboxes[0][0].toFixed(5))
     const firstlat = Number(bboxes[0][1].toFixed(5))
-    console.log(toggle);
 
     if (bboxes.length > 1) {
       const lastlng = Number(bboxes[bboxes.length - 1][0].toFixed(5))
       const lastlat = Number(bboxes[bboxes.length - 1][1].toFixed(5))
       const firstData = parseTile({ lat: firstlat, lng: firstlng })
       const lastData = parseTile({ lat: lastlat, lng: lastlng })
-      console.log(firstData);
-      console.log(lastData);
       if (toggle === 2) {
         toggle = 0;
         ece8110_data = bboxes.map((bbox) => {
@@ -271,7 +262,6 @@ map.on("load", () => {
      * 박스 하나만 선택하고 구매한 경우 
      */
     if (toggle == 2) {
-      console.log("Hello");
     }
     tempSelectedCells = [];
     bboxes.forEach((bbox) => {
@@ -299,14 +289,10 @@ map.on("load", () => {
     });
 
     const newSelectedCells = [...selectedCells, ...tempSelectedCells];
-    console.log("SelectedTitles");
     //선택한 타일 좌표값 ece8110
     $("#selecttile").text(`${newSelectedCells.length} Tiles`)
     $("#selectlocation").text(`좌표 : ${newSelectedCells[newSelectedCells.length - 1].geometry.bbox[1].toFixed(5)} ,${newSelectedCells[newSelectedCells.length - 1].geometry.bbox[0].toFixed(5)}`);
     $("#selecttileprice").text(`${Number(tileAdminInfo.currentamount) * newSelectedCells.length} XRP`)
-    // console.log(newSelectedCells[newSelectedCells.length - 1].geometry.bbox[0]);
-    // console.log(newSelectedCells[newSelectedCells.length - 1].geometry.bbox[1]);
-    console.log(newSelectedCells.length);
     const source = map.getSource(selectedCellsId);
     source.setData({
       type: "FeatureCollection",
@@ -340,13 +326,6 @@ map.on("load", () => {
 
   // Show details
   document.getElementById("show-details").addEventListener("click", () => {
-    console.log(
-      "coordinates",
-      selectedCells.map((s) => ({
-        c: s.geometry.coordinates[0],
-        b: s.geometry.bbox,
-      }))
-    );
     alert("Look at inspect console");
   });
 
@@ -354,7 +333,6 @@ map.on("load", () => {
   // Collapse/expand resources
   let expandResources = true;
   document.getElementById("resources-btn").addEventListener("click", () => {
-    console.log("Test");
     if (expandResources) {
       document
         .getElementById("resources-list")
@@ -394,7 +372,6 @@ map.on("load", () => {
     point.push(arr)
     lng += 0.000095;
   })
-  console.log(point);
   const testData1 = [
     [
       126.46573,
@@ -411,7 +388,20 @@ map.on("load", () => {
   // selectedTilesCustom_loadImage(testData)
 });
 
+function selectedTiles_g() {
+  selectedCells = [];
+  const sourceSelect = map.getSource(selectedCellsId);
+  sourceSelect.setData({
+    type: "FeatureCollection",
+    features: selectedCells,
+  });
 
+  document.getElementById("tile-counts").innerText = "0";
+  document.getElementById("no-selected").classList.add("selected-show");
+  document.getElementById("has-selected").classList.remove("selected-show");
+  document.getElementById("has-resource").classList.remove("resource-show");
+  document.getElementById("has-details").classList.remove("detail-show");
+};
 
 
 function selectedTilesCustom(bboxes) {
@@ -435,8 +425,6 @@ function selectedTilesCustom(bboxes) {
   });
 
   const newSelectedCells = [...tempSelectedCells];
-  console.log("SelectedTitles");
-  console.log(newSelectedCells);
   const source = map.getSource(beforeByselectedCellsId);
   source.setData({
     type: "FeatureCollection",
@@ -473,8 +461,6 @@ function selectedTilesCustom_classname(bboxes, className) {
   });
 
   const newSelectedCells = [...tempSelectedCells];
-  console.log("SelectedTitles");
-  console.log(`select tiles length ${newSelectedCells.length}`);
   const source = map.getSource(className);
   source.setData({
     type: "FeatureCollection",
@@ -504,8 +490,6 @@ function selectedTilesCustom_loadImage(bboxes) {
   });
 
   const newSelectedCells = [...tempSelectedCells];
-  console.log("SelectedTitles");
-  console.log(newSelectedCells);
   const source = map.getSource("source");
   source.setData(loadImageData);
 

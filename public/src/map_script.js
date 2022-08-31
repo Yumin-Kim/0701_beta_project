@@ -1,20 +1,21 @@
+let clearMapTimer;
 map.on('movestart', (e) => {
-    console.log(map.getCenter());
-    const clearMapTimer = setTimeout(() => {
+    clearTimeout(clearMapTimer)
+    clearMapTimer = setTimeout(() => {
         let { lat, lng } = map.getCenter();
-        console.log(lat, lng);
         AJAXRequestMethod({
             method: "POST",
             requestURL: `${serverURL}/ece3000/ece3300`,
             data: parseTile({ lng, lat })
         }).then((result) => {
             clearTimeout(clearMapTimer)
-            console.log(result);
-            let { data } = result;
+            let { data, extraData } = result;
+            locationIndexingList = extraData
             const geoJSON = data.reduce((prev, cur) => {
                 prev.push(cur.blockLocation)
                 return prev
             }, [])
+
             selectedTilesCustom_classname(geoJSON, "green")
         }).catch((err) => {
             console.log(err);
@@ -25,8 +26,6 @@ map.on('movestart', (e) => {
 
 map.on("zoom", () => {
     const zoomSize = map.getZoom();
-
-    console.log(zoomSize);
     // selectedTilesCustom_classname(selectGreenBox, "green")
     // if (zoomSize < 17) {
     //     selectedTilesCustom_classname([], "green")

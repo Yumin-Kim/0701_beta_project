@@ -4,7 +4,6 @@ $("#erroraddress").css("display", "none")
 AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
     .then(async (response) => {
         const { data } = response
-        console.log(data);
         const { data: resourceBannerText } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece3000/ece3500?member=${member}` })
         let bannerList = "채굴된 자원이 없습니다."
         if (resourceBannerText.resoureList.length !== 0) {
@@ -17,7 +16,6 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
         $('#resourceText').text(bannerList)
         const { data: adminXRP } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8210?member=${member}` })
         const [admin] = adminXRP
-        console.log(admin);
         $("#message").html(`현재 채굴기 개당 가격은 ${admin.currentamount}XRP 입니다.`)
         let sellMinerList = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8211?member=${member}` })
         if (sellMinerList.data.length !== 0) {
@@ -28,7 +26,6 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
             sellMinerList = sellMinerList.join(",").replaceAll(",", "")
             $(".ece8210_history_template").html(sellMinerList)
         }
-        console.log(sellMinerList);
         $("#ece8210_ece8220").click(async () => {
             const minerCount = $("#minerCount").val()
             let valid = true
@@ -67,29 +64,38 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
         }
         $("#ece8110_ece8120").click(async () => {
             //타일수 , 가격 , 멤버 , 타일 정보 
+            let duplicateTile = false;
             const tileInfo = ece8110_data;
             const tileLength = $("#selecttile").text().split(" ")[0];
             const price = $("#selecttileprice").text().split(" ")[0]
-            const requestData = {
-                data: tileInfo,
-                xrp: price
-            }
-            const ece8120Code = await AJAXRequestMethod({ method: "POST", requestURL: `${serverURL}/ece8000/ece8120?member=${member}`, data: requestData })
-            console.log(ece8120Code);
-            if (ece8120Code.status === 1310) {
-                location.href = `./ece8120.html?member=${member}&xrp=${price}&miner=${tileLength}&dt=${ece8120Code.data}`
+            tileInfo.forEach(({ width, height }) => {
+                const indexing = parseArrayToIndexNumber(width, height)
+                if (locationIndexingList.includes(indexing)) {
+                    duplicateTile = true;
+                }
+            })
+            if (!duplicateTile) {
+                const requestData = {
+                    data: tileInfo,
+                    xrp: price
+                }
+                const ece8120Code = await AJAXRequestMethod({ method: "POST", requestURL: `${serverURL}/ece8000/ece8120?member=${member}`, data: requestData })
+                if (ece8120Code.status === 1310) {
+                    location.href = `./ece8120.html?member=${member}&xrp=${price}&miner=${tileLength}&dt=${ece8120Code.data}`
+                }
+            } else {
+                var x = document.getElementById("snackbar");
+                x.className = "show";
+                setTimeout(function () {
+                    x.className = x.className.replace("show", "");
+                }, 3000);
+                $("#snackbar").html('<h3>타일 구매</h3><p>사용자가 존재하는 타일을 선택하셨습니다.<p/>')
+                selectedTiles_g()
             }
 
         })
     })
-//     return `<div class="ece8210_history">
-//     <span style="float: left">${createdt}</span>
-//     <span style="float: right">
-//       <span style="font-size:12px">${minerCount}</span>
-//       <span style="font-size:12px">${xrp}XRP</span>
-//       <h4>${status}</h4>
-//     </span>
-//   </div>`
+
 function innerHTML_MinerHistory({ createdt, status, xrp, minerCount }) {
     return `<div class="ece8210_history">
             <span style="float: left">[${createdt}]</span>
@@ -99,4 +105,7 @@ function innerHTML_MinerHistory({ createdt, status, xrp, minerCount }) {
               <h4>${status.slice(4)}</h4>
             </span>
           </div>`
+}
+function parseArrayToIndexNumber(x, y) {
+    return Math.floor(y * point_lng + x)
 }

@@ -6,14 +6,13 @@ let member = querystring.split("=")[1].split("&")[0];
 let centerLocation = { lng: null, lat: null }
 let centerPoint = [126.46573,
     33.50650];
-let center
+let center, locationIndexingList;
+
 // 타일 확인 시 동작
 if (querystring.split("=").length > 2) {
-    console.log(querystring);
     const a = querystring.split("&")
     a.forEach(v => {
         const [key, value] = v.split("=");
-        console.log(key);
         if (key !== "member")
             centerLocation[`${key}`] = Number(value)
     })
@@ -42,8 +41,6 @@ function AJAXRequestMethod({ method, requestURL, data }) {
                     res(JSON.parse(XHR.response));
                 }
             } catch (error) {
-                console.log(XHR.response);
-                console.log(error)
             }
         };
     });
@@ -65,7 +62,6 @@ window.onload = () => {
     const btn8000 = document.getElementsByClassName("btn8000")
     if (btn8000.length !== 0) {
         Array(btn8000.length).fill().forEach((v, i) => {
-            console.log(btn8000[i].value);
             if (btn8000[i].value.trim() !== "") {
                 btn8000[i].setAttribute("onclick", `location.href='${btn8000[i].getAttribute("value")}?member=${member}'`)
             }
@@ -75,7 +71,6 @@ window.onload = () => {
     const btn7000 = document.getElementsByClassName("btn7000")
     if (btn7000.length !== 0) {
         Array(btn7000.length).fill().forEach((v, i) => {
-            console.log(btn7000[i].value);
             if (btn7000[i].value.trim() !== "") {
                 btn7000[i].setAttribute("onclick", `location.href='${btn7000[i].getAttribute("value")}?member=${member}'`)
             }

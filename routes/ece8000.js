@@ -29,6 +29,9 @@ router.post("/ece8120", async (req, res) => {
             return parseArrayToIndexNumber(width, height)
         })
         const code = generateRandomCode(9)
+        // console.log(indexingNumberTilesList.join(","));
+        // const findLandByMember = await executeQuery(`select * from Lands where landkey in (${indexingNumberTilesList.join(",")})`)
+        // if (findLandByMember.length !== 0) throw new Error(ece8000.ece8120.validLand);
         const { insertId, affectedRows } = await executeQuery(sql.ece8120.requsetBuyTilesTransaction({ code, xrp, member, tile: indexingNumberTilesList[0], tileInfo: JSON.stringify(indexingNumberTilesList), tileLength: indexingNumberTilesList.length }))
         if (affectedRows === undefined) throw new Error(ece8000.ece8120.failure);
         res.send(resultResponseFormat({ status: 1310, msg: ece8000.ece8120.success, data: code }))

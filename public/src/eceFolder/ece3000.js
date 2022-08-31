@@ -2,7 +2,6 @@ const minerTimer = 0
 AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
     .then(async (response) => {
         const { data } = response
-        console.log(data);
         const { data: resourceBannerText } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece3000/ece3500?member=${member}` })
         let bannerList = "채굴된 자원이 없습니다."
         if (resourceBannerText.resoureList.length !== 0) {
@@ -36,8 +35,6 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                             $("#timer").text(`채굴 완료 까지 ${60 - Number(minutes)}:${60 - Number(seconds)} 남았습니다.`);
                             if (seconds === 59 && minutes === 59) {
                                 check = true;
-                                console.log("Check");
-                                console.log(check);
                             }
                         }
                         else {
@@ -53,7 +50,6 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
             }
         }
         const a = selectCodeNameTpCodeTable({ data, codeName: 7212 })
-        console.log(resourceBannerText.memberInfo);
 
         $('#resourceText').text(bannerList)
         $("#mining").click(async () => {
@@ -96,8 +92,6 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                     $("#timer").text(`채굴 완료 까지 ${60 - Number(minutes)}:${60 - Number(seconds)} 남았습니다.`);
                     if (seconds === 59 && minutes === 59) {
                         check = true;
-                        console.log("Check");
-                        console.log(check);
                     }
                 }
                 else {

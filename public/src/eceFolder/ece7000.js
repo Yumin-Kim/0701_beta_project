@@ -2,7 +2,6 @@ const minerTimer = 0
 AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
     .then(async (response) => {
         const { data } = response
-        console.log(data);
         const { data: resourceBannerText } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece3000/ece3500?member=${member}` })
         let bannerList = "채굴된 자원이 없습니다."
         if (resourceBannerText.resoureList.length !== 0) {
@@ -19,7 +18,6 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
         $("#lastname").val(lastname)
         $("#email").val(email)
 
-        console.log(gender);
         if (gender === 9211) {
             $("#btn9211").addClass("selectBtn")
         }

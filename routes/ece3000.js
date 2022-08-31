@@ -12,7 +12,6 @@ router.post("/ece3200", async (req, res) => {
         const { width, height } = req.body
         const points = parseArrayToIndexNumber(width, height)
         const [selectLandMemberInfo] = await executeQuery(`select * from Lands where landkey = ${points} limit 1`);
-        console.log(selectLandMemberInfo);
         if (selectLandMemberInfo === undefined) throw new Error("선택한타일은 사용자가 존재하지 않습니다.")
         const [memberInfo] = await executeQuery(`select member , email , firstname , lastname from Members where member = ${selectLandMemberInfo.member}`)
         const memberCenterLocation = ece3200_getCenterPoint(width, height)
@@ -40,13 +39,15 @@ router.post("/ece3300", async (req, res) => {
     let selectQuery = getcenterLandquery.join(",")
     selectQuery = selectQuery.replaceAll(",", " union all ")
     const result = await executeQuery(selectQuery)
+    const landKeyList = []
     const data = result.map((value, index) => {
         const { land, landkey, member, createdt, updatedt } = value
         const [width, height] = parseIndexNumberToArray(landkey)
         const location = convertArrayToLocation(width, height)
-        return { land, blockLocation: [location[0], location[1], location[0] + 0.00009, location[1] - 0.00009], member, createdt, updatedt }
+        landKeyList.push(landkey)
+        return { land, blockLocation: [location[0], location[1], location[0] + 0.00009, location[1] - 0.00009], member, createdt, updatedt, landkey }
     })
-    await res.send({ data, msg: "타일 불러오기 성공" })
+    await res.send(resultResponseFormat({ data, msg: "타일 불러오기 성공", extraData: landKeyList, status: 1310 }))
 })
 router.get("/ece3400", async (req, res) => {
     try {

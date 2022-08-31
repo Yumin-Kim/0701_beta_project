@@ -103,7 +103,8 @@ module.exports = {
             },
             ece8120: {
                 success: "토지 구매 요청 승인",
-                failure: "토지 구매 승인 실패"
+                failure: "토지 구매 승인 실패",
+                validLand: "선택한 토지는 사용자가 존재합니다."
             },
             ece8210: {
                 success: "판매자 정보 조회 완료",

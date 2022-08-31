@@ -2,7 +2,6 @@ const minerTimer = 0
 AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
   .then(async (response) => {
     const { data } = response
-    console.log(data);
     const { data: resourceBannerText } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece3000/ece3500?member=${member}` })
     let bannerList = "채굴된 자원이 없습니다."
     if (resourceBannerText.resoureList.length !== 0) {
@@ -14,13 +13,11 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
     }
     $('#resourceText').text(bannerList)
     const { data: tileData } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece4000/ece4100?member=${member}` })
-    console.log(tileData);
     $("#name").text(`닉네임 : ${tileData.name}`)
     $("#tilecount").text(`현재 타일 수량 : Made up of ${tileData.tileCount} tiles`)
     if (tileData.tilesInfoList.length !== 0) {
       let innerHTMLTileCardView = tileData.tilesInfoList.map((v) => {
         const { createdt, blockLocation } = v
-        console.log(createdt);
         return tileInfoMappingTag({ createdt, blockLocation, location: `?member=${member}&lng=${blockLocation[0]}&lat=${blockLocation[1]}` })
       })
       innerHTMLTileCardView = innerHTMLTileCardView.join(",").replaceAll(",", "");

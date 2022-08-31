@@ -2,7 +2,6 @@ const minerTimer = 0
 AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
     .then(async (response) => {
         const { data } = response
-        console.log(data);
         const { data: resourceBannerText } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece3000/ece3500?member=${member}` })
         let bannerList = "채굴된 자원이 없습니다."
         if (resourceBannerText.resoureList.length !== 0) {
@@ -29,7 +28,6 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                         }
                         return prev;
                     }, [])
-                    console.log(chartData);
                     const resourceText = document.getElementsByClassName('resourceitem')
                     Array(resourceText.length).fill().forEach((v, index) => {
                         const item = resourceText.item(index)
@@ -66,7 +64,6 @@ function options({ chartData, chartCategoryData }) {
             type: 'bar',
             events: {
                 click: function (chart, w, e) {
-                    // console.log(chart, w, e)
                 }
             },
             foreColor: '#ffffff'
