@@ -29,7 +29,10 @@ module.exports = {
         updatePin: ({ pin, member }) => `UPDATE Members SET pin = hex(aes_encrypt('${pin}','ELC')) WHERE member = ${member};`,
         findByMember: ({ member }) => `select * from Members where member = ${member}`
     },
-    ece2400: ({ email, pin }) => `SELECT member FROM Members where  CONVERT(AES_DECRYPT(unhex(pin), 'ELC') using utf8) = '${pin}' and email = '${email}'`,
+    ece2400: {
+        findByMember: ({ email, pin }) => `SELECT member FROM Members where  CONVERT(AES_DECRYPT(unhex(pin), 'ELC') using utf8) = '${pin}' and email = '${email}'`,
+        insertLoginMemberInfo: ({ member }) => `insert into Transactions (action , status, member) values (9130,1310,${member})`,
+    },
     ece3300: {
         findLandsByAroundLand: ({ minLandIndex, maxLandIndex }) => `(select * from Lands where landkey >= ${minLandIndex} and landkey <= ${maxLandIndex})`
     },

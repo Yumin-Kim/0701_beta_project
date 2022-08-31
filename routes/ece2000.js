@@ -166,8 +166,9 @@ router.post("/ece2334", async (req, res) => {
 router.post("/ece2400", async (req, res) => {
     try {
         const { email, pin } = req.body
-        const [data] = await executeQuery(sql.ece2400({ email, pin }))
+        const [data] = await executeQuery(sql.ece2400.findByMember({ email, pin }))
         if (data !== undefined) {
+            await executeQuery(sql.ece2400.insertLoginMemberInfo({ member: data.member }))
             await res.send(resultResponseFormat({ data, status: 1310, msg: ece2000.ece2400.success }))
         } else {
             throw new Error(ece2000.ece2400.failure)
