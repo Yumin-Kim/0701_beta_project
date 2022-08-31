@@ -95,7 +95,9 @@ router.post("/ece8220", async (req, res) => {
 function generateRandomCode(n) {
     let str = ''
     for (let i = 0; i < n; i++) {
-        str += Math.floor(Math.random() * 10)
+        let num = Math.floor(Math.random() * 10)
+        num === 0 ? num = 1 : num = num;
+        str += num
     }
     return str
 }
