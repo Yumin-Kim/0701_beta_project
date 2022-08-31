@@ -84,6 +84,10 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                     location.href = `./ece8120.html?member=${member}&xrp=${price}&miner=${tileLength}&dt=${ece8120Code.data}`
                 }
             } else {
+                $("#selectlocation").text("좌표 :")
+                $("#selecttile").text("선택해주세요")
+                $("#selecttileprice").text("선택해주세요")
+
                 var x = document.getElementById("snackbar");
                 x.className = "show";
                 setTimeout(function () {

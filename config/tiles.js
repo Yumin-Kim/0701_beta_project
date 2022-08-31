@@ -5,8 +5,8 @@ const endPointLng = 127.00601;
 const sliceNumber = 0.00009
 const point_lat = Math.round(Number((endPointLat - startLat).toFixed(5)) / sliceNumber)
 const point_lng = Math.round(Number((endPointLng - startLng).toFixed(5)) / sliceNumber);
-const distance = 100;
-const distance_ece3200 = 30;
+const distance = 70;
+const distance_ece3200 = 50;
 
 const convertArrayToLocation = (width, height) =>
     [startLng + width * sliceNumber, startLat + height * sliceNumber]

@@ -16,7 +16,7 @@ const map = new mapboxgl.Map({
   container: "map",
   style: "mapbox://styles/mapbox/satellite-streets-v11",
   center: centerPoint,
-  zoom: 17.5,
+  zoom: 17,
 });
 map.addControl(new mapboxgl.NavigationControl(), "bottom-right");
 
@@ -316,7 +316,9 @@ map.on("load", () => {
       type: "FeatureCollection",
       features: selectedCells,
     });
-
+    $("#selectlocation").text("좌표 :")
+    $("#selecttile").text("선택해주세요")
+    $("#selecttileprice").text("선택해주세요")
     document.getElementById("tile-counts").innerText = "0";
     document.getElementById("no-selected").classList.add("selected-show");
     document.getElementById("has-selected").classList.remove("selected-show");
