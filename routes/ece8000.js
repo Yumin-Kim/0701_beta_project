@@ -89,7 +89,7 @@ router.post("/ece8220", async (req, res) => {
         if (memberAddress === null) throw new Error(ece8000.ece8220.notFoundMemberXRPWallerAddress);
         if (member === undefined || miner === undefined || xrp === undefined) throw new Error(intergrateMSG.failure)
         const code = generateRandomCode(9)
-        await executeQuery(sql.ece8220({ member, miner, xrp, code }))
+        await executeQuery(sql.ece8220({ member, miner, amount: xrp, code }))
         res.send(resultResponseFormat({ status: 1310, msg: ece8000.ece8220.success, data: code }))
     } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))

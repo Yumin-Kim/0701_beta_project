@@ -1,7 +1,7 @@
 const { executeQuery, dbPool } = require("./config/db.js")
 const sql = require("./config/sql.js")
 const schedule = require('node-schedule');
-const resouceList = [7501, 7502, 7503, 7504, 7601]
+const resouceList = [7505, 7506, 7507, 7602]
 const TIMER_1M = '59 * * * * *'
 const TIMER_1S = '1 * * * * *'
 const TIMER_1H = '59 59 * * * *'
@@ -10,7 +10,7 @@ const CURRENT_CONFIG_TIME = process.env.TIME === undefined ? TIMER_1H : TIMER_1M
 
 const interval_mining = async ({ instance }) => {
     await instance.beginTransaction();
-    const [selectContainByMiner] = await instance.query(sql.miner_getMinerOnTiles())
+    const [selectContainByMiner] = await instance.query(sql.miner.getMinerOnTiles())
     if (selectContainByMiner.length !== 0) {
         console.log(`Miner Member Length : ${selectContainByMiner.length}`);
         /**
@@ -23,8 +23,10 @@ const interval_mining = async ({ instance }) => {
         const createResourceInsertQuerysOnPromise = await selectContainByMiner.map(async (resultMember) => {
             const [transactionRow] = await instance.query(`insert into Transactions (action , status ,extracode1 , extracode2 , member ) values (7223 , 1310 ,${resultMember.tileCount},${resultMember.minerCount} ,${resultMember.member})`)
             const resourceInsertQuery = resouceList.map((ele, index) => {
-                if (index === resouceList.length - 1) {
+                if (ele === 7602) {
                     return ele[index] = `(${ele},${Math.floor(Math.random() * 3)},${resultMember.tileCount},${resultMember.minerCount},${resultMember.member},${transactionRow.insertId})`
+                } else if (ele === 7506 || ele === 7507) {
+                    return ele[index] = `(${ele},${Number(resultMember.minerCount) * Number(resultMember.tileCount) * Math.floor(Math.random() * 3)},${resultMember.tileCount},${resultMember.minerCount},${resultMember.member},${transactionRow.insertId})`
                 } else {
                     return ele[index] = `(${ele},${miningLogic({ minerCount: Number(resultMember.minerCount), tileCount: Number(resultMember.tileCount) })},${resultMember.tileCount},${resultMember.minerCount},${resultMember.member},${transactionRow.insertId})`
                 }

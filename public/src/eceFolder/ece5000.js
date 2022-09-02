@@ -28,20 +28,28 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                         }
                         return prev;
                     }, [])
+                    const chartCategoryDataTitle = ["금", "은", "동", "다이아몬드"]
                     const resourceText = document.getElementsByClassName('resourceitem')
+                    const resourceTitleList = document.getElementsByClassName('resourceitemtitle')
                     Array(resourceText.length).fill().forEach((v, index) => {
                         const item = resourceText.item(index)
+                        const itemTitle = resourceTitleList.item(index)
                         item.innerHTML = chartData[index]
+                        itemTitle.innerHTML = chartCategoryDataTitle[index]
                     })
                     var chart = new ApexCharts(document.querySelector("#chart"), options({ chartCategoryData, chartData }));
                     chart.render();
                 } else {
-                    const chartCategoryData = ["물", "목재", "철광석", "석탄", "크립토나이트"]
+                    const chartCategoryData = ["금", "은", "동", "다이아몬드"]
                     const chartData = [0, 0, 0, 0, 0]
                     const resourceText = document.getElementsByClassName('resourceitem')
+                    const resourceTitleList = document.getElementsByClassName('resourceitemtitle')
+                    console.log(resourceTitleList);
                     Array(chartData.length).fill().forEach((v, index) => {
                         const item = resourceText.item(index)
+                        const itemTitle = resourceTitleList.item(index)
                         item.innerHTML = chartData[index]
+                        itemTitle.innerHTML = chartCategoryData[index]
                     })
                     var chart = new ApexCharts(document.querySelector("#chart"), options({ chartCategoryData, chartData }));
                     chart.render();

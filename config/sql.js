@@ -111,36 +111,16 @@ module.exports = {
      * extrastr2 사용자 지갑 명
      */
     // ece8220: ({ member, miner, xrp, memberAddress }) => `insert into Transactions (action , status,member,extracode1,extracode2,extrastr1,extrastr2) values (7211  , 1310 , ${member}, 6101 ,${miner},${xrp},'${memberAddress}' );`,
-    ece8220: ({ member, miner, xrp, code }) => `insert into Transactions (action , status,member,extracode1,extracode2,extrastr1,extrastr2) values (7211  , 1310 , ${member}, 6101 ,${miner},${xrp},'${code}' );`,
+    ece8220: ({ member, miner, amount, code }) => `insert into Transactions (action , status,member,extracode1,extracode2,extrastr1,extrastr2) values (7211  , 1310 , ${member}, 6201 ,${miner},${amount},'${code}' );`,
     ece9100: {
         findTransactionList: ({ member }) => `select transaction , DATE_FORMAT(createdt, '%Y.%m.%d') as createdt from Transactions where action in (7131 , 7132 , 7212,7211) and member = ${member}  group by createdt,transaction order by transaction desc;`,
         selectDetailTransaction: ({ transaction }) => `select action , extracode1,extracode2,extrastr1,extrastr2,extrastr3,member from Transactions where transaction = ${transaction}`
     },
-    /*
-        임의 토지 구매
-        action 7110 소유
-        status 1310 데이터 상태
-        extracode1 시작 타일 또는 선택 타일중 가장 작은 값
-        extracode2 타일 수 
-        extrastr1
-        extrastr2
-        extrastr3 json 정보 저장 [123,1234,1235]
-        land 
-    */
-    miner_buyToTiles: ({ member, jsondata }) => `insert into Transactions (action , status , member , extracode1,extracode2,extrastr3) value (7110 ,1310,${member},${jsondata[0]},${jsondata.length},'${JSON.stringify(jsondata)}')`,
-    /** 채굴기 구매(요청)
-     * 
-     */
-    miner_requestToMiner: ({ member, miner, xrp }) => `insert into Transactions (action , status,member,extracode1,extrastr1,extrastr2) values (7211  , 1310 , ${member}, 6101 ,${miner},${xrp} );`,
-    /** 채굴기 구매 (승인)
-     * 
-    */
-    miner_buyToSuccessMiner: ({ member, miner, xrp }) => `insert into Transactions (action , status,member,extracode1,extrastr1,extrastr2) values (7212  , 1310 , ${member}, 6102 ,${miner},${xrp} );`,
-    // miningToResource:()=>`insert ingo ResourceTrnasctions(action , status , member , )`
-    miner_getMinerOnTiles: () => `    select t2.member , sum(t1.extracode2) as 'tileCount',t2.minerCount  from Transactions as t1 left join 
+    miner: {
+        getMinerOnTiles: () => `select t2.member , sum(t1.extracode2) as 'tileCount',t2.minerCount  from Transactions as t1 left join 
     (select member , sum(extracode2) as 'minerCount' from Transactions where action = 7212   group by member) as t2
     on t1.member = t2.member where t1.action = 7132  and t2.minerCount is not null  group by t1.member`,
-    admin: {
+    }, admin: {
         insertTileSellerInfo: ({ xrpWallet, xrp }) => `insert into Transactions (action ,status,extracode1,extrastr1,extrastr2) values(8201,1310,6520,'${xrpWallet}','${xrp}')`,
         insertMinerSellerInfo: ({ xrpWallet, xrp }) => `insert into Transactions (action ,status,extracode1,extrastr1,extrastr2) values(8202,1310,6520,'${xrpWallet}','${xrp}')`,
     },
@@ -148,23 +128,23 @@ module.exports = {
         v1: {
             updateECE8220: ({ transaction }) => `
             update Transactions 
-            set action = 7212 , extracode1 = 6102 , updatedt=NOW() 
+            set action = 7212 , extracode1 = 6502 , updatedt=NOW() 
             where transaction = ${transaction};
             `,
             updateECE8120: ({ transaction }) => `
             update Transactions 
-            set action = 7132 , extracode1 = 6102 , updatedt=NOW() 
+            set action = 7132 ,updatedt=NOW() 
             where transaction = ${transaction};
             `,
             /** 사용자 입금 내용 한번 더 기록  extracode1 BIGIN T(20) 변경
              * 
-             * action : 6104
+             * action : 6504
              * extracode1 입금 xrp >> 1000000
              * extrastr1 txHash
              * extrastr2 from
              */
             notSelectMemberAndObserveTransaction: ({ to, amount, txHash }) => `insert into Transactions (action , status, extracode1,extrastr1,extrastr2) 
-            values (6104,1310,${amount} , '${txHash}' , '${to}')`,
+            values (6504,1310,${amount} , '${txHash}' , '${to}')`,
             /** 사용자 입금 내용 한번 더 기록
              * action : 6102
              * extracode1 transaction id
@@ -174,7 +154,7 @@ module.exports = {
              * member member ID
              */
             findMemberAndObserveTransaction: ({ transaction, xrpAmout, txHash, from, member }) => `insert into Transactions (action , status, extracode1,extracode2,extrastr1,extrastr2,member) 
-            values (6102,1310,${transaction},${xrpAmout} , '${txHash}' , '${from}' ,${member})`
+            values (6502,1310,${transaction},${xrpAmout} , '${txHash}' , '${from}' ,${member})`
         },
         /** 토지 구매 승인
          *  
