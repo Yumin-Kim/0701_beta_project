@@ -4,7 +4,7 @@ const sql = require("../config/sql");
 const { parseIndexNumberToArray, convertArrayToLocation } = require("../config/tiles");
 const { intergrateMSG } = resultMSG
 const router = require("express").Router()
-const currentResource = [7505, 7506, 7507, 7602]
+const currentResource = [7507, 7508, 7509, 7602]
 router.get("/ece5100", async (req, res) => {
     try {
         const { member } = req.query;

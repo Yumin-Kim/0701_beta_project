@@ -28,15 +28,34 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                         }
                         return prev;
                     }, [])
+                    console.log(chartCategoryData);
                     const chartCategoryDataTitle = ["금", "은", "동", "다이아몬드"]
                     const resourceText = document.getElementsByClassName('resourceitem')
                     const resourceTitleList = document.getElementsByClassName('resourceitemtitle')
+                    const tagbg = document.getElementsByClassName('sc-timeline-info')
+                    const tagicon = document.getElementsByClassName('sc-timeline-icon')
                     console.log(chartData);
                     Array(resourceText.length).fill().forEach((v, index) => {
                         const item = resourceText.item(index)
                         const itemTitle = resourceTitleList.item(index)
                         item.innerHTML = chartData[index]
-                        itemTitle.innerHTML = chartCategoryDataTitle[index]
+                        itemTitle.innerHTML = chartCategoryData[index]
+                        if (chartCategoryData[index] === "동") {
+                            tagicon.item(index).style.backgroundImage = `url('./assets/aa.png')`;
+                            tagbg.item(index).style.background = `#fea47857`;
+                        }
+                        if (chartCategoryData[index] === "금") {
+                            tagicon.item(index).style.backgroundImage = `url('./assets/gold.png')`;
+                            tagbg.item(index).style.background = `#cfaf3d3d`;
+                        }
+                        if (chartCategoryData[index] === "다이아몬드") {
+                            tagicon.item(index).style.backgroundImage = `url('./assets/dia.png')`;
+                            tagbg.item(index).style.background = `#ffffff49`;
+                        }
+                        if (chartCategoryData[index] === "은") {
+                            tagicon.item(index).style.backgroundImage = `url('./assets/sliver.png')`;
+                            tagbg.item(index).style.background = `#fffafa3d`;
+                        }
                     })
                     var chart = new ApexCharts(document.querySelector("#chart"), options({ chartCategoryData, chartData }));
                     chart.render();
@@ -57,7 +76,7 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
             })
     })
 // #cfaf3d3d;bbbbbb3d;bf7c5b57;ffffff49
-const colors = ["#cfaf3d3d", "#bbbbbb3d", "#bf7c5b57", "#ffffff49"]
+const colors = ["#bf7c5b57", "#cfaf3d3d", "#bbbbbb3d", "#ffffff49"]
 function options({ chartData, chartCategoryData }) {
     return {
         series: [{
