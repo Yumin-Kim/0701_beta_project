@@ -31,6 +31,7 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                     const chartCategoryDataTitle = ["금", "은", "동", "다이아몬드"]
                     const resourceText = document.getElementsByClassName('resourceitem')
                     const resourceTitleList = document.getElementsByClassName('resourceitemtitle')
+                    console.log(chartData);
                     Array(resourceText.length).fill().forEach((v, index) => {
                         const item = resourceText.item(index)
                         const itemTitle = resourceTitleList.item(index)
@@ -44,7 +45,6 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                     const chartData = [0, 0, 0, 0, 0]
                     const resourceText = document.getElementsByClassName('resourceitem')
                     const resourceTitleList = document.getElementsByClassName('resourceitemtitle')
-                    console.log(resourceTitleList);
                     Array(chartData.length).fill().forEach((v, index) => {
                         const item = resourceText.item(index)
                         const itemTitle = resourceTitleList.item(index)
