@@ -11,9 +11,14 @@ router.get("/ece5100", async (req, res) => {
         if (member === undefined) throw new Error(intergrateMSG.notSendclientInfo)
         let data = await executeQuery(sql.ece5100({ member }));
         if (data.length !== currentResource.length) {
-            console.log(data);
             await currentResource.map(async (name) => {
-                if (data.resource !== name) {
+                let check = false;
+                await data.forEach(({ resource, amount }) => {
+                    if (resource === name) {
+                        check = true;
+                    }
+                })
+                if (!check) {
                     const obj = {
                         resource: name,
                         amount: 0,
