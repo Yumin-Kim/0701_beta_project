@@ -72,7 +72,7 @@ function textInnerHTML({ action, toggleName, wallet, code, xrp, amount, per }) {
     return `<li>
     <div style="overflow: hidden">
       <h3 style="float: left" id="status">${action}</h3>
-      <h4 style="float: right" id="xrp">${xrp} XRP</h4>
+      <h4 style="float: right" id="xrp">${xrp} TRX</h4>
     </div>
     <p class="ece9000_txt" id="amount">${toggleName} : ${amount} ${per}</p>
     <p class="ece9000_txt">

@@ -16,7 +16,7 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
         $('#resourceText').text(bannerList)
         const { data: adminXRP } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8210?member=${member}` })
         const [admin] = adminXRP
-        $("#message").html(`현재 채굴기 개당 가격은 ${admin.currentamount}XRP 입니다.`)
+        $("#message").html(`현재 채굴기 개당 가격은 ${admin.currentamount}TRX 입니다.`)
         let sellMinerList = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8211?member=${member}` })
         if (sellMinerList.data.length !== 0) {
             sellMinerList = sellMinerList.data
@@ -57,7 +57,7 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
         if (ece8210_data.miner !== null) {
             const { data: adminInfo } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8210?member=${member}` })
             $("#admin").html(adminInfo[0].walletaddress)
-            $("#xrp").html(ece8210_data.xrp + "XRP")
+            $("#xrp").html(ece8210_data.xrp + "TRX")
             $("#miner").html(ece8210_data.miner)
             $("#dt").html(ece8210_data.dt)
 
@@ -105,7 +105,7 @@ function innerHTML_MinerHistory({ createdt, status, xrp, minerCount }) {
             <span style="float: left">[${createdt}]</span>
             <span style="float: left; margin-left:10px">${minerCount}대</span>
             <span style="float: right">
-              <span style="font-size:12px">${xrp}XRP</span>
+              <span style="font-size:12px">${xrp}TRX</span>
               <h4>${status.slice(4)}</h4>
             </span>
           </div>`

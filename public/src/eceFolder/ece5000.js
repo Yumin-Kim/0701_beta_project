@@ -56,8 +56,8 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                 }
             })
     })
-
-const colors = ["#239DF5", "#824949", "#A8A8A8", "#A62C2C", "#32C981"]
+// #cfaf3d3d;bbbbbb3d;bf7c5b57;ffffff49
+const colors = ["#cfaf3d3d", "#bbbbbb3d", "#bf7c5b57", "#ffffff49"]
 function options({ chartData, chartCategoryData }) {
     return {
         series: [{
@@ -96,8 +96,17 @@ function options({ chartData, chartCategoryData }) {
             categories: chartCategoryData,
             labels: {
                 style: {
-                    colors,
-                    fontSize: '10px'
+                    // colors:,
+                    fontSize: '10px',
+                    cssClass: 'apexcharts-text-title',
+                    textColor: "#fff"
+                }
+            },
+            title: { style: { color: "#fdfdfdf" } }
+        }, yaxis: {
+            labels: {
+                style: {
+                    colors: "#fff"
                 }
             }
         }

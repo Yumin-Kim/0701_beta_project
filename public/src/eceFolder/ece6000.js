@@ -60,12 +60,21 @@ function textInnerHTML({ minerCount, spAmount, tileCount }) {
     return `<li>
     <div style="overflow: hidden">
       <h4 style="float: left">채굴기 : ${minerCount}</h4>
-      <h4 style="color: #12e1f0; float: right">CR : ${spAmount}</h4>
     </div>
     <p>타일 갯수 : ${tileCount}</p>
     <div class="flex2">
     `
 }
+// function textInnerHTML({ minerCount, spAmount, tileCount }) {
+//     return `<li>
+//     <div style="overflow: hidden">
+//       <h4 style="float: left">채굴기 : ${minerCount}</h4>
+//     //   <h4 style="color: #12e1f0; float: right">CR : ${spAmount}</h4>
+//     </div>
+//     <p>타일 갯수 : ${tileCount}</p>
+//     <div class="flex2">
+//     `
+// }
 function resourceInnerHTML({ cateogoryName, amount }) {
     return `<div class="flex-items">${cateogoryName} : ${amount}</div>`
 }
