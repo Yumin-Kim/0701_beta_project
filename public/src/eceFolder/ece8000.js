@@ -4,30 +4,48 @@ $("#erroraddress").css("display", "none")
 AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
     .then(async (response) => {
         const { data } = response
-        const { data: resourceBannerText } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece3000/ece3500?member=${member}` })
+        const { data: resourceBannerText } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece3000/ece3500_beta?member=${member}` })
         let bannerList = "채굴된 자원이 없습니다."
         if (resourceBannerText.resoureList.length !== 0) {
             bannerList = resourceBannerText.resoureList.map((v) => {
                 const description = selectCodeNameTpCodeTable({ data, codeName: v.resource })
-                return `${description}: ${v.amount}`
+                if (description === "동") {
+                    return `${description}: <span id ="resourceTrick">${v.amount}</span>`
+                } else {
+                    return `${description}: ${v.amount}`
+                }
             })
             bannerList = bannerList.join(",").replaceAll(",", " ")
+
         }
-        $('#resourceText').text(bannerList)
+        $('#resourceText').html(bannerList)
+        const trickResource = $("#resourceTrick").text()
+        setInterval(() => {
+            const unixtime = Math.floor(new Date().getTime() / 1000)
+            $("#resourceTrick").text(`${trickResource}.${String(unixtime).slice(5, 10)}`)
+        }, 1000)
         const { data: adminXRP } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8210?member=${member}` })
         const [admin] = adminXRP
-        $("#message").html(`현재 채굴기 개당 가격은 ${admin.currentamount}TRX 입니다.`)
-        let sellMinerList = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8211?member=${member}` })
+        let [firstDecimal, secondDecimal] = admin.currentamount.split(".")
+        firstDecimal = firstDecimal.slice(0, firstDecimal.length - 2) + generateRandomCode(2)
+        secondDecimal = generateRandomCode(2);
+        console.log(firstDecimal);
+        const adminDecimalTronAmount = `${firstDecimal}.${secondDecimal}`
+        $("#message").html(`현재 채굴기 개당 가격은 ${adminDecimalTronAmount}TRX 입니다.`)
+        let sellMinerList = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8211_beta?member=${member}` })
+        console.log(sellMinerList);
         if (sellMinerList.data.length !== 0) {
             sellMinerList = sellMinerList.data
             sellMinerList = sellMinerList.map((v) => {
-                return innerHTML_MinerHistory({ createdt: v.createdt.split("T")[0], status: selectCodeNameTpCodeTable({ data, codeName: v.action }), xrp: v.xrp, minerCount: v.minercount })
+                // return innerHTML_MinerHistory({ createdt: v.createdt.split("T")[0], status: selectCodeNameTpCodeTable({ data, codeName: v.action }), xrp: v.xrp, minerCount: v.minercount })
+                return innerHTML_MinerHistory({ createdt: v.createdt.split("T")[0], status: selectCodeNameTpCodeTable({ data, codeName: v.action }), xrp: v.amount, minerCount: v.minerCount })
             })
             sellMinerList = sellMinerList.join(",").replaceAll(",", "")
             $(".ece8210_history_template").html(sellMinerList)
         }
         $("#ece8210_ece8220").click(async () => {
             const minerCount = $("#minerCount").val()
+            const address = $("#address").val()
             let valid = true
             if (minerCount.trim() === "") {
                 valid = false;
@@ -39,12 +57,21 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
             } else {
                 $("#errorminer").fadeOut()
             }
+            if (address.trim() === "") {
+                valid = false;
+                $("#erroraddress").fadeIn();
+            } else if (Number(address.length) < 33) {
+                valid = false;
+                $("#erroraddress").html("트론 지갑 주소는 최소 34자리 이상 입력하셔야합니다")
+                $("#erroraddress").fadeIn()
+            } else {
+                $("#erroraddress").fadeOut()
+            }
             if (valid) {
-                const { data: adminInfo } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8210?member=${member}` })
-                const xrp = (Number(adminInfo[0].currentamount) * minerCount).toFixed(2)
-                const requestMiner = await AJAXRequestMethod({ method: "POST", requestURL: `${serverURL}/ece8000/ece8220?member=${member}`, data: { miner: minerCount, xrp } })
+                const amount = (Number(adminDecimalTronAmount) * minerCount).toFixed(2)
+                const requestMiner = await AJAXRequestMethod({ method: "POST", requestURL: `${serverURL}/ece8000/ece8220_beta?member=${member}`, data: { miner: minerCount, amount, address } })
                 if (requestMiner.status === 1310) {
-                    location.href = `./ece8220.html?member=${member}&xrp=${xrp}&miner=${minerCount}&dt=${requestMiner.data}`
+                    location.href = `./ece8220.html?member=${member}&amount=${amount}&miner=${minerCount}&address=${address}`
                 }
             }
         })
@@ -57,9 +84,10 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
         if (ece8210_data.miner !== null) {
             const { data: adminInfo } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8210?member=${member}` })
             $("#admin").html(adminInfo[0].walletaddress)
-            $("#xrp").html(ece8210_data.xrp + "TRX")
+            $("#xrp").html(ece8210_data.amount + "TRX")
             $("#miner").html(ece8210_data.miner)
-            $("#dt").html(ece8210_data.dt)
+            $("#address").html(ece8210_data.address)
+            // $("#dt").html(ece8210_data.dt)
 
         }
         $("#ece8110_ece8120").click(async () => {
@@ -74,6 +102,9 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                     duplicateTile = true;
                 }
             })
+            // 0913 막음
+            duplicateTile = true;
+            //0913 막음
             if (!duplicateTile) {
                 const requestData = {
                     data: tileInfo,
@@ -93,7 +124,8 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                 setTimeout(function () {
                     x.className = x.className.replace("show", "");
                 }, 3000);
-                $("#snackbar").html('<h3>타일 구매</h3><p>사용자가 존재하는 타일을 선택하셨습니다.<p/>')
+                // $("#snackbar").html('<h3>타일 구매</h3><p>사용자가 존재하는 타일을 선택하셨습니다.<p/>')
+                $("#snackbar").html('<h3>타일 구매</h3><p>준비중입니다.<p/>')
                 selectedTiles_g()
             }
 
@@ -112,4 +144,12 @@ function innerHTML_MinerHistory({ createdt, status, xrp, minerCount }) {
 }
 function parseArrayToIndexNumber(x, y) {
     return Math.floor(y * point_lng + x)
+}
+
+function generateRandomCode(n) {
+    let str = ''
+    for (let i = 0; i < n; i++) {
+        str += Math.floor(Math.random() * 10)
+    }
+    return str
 }

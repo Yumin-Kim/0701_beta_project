@@ -457,7 +457,8 @@ body {
         background: #57f5ff33;
 }
 #resourceText{
-  font-size: 10px;
+  margin-top: 5px;
+  font-size: 13px;
 }
 .resourceTag p{
   text-align: center;

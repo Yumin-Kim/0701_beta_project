@@ -20,6 +20,7 @@
     <link href="./style.css" rel="stylesheet" />
   </head>
   <link rel="stylesheet" href="./ece7000.css" />
+  <script src="./lib/gauge.min.js"></script>
   <style>
     .sc-searchbox {
       position: relative;
@@ -70,6 +71,24 @@
     p {
       color: #ffffff;
     }
+    .ece8210_history {
+      color: #fff;
+      overflow: hidden;
+      margin-bottom: 4px;
+      background: #57f5ff6b;
+      padding: 10px 10px;
+    }
+    .ece8210_history span,
+    .ece8210_history h4 {
+      display: inline-block;
+      margin: 0;
+    }
+    .ece8210_history_template {
+      overflow-x: hidden;
+      overflow-y: scroll;
+      height: 16vh;
+      margin-bottom: 30px;
+    }
   </style>
   <body>
     <div class="resourceTag">
@@ -115,15 +134,82 @@
     </div>
     <div id="contents">
       <div class="row_margin">
-        <h1>내정보</h1>
-        <h3>이메일</h3>
-        <div class="sc-searchbox">
-          <input type="email" id="email" class="sc-searchbox-field" />
-          <div class="sc-searchbox-placeholder"></div>
-          <div style="background-color: #94e5ff; height: 1px"></div>
-          <p class="alert" id="erroremail">이메일을 입력해주세요</p>
+        <h1 style="margin: 10px 0 0 10px">추천인</h1>
+        <h3>채굴기 가속도</h3>
+        <div style="margin: 0 auto; padding: 0 14px" id="guages">
+          <canvas id="foo"></canvas>
+          <h3
+            id="title"
+            style="
+              text-align: center;
+              margin: 0px;
+              margin-top: -25px;
+              font-size: 25px;
+            "
+          ></h3>
+          <p
+            id="notMiner"
+            style="display: none; text-align: center; margin-top: 10px"
+          >
+            채굴기를 구매하셔야합니다.
+          </p>
+          <h4
+            style="
+              text-align: center;
+              color: #fff;
+              margin: 10px 0;
+              font-size: 12px;
+            "
+          >
+            "추천인을 늘려 더욱 빠른 채굴을 즐기세요"
+          </h4>
         </div>
-        <h3>성</h3>
+        <h3>추천인 코드</h3>
+        <div class="sc-searchbox" style="overflow: hidden">
+          <div style="width: 70%; float: left; margin-right: 10px">
+            <input type="text" id="ece3620_txt" class="sc-searchbox-field" />
+            <div class="sc-searchbox-placeholder"></div>
+            <div style="background-color: #94e5ff; height: 1px"></div>
+            <p class="alert" id="errornickname">추천인 닉네임을 입력해주세요</p>
+          </div>
+          <div>
+            <button
+              class="cardviewbtn_w100"
+              id="ece3620"
+              style="width: 25%; float: left; margin: 0 !important"
+            >
+              등록
+            </button>
+          </div>
+        </div>
+        <div style="overflow: hidden">
+          <h3 class="ece8210_title" style="float: left">추천인 현황</h3>
+          <h3 class="ece8210_title" id="referLevel" style="float: right"></h3>
+        </div>
+        <div class="ece8210_history_template">
+          <div class="ece8210_history">
+            <span style="text-align: center; display: block"
+              >추천인 내역이 존재하지 않습니다.</span
+            >
+          </div>
+          <!-- <div class="ece8210_history">
+            <span style="float: left">2022.07.04</span>
+            <span style="float: right">
+              <span>Guest001</span>
+              <h4>추천인 승인 완료</h4>
+            </span>
+          </div> -->
+        </div>
+        <button
+          type="button"
+          value="./index.html"
+          class="cardviewbtn_w100 btn7000"
+        >
+          메인 페이지
+        </button>
+      </div>
+
+      <!-- <h3>성</h3>
         <div class="sc-searchbox">
           <input type="text" id="firstname" class="sc-searchbox-field" />
           <div class="sc-searchbox-placeholder"></div>
@@ -151,20 +237,12 @@
             여성
           </button>
         </div>
-        <button
-          type="button"
-          value="./index.html"
-          class="cardviewbtn_w100 btn7000"
-        >
-          메인 페이지
-        </button>
-        <button type="button" id="updatememberInfo" class="cardviewbtn_w100">
-          변경
-        </button>
-      </div>
+        
+        
+      </div> -->
     </div>
     <script src="./main.js"></script>
     <script src="./src/jquery_main.js"></script>
-    <script src="./src/eceFolder/ece7000.js"></script>
+    <script src="./src/eceFolder/ece3600.js"></script>
   </body>
 </html>

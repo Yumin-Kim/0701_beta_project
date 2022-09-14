@@ -92,7 +92,7 @@
     .ece8210_history_template {
       overflow-x: hidden;
       overflow-y: scroll;
-      height: 36vh;
+      height: 25vh;
       margin-bottom: 30px;
     }
     * {
@@ -110,7 +110,7 @@
     /* form starting stylings ------------------------------- */
     .group {
       position: relative;
-      margin-bottom: 45px;
+      margin-bottom: 15px;
     }
     .group input {
       font-size: 18px;
@@ -166,7 +166,7 @@
   <body>
     <div class="resourceTag">
       <p>보유 자원</p>
-      <p id="resourceText">물 : 00 물 : 00 물 : 00 물 : 00</p>
+      <p id="resourceText">0</p>
     </div>
     <div id="topBar">
       <h3 id="menu-toggle">Menu</h3>
@@ -239,6 +239,21 @@
             </p>
           </div>
         </div>
+        <h3 class="ece8210_title">* 입금 트론 지갑 주소명</h3>
+        <div class="container">
+          <div class="group">
+            <input
+              id="address"
+              placeholder="TQooBX9o8iSSprLWW96YShBogx7Uwisuim"
+              type="text"
+              style="font-size: 12px"
+            />
+            <div style="background-color: #94e5ff; height: 1px"></div>
+            <p class="alert" id="erroraddress">
+              입금할 트론 지갑 주소를 입력해주세요
+            </p>
+          </div>
+        </div>
         <h3 class="ece8210_title">채굴기 구매 기록</h3>
         <div class="ece8210_history_template">
           <div class="ece8210_history">
@@ -256,21 +271,6 @@
           </div> -->
         </div>
 
-        <!-- <h3 class="ece8210_title">* 입금 리플 지갑 주소명</h3>
-        <div class="container">
-          <div class="group">
-            <input
-              id="address"
-              placeholder="rsG1sNifXJxGS2nDQ9zHyoe1S5APrtwpjV"
-              type="text"
-              style="font-size: 12px"
-            />
-            <div style="background-color: #94e5ff; height: 1px"></div>
-            <p class="alert" id="erroraddress">
-              입금할 리플 지갑 주소를 입력해주세요
-            </p>
-          </div>
-        </div> -->
         <button
           type="button"
           style="margin-bottom: 30px"

@@ -70,13 +70,88 @@ function miningLogic_v1({ minerCount, tileCount }) {
     const mainLogic = (x) => x / unixTime
     return Math.round(Math.floor(mainLogic(Math.random() * unixTime) * (Math.random() * 100) + 5) + miningTileCount / miningDate * Math.round((Math.random() * 12) + 1) * tileCount)
 }
+
+async function mining_beta({ instance }) {
+    await instance.beginTransaction();
+    const [selectContainByMiner] = await instance.query(sql.miner.getMinerOnTiles())
+    if (selectContainByMiner.length !== 0) {
+        console.log(`Miner Member Length : ${selectContainByMiner.length}`);
+        /**
+         * 마이닝 
+         * Transaction
+         * extracode1 >> tile count
+         * extracode2 >> miner count
+         */
+        let bulkinsertByMineToResourceTransaction = `insert into ResourceTransactions (resource , amount ,tiles , minercount,member,transaction) values`
+        const createResourceInsertQuerysOnPromise = await selectContainByMiner.map(async (resultMember) => {
+            const [transactionRow] = await instance.query(`insert into Transactions (action , status ,extracode1 , extracode2 , member ) values (7223 , 1310 ,${resultMember.tileCount},${resultMember.minerCount} ,${resultMember.member})`)
+            const resourceInsertQuery = resouceList.map((ele, index) => {
+                // if (ele === 7602) {
+                //     return ele[index] = `(${ele},${Math.floor(Math.random() * 3)},${resultMember.tileCount},${resultMember.minerCount},${resultMember.member},${transactionRow.insertId})`
+                // } else if (ele === 7506 || ele === 7507) {
+                //     return ele[index] = `(${ele},${Number(resultMember.minerCount) * Number(resultMember.tileCount) * Math.floor(Math.random() * 3)},${resultMember.tileCount},${resultMember.minerCount},${resultMember.member},${transactionRow.insertId})`
+                // } else {
+                return ele[index] = `(${ele},${miningLogic_v1({ minerCount: Number(resultMember.minerCount), tileCount: Number(resultMember.tileCount) })},${resultMember.tileCount},${resultMember.minerCount},${resultMember.member},${transactionRow.insertId})`
+                // }
+            })
+            return resourceInsertQuery.join(",")
+        })
+        const createReouceInsertQuery = await Promise.all(createResourceInsertQuerysOnPromise)
+        bulkinsertByMineToResourceTransaction = bulkinsertByMineToResourceTransaction + createReouceInsertQuery.join(",")
+        const [insertByMinerInfoTransactions] = await instance.query(bulkinsertByMineToResourceTransaction);
+        console.log(`
+    insertByResourceTransactions affect Rows : ${JSON.stringify(insertByMinerInfoTransactions)}
+        `);
+
+    }
+    await instance.commit();
+    await instance.release();
+}
+async function interval_minig_beta({ instance }) {
+    const referPlusEle = [3, 5, 7, 9, 11, 14, 17, 21, 24, 29]
+    await instance.beginTransaction()
+    const [findMiningMember] = await instance.query('select * from Transactions where action = 7235;')
+    if (findMiningMember.length !== 0) {
+        const craetePromiseLoop = await findMiningMember.map(async (v) => {
+            const currentAmount = v.extracode2;
+            const id = v.transaction;
+            const member = v.member;
+            const minerCount = v.extrastr2
+            const amount = v.extracode1;
+            if (currentAmount === (10000000 * minerCount) || currentAmount > (10000000 * minerCount)) {
+                await instance.query(`update Transactions set action = 7236 where transaction = ${v.transaction}`)
+                return { id, member, amount, minerCount, msg: "채굴 종료" };
+            } else {
+                const [checkReferCodeCount] = await executeQuery(`select count(*) as count from Transactions where action = 9501 and member = ${v.member}`)
+                let referCount;
+                if (checkReferCodeCount.count === 0) {
+                    referCount = 1
+                } else {
+                    referCount = referPlusEle[checkReferCodeCount.count - 1];
+                }
+
+                const updateData = currentAmount + Math.round((10000000 * minerCount) / 22000 * referCount)
+                await instance.query(`insert ResourceTransactions (resource,amount,minercount,member,transaction) values(7507,${Math.round((10000000 * minerCount) / 22000 * referCount)},${minerCount},${member},${id}) `)
+                await instance.query(`update Transactions set extracode2 = ${updateData} where transaction = ${v.transaction}`)
+                return { id, member, amount, minerCount, referCount }
+            }
+        })
+        const craetePromiseLoopResolve = await Promise.all(craetePromiseLoop)
+        console.log(`${JSON.stringify(craetePromiseLoopResolve)}`);
+        await instance.commit();
+        await instance.release();
+    }
+}
 (async () => {
-    console.log(`=======================================`);
-    console.log(`[${process.env.NODE_ENV}] start mining`);
-    console.log(`Mining ${CURRENT_CONFIG_TIME}`);
-    console.log(`=======================================`);
-    const j = await schedule.scheduleJob(CURRENT_CONFIG_TIME, async () => {
-        const instance = await dbPool.getConnection(async conn => conn)
-        await interval_mining({ instance });
-    });
+    const instance = await dbPool.getConnection(async conn => conn)
+    await interval_minig_beta({ instance })
+    // console.log(`=======================================`);
+    // console.log(`[${process.env.NODE_ENV}] start mining`);
+    // console.log(`Mining ${CURRENT_CONFIG_TIME}`);
+    // console.log(`=======================================`);
+    // const j = await schedule.scheduleJob(CURRENT_CONFIG_TIME, async () => {
+    //     const instance = await dbPool.getConnection(async conn => conn)
+    //     await interval_minig_beta({ instance })
+    //     // await interval_mining({ instance });
+    // });
 })()

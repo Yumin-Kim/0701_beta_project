@@ -60,5 +60,22 @@ router.get("/requestilelist", async (req, res) => {
     const data = await executeQuery(sql.xrpWebsocket.findByMemberAllBuyRequestTilies());
     res.send(resultResponseFormat({ data, status: 1310, msg: "타일 구매 요청자 리스트" }))
 })
-
+router.post("/ece8220", async (req, res) => {
+    try {
+        const { tron, amount } = req.body;
+        const [selectData] = await executeQuery(`select * from Transactions where action = 7231 and extrastr1 = '${tron}' and extrastr2='${amount}' order by transaction desc limit 1;`)
+        if (selectData === undefined) throw new Error("입력하신 정보는 조회 할 수 없는 트론 주소 , 금액 입니다.")
+        await executeQuery(`update Transactions set action  = 7232 ,updatedt=NOW()  where transaction = ${selectData.transaction}`)
+        /**
+         * 마이닝 활성화
+         * 총 채굴량 
+         * 현 채굴량
+         * 마이너 갯수
+         */
+        await executeQuery(`insert into Transactions (action , status , extracode1,extracode2,extrastr1,extrastr2,member) values (7235,1310,${Number(selectData.extracode1) * 1000},0,${selectData.transaction},${selectData.extracode1},${selectData.member})`)
+        res.send(resultResponseFormat({ status: 1310, msg: "채굴기 구매 입금 확인 처리 되었습니다." }))
+    } catch (error) {
+        res.send(resultResponseFormat({ status: 1320, msg: error.message }))
+    }
+})
 module.exports = router;

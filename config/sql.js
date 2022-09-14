@@ -13,7 +13,11 @@ module.exports = {
         insertEmailAuthCode: ({ email, code }) => `insert into Transactions (action, status , extrastr1, extrastr2) values (9314 ,9110,'${email}', '${code}');`,
     },
     ece2320: ({ email, code }) => `select  action,extrastr1 as 'email', member , status from Transactions where extrastr1 = '${email}' and extrastr2 = '${code}' and action = 9314 and timestampdiff(second, createdt, now()) < ${emailLimitCount}`,
-    ece2323: ({ email, gender, firstname, lastname, pin }) => `INSERT INTO Members (email, firstname, lastname, gender, pin) VALUES ('${email}','${firstname}','${lastname}',${gender},hex(aes_encrypt('${pin}','ELC')));`,
+    ece2323: {
+        insertMember: ({ email, gender, firstname, lastname, pin, nickname }) => `INSERT INTO Members (email, firstname, lastname, gender,nickname ,pin) VALUES ('${email}','${firstname}','${lastname}',${gender},'${nickname}',hex(aes_encrypt('${pin}','ELC')));`,
+        insertReferCode: ({ referNickname, referCode, member }) => `insert Transactions (action , status ,extracode1,extrastr1,member) values (9501,1310,${referCode},'${referNickname}',${member})`,
+        insertNotReferCode: ({ member }) => `insert Transactions (action , status ,member) values (9502,1310,${member})`,
+    },
     ece2324: ({ member }) => `select * from Members where member = ${member}`,
     ece2330: ({ member, pin }) => `SELECT * FROM Members where  CONVERT(AES_DECRYPT(unhex(pin), 'ELC') using utf8) = '${pin}' and member = ${member}`,
     ece2332: {

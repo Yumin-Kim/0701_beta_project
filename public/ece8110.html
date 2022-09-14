@@ -19,6 +19,11 @@
     <script src="./src/global.js"></script>
     <link href="./custom-style.css" rel="stylesheet" />
     <link href="./style.css" rel="stylesheet" />
+    <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/flickity@2/dist/flickity.min.css"
+    />
     <style>
       .floatbutton {
         position: fixed;
@@ -188,12 +193,49 @@
         display: inline-block;
         margin-bottom: 18px;
       }
+      .carousel {
+        background: #eee;
+      }
+      /* 
+      .carousel-cell {
+        width: 66%;
+        height: 200px;
+        margin-right: 10px;
+        background: #8c8;
+        border-radius: 5px;
+        counter-increment: gallery-cell;
+      } */
+
+      /* cell number */
+      /* .carousel-cell:before {
+        display: block;
+        text-align: center;
+        content: counter(gallery-cell);
+        line-height: 200px;
+        font-size: 80px;
+        color: white;
+      } */
+      .flickity-viewport {
+        height: 92vh !important;
+      }
+      .carousel-cell {
+        height: 100%;
+      }
+      .flickity-button {
+        display: none;
+      }
+      .flickity-page-dots .dot {
+        background-color: #57f4ffa3;
+      }
+      .flickity-page-dots {
+        bottom: 19px;
+      }
     </style>
   </head>
   <body>
     <div class="resourceTag">
       <p>보유 자원</p>
-      <p id="resourceText">물 : 00 물 : 00 물 : 00 물 : 00</p>
+      <p id="resourceText">0</p>
     </div>
     <div id="topBar">
       <h3 id="menu-toggle">Menu</h3>
@@ -246,11 +288,35 @@
     </div>
     <div id="snackbar">
       <h3>채굴 완료</h3>
-      <p>믈 10 얼음 9 모래 8 나무 10</p>
+      <p>0</p>
       <p>특수 자원 2</p>
     </div>
-    <div id="map" style="display: none"></div>
-    <img src="./assets/main_1.png" style="width: 100%; height: 100vh" alt="" />
+    <div id="map"></div>
+    <!-- <div id="map" style="display: none"></div> -->
+    <!-- <img src="./assets/main_1.png" style="width: 100%; height: 100vh" alt="" />
+    <div class="carousel" data-flickity='{ "freeScroll": true }'>
+      <div class="carousel-cell">
+        <img
+          src="./assets/main_1.png"
+          style="width: 100%; height: 100vh"
+          alt=""
+        />
+      </div>
+      <div class="carousel-cell">
+        <img
+          src="./assets/main_1.png"
+          style="width: 100%; height: 100vh"
+          alt=""
+        />
+      </div>
+      <div class="carousel-cell">
+        <img
+          src="./assets/main_1.png"
+          style="width: 100%; height: 100vh"
+          alt=""
+        />
+      </div>
+    </div> -->
     <div class="ece8110_container">
       <div class="ece8110_box">
         <h2 style="margin-top: 18px">

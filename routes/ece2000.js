@@ -51,13 +51,29 @@ router.post("/ece2320", async (req, res) => {
 })
 
 /**
- * 사용자 정보 중복 검사
+ * 닉네임 정보 중복 검사
+ */
+router.post("/ece2321", async (req, res) => {
+    try {
+        const { nickname } = req.body;
+        const validrefer = await executeQuery(`select member,nickname from Members where nickname = '${nickname}' limit 1`);
+        if (validrefer.length !== 0) throw new Error("존재하는 닉네임입니다.")
+        res.send(resultResponseFormat({ status: 1310, msg: "사용가능한 닉네임입니다." }))
+    } catch (error) {
+        res.send(resultResponseFormat({ status: 1320, msg: error.message }))
+    }
+})
+/**
+ * 추천인 정보 중복 검사
  */
 router.post("/ece2322", async (req, res) => {
     try {
-
+        const { nickname } = req.body;
+        const data = await executeQuery(`select member,nickname from Members where nickname = '${nickname}' limit 1`);
+        if (data.length == 0) throw new Error("존재하지 않은 추천인 닉네임 입니다.");
+        res.send(resultResponseFormat({ status: 1310, msg: "존재하는 추천인 입니다.", data: { referCode: data[0].member, nickname: data[0].nickname } }))
     } catch (error) {
-
+        res.send(resultResponseFormat({ status: 1320, msg: error.message }))
     }
 })
 /**
@@ -65,12 +81,26 @@ router.post("/ece2322", async (req, res) => {
  */
 router.post("/ece2323", async (req, res) => {
     try {
-        const { email, gender, firstname, lastname, pin } = req.body;
+        let { email, gender, firstname, lastname, pin, nickname, referCode, referNickname } = req.body;
         const [member] = await executeQuery(sql.ece2310.findByMember({ email }));
+        let validReferCode = false;
         if (member !== undefined) throw new Error(ece2000.ece2323.validEmail)
-        const { affectedRows, insertId } = await executeQuery(sql.ece2323({ email, firstname, lastname, pin, gender }))
+        /**
+         * @TODO 추천인 미입력
+         */
+        if (referCode.trim() === "" || referCode === 0 || referNickname.trim() === "") {
+            validReferCode = true
+            // referCode = 999999;
+            // referNickname = "ELC NOT ReferCode";
+        }
+        const { affectedRows, insertId } = await executeQuery(sql.ece2323.insertMember({ email, firstname, lastname, pin, gender, nickname }))
+        if (affectedRows !== 1) throw new Error(ece2000.ece2323.failure);
+        if (!validReferCode) {
+            await executeQuery(sql.ece2323.insertReferCode({ member: insertId, referCode, referNickname }))
+        } else {
+            await executeQuery(sql.ece2323.insertNotReferCode({ member: insertId }))
+        }
         if (affectedRows === 1) await res.send(resultResponseFormat({ data: { member: insertId }, msg: ece2000.ece2323.success, status: 1310 }))
-        else new Error(ece2000.ece2323.faliure)
     } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
     }

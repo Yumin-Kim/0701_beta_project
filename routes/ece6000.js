@@ -39,7 +39,50 @@ router.get("/ece6100", async (req, res) => {
             }
             return Promise.resolve([...prevData]);
         }, Promise.resolve([]))
-        res.send(resultResponseFormat({ status: 1310, msg: "내 토지 조회 완료", data }))
+        res.send(resultResponseFormat({ status: 1310, msg: "총 채굴 정보 전송", data }))
+    } catch (error) {
+        res.send(resultResponseFormat({ status: 1320, msg: error.message }))
+    }
+})
+router.get("/ece6100_beta", async (req, res) => {
+    try {
+        const { member } = req.query;
+        if (member === undefined) throw new Error(intergrateMSG.notSendclientInfo)
+        const resoureTransactionList = await executeQuery(`
+        SELECT 
+            DATE_FORMAT(t1.createdt, '%Y.%m.%d') AS createdt,
+            t1.extracode1 AS 'amount',
+            t1.extracode2 AS 'resource',
+            t.extracode1 as 'tileCount',
+            t.extrastr2 as 'minerCount'    
+        FROM
+            Transactions as t1
+            left join
+            (select * from Transactions where member = ${member} and action = 7235) as t
+            on t.transaction = t1.extrastr1
+        WHERE
+            t1.action IN (9901) AND t1.member = ${member} order by t1.transaction desc;
+        `)
+        const data = await resoureTransactionList.reduce((prev, cur) => {
+            if (prev.length === 0) {
+                prev.push({ createdt: cur.createdt, dayminingData: [cur] })
+            } else {
+                const result = prev.filter(v => v.createdt === cur.createdt);
+                let indexing;
+                prev.forEach((val, index) => {
+                    if (val.createdt === cur.createdt) {
+                        indexing = index
+                    }
+                })
+                if (result.length !== 0) {
+                    prev[indexing].dayminingData.push(cur)
+                } else {
+                    prev.push({ createdt: cur.createdt, dayminingData: [cur] })
+                }
+            }
+            return prev
+        }, [])
+        res.send(resultResponseFormat({ status: 1310, msg: "총 채굴 정보 전송", data }))
     } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
     }

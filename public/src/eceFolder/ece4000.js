@@ -2,16 +2,26 @@ const minerTimer = 0
 AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
   .then(async (response) => {
     const { data } = response
-    const { data: resourceBannerText } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece3000/ece3500?member=${member}` })
+    const { data: resourceBannerText } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece3000/ece3500_beta?member=${member}` })
     let bannerList = "채굴된 자원이 없습니다."
     if (resourceBannerText.resoureList.length !== 0) {
       bannerList = resourceBannerText.resoureList.map((v) => {
         const description = selectCodeNameTpCodeTable({ data, codeName: v.resource })
-        return `${description}: ${v.amount}`
+        if (description === "동") {
+          return `${description}: <span id ="resourceTrick">${v.amount}</span>`
+        } else {
+          return `${description}: ${v.amount}`
+        }
       })
       bannerList = bannerList.join(",").replaceAll(",", " ")
+
     }
-    $('#resourceText').text(bannerList)
+    $('#resourceText').html(bannerList)
+    const trickResource = $("#resourceTrick").text()
+    setInterval(() => {
+      const unixtime = Math.floor(new Date().getTime() / 1000)
+      $("#resourceTrick").text(`${trickResource}.${String(unixtime).slice(5, 10)}`)
+    }, 1000)
     const { data: tileData } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece4000/ece4100?member=${member}` })
     $("#name").text(`닉네임 : ${tileData.name}`)
     $("#tilecount").text(`현재 타일 수량 : Made up of ${tileData.tileCount} tiles`)

@@ -1,16 +1,23 @@
 const minerTimer = 0
+let trickTimer;
 AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
     .then(async (response) => {
         const { data } = response
-        const { data: resourceBannerText } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece3000/ece3500?member=${member}` })
+        const { data: resourceBannerText } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece3000/ece3500_beta?member=${member}` })
         let bannerList = "채굴된 자원이 없습니다."
         if (resourceBannerText.resoureList.length !== 0) {
             bannerList = resourceBannerText.resoureList.map((v) => {
                 const description = selectCodeNameTpCodeTable({ data, codeName: v.resource })
-                return `${description}: ${v.amount}`
+                if (description === "동") {
+                    return `${description}: <span id ="resourceTrick">${v.amount}</span>`
+                } else {
+                    return `${description}: ${v.amount}`
+                }
             })
             bannerList = bannerList.join(",").replaceAll(",", " ")
+
         }
+        console.log(resourceBannerText.memberInfo);
         if (resourceBannerText.memberInfo.length !== 0) {
             let count = 0;
             resourceBannerText.memberInfo.forEach((v) => {
@@ -22,7 +29,7 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                 $("#mining").css("display", "none")
                 $("#timer").text("채굴기 또는 타일을 모두 구매하셔야합니다.")
             } else {
-                const { data } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece3000/ece3401?member=${member}` })
+                const { data } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece3000/ece3401_beta?member=${member}` })
                 // 누적 채굴 X
                 if (data.length === 0) {
                     $("#mining").css("display", "none")
@@ -48,12 +55,20 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                     $("#timer").text("채굴하기를 눌러주세요")
                 }
             }
+        } else {
+            $("#mining").css("display", "none")
+            $("#timer").text("채굴기 또는 타일을 모두 구매하셔야합니다.")
         }
         const a = selectCodeNameTpCodeTable({ data, codeName: 7212 })
 
-        $('#resourceText').text(bannerList)
+        $('#resourceText').html(bannerList)
+        const trickResource = $("#resourceTrick").text()
+        trickTimer = setInterval(() => {
+            const unixtime = Math.floor(new Date().getTime() / 1000)
+            $("#resourceTrick").text(`${trickResource}.${String(unixtime).slice(5, 10)}`)
+        }, 1000)
         $("#mining").click(async () => {
-            const response = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece3000/ece3400?member=${member}` })
+            const response = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece3000/ece3400_beta?member=${member}` })
             if (response.status === 1320) {
                 $("#snackbar").html('<h3>체굴 실패</h3><p>채굴할 자원이 없습니다.<p/>')
             } else {
@@ -71,16 +86,26 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                 <h3>채굴 완료</h3>
                 <p>${text.join(",").replaceAll(",", " ")}</p>
                 <p>${sp}</p>`)
-                const { data: resourceBannerText } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece3000/ece3500?member=${member}` })
+                const { data: resourceBannerText } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece3000/ece3500_beta?member=${member}` })
                 let bannerList = "채굴된 자원이 없습니다."
                 if (resourceBannerText.resoureList.length !== 0) {
                     bannerList = resourceBannerText.resoureList.map((v) => {
                         const description = selectCodeNameTpCodeTable({ data, codeName: v.resource })
-                        return `${description}: ${v.amount}`
+                        if (description === "동") {
+                            return `${description}: <span id ="resourceTrick">${v.amount}</span>`
+                        } else {
+                            return `${description}: ${v.amount}`
+                        }
                     })
                     bannerList = bannerList.join(",").replaceAll(",", " ")
-                    $('#resourceText').text(bannerList)
                 }
+                $('#resourceText').html(bannerList)
+                const trickResource = $("#resourceTrick").text()
+                clearInterval(trickTimer)
+                trickTimer = setInterval(() => {
+                    const unixtime = Math.floor(new Date().getTime() / 1000)
+                    $("#resourceTrick").text(`${trickResource}.${String(unixtime).slice(5, 10)}`)
+                }, 1000)
             }
             $("#mining").css("display", "none")
             let check = false;

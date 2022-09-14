@@ -81,6 +81,16 @@ router.get("/ece8211", async (req, res) => {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
     }
 })
+router.get("/ece8211_beta", async (req, res) => {
+    try {
+        const { member } = req.query;
+        if (member === undefined) throw new Error(intergrateMSG.failure)
+        const data = await executeQuery(`select action , extracode1 as 'minerCount' , extrastr2 as 'amount' , createdt from Transactions where action in (7231,7232) and member = ${member}`)
+        res.send(resultResponseFormat({ data, status: 1310, msg: ece8000.ece8210.success }))
+    } catch (error) {
+        res.send(resultResponseFormat({ status: 1320, msg: error.message }))
+    }
+})
 router.post("/ece8220", async (req, res) => {
     try {
         const { member } = req.query;
@@ -91,6 +101,17 @@ router.post("/ece8220", async (req, res) => {
         const code = generateRandomCode(9)
         await executeQuery(sql.ece8220({ member, miner, amount: xrp, code }))
         res.send(resultResponseFormat({ status: 1310, msg: ece8000.ece8220.success, data: code }))
+    } catch (error) {
+        res.send(resultResponseFormat({ status: 1320, msg: error.message }))
+    }
+})
+router.post("/ece8220_beta", async (req, res) => {
+    try {
+        const { member } = req.query;
+        const { miner, address, amount } = req.body;
+        if (member === undefined || miner === undefined || address === undefined) throw new Error(intergrateMSG.failure)
+        await executeQuery(`insert  Transactions (action , status , extracode1, extrastr1 ,extrastr2,member ) values (7231,1310 , ${miner} , '${address}' , '${amount}',${member})`);
+        res.send(resultResponseFormat({ status: 1310, msg: ece8000.ece8220.success }))
     } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
     }

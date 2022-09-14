@@ -78,6 +78,10 @@ module.exports = {
                 success: "채굴 완료 하였습니다.",
                 failure: "채굴할 자원이 없습니다."
             },
+            ece3401: {
+                success: "채굴할 자원이 존재합니다.",
+                failure: "채굴할 자원이 존재하지 않습니다."
+            },
             ece3500: {
                 success: "사용자 채굴 관련 정보 전송 완료"
             }
