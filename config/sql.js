@@ -75,9 +75,8 @@ module.exports = {
         union all
         (select sum(extracode2) as 'amount' , action from Transactions where member = ${member} and action = 7212)`,
     },
-    ece5100: ({ member }) => `select sum(rt.amount) as 'amount',rt.resource from ResourceTransactions as rt left join 
-    (select transaction from Transactions where action = 7224 and member = ${member}) as t
-    on rt.transaction = t.transaction where member = ${member} and rt.transaction is not null group by rt.resource;`,
+    ece5100: ({ member }) => `select sum(amount) as 'amount',resource from ResourceTransactions 
+    where member = ${member} and extracode is not null group by resource;`,
     ece6100: {
         findTransactionByResoureceTransactions: ({ member }) => `SELECT DATE_FORMAT(createdt, '%Y.%m.%d') as createdt,transaction,extracode1 as 'tileCount' , extracode2 as 'minerCount'  FROM Transactions where action = 7224 and member = ${member} group by createdt , transaction order by  transaction desc;`,
         findResourceTrnsactionByResouce: ({ transaction }) => `SELECT resource,amount,tiles,minercount FROM  ResourceTransactions where transaction =${transaction}`
