@@ -18,11 +18,11 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
 
         }
         $('#resourceText').html(bannerList)
-        const trickResource = $("#resourceTrick").text()
-        setInterval(() => {
-            const unixtime = Math.floor(new Date().getTime() / 1000)
-            $("#resourceTrick").text(`${trickResource}.${String(unixtime).slice(5, 10)}`)
-        }, 1000)
+        // const trickResource = $("#resourceTrick").text()
+        // setInterval(() => {
+        //     const unixtime = Math.floor(new Date().getTime() / 1000)
+        //     $("#resourceTrick").text(`${trickResource}.${String(unixtime).slice(5, 10)}`)
+        // }, 1000)
 
         $("#ece3620").click(async () => {
             const ece3620_txt = $("#ece3620_txt").val()

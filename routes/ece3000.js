@@ -181,14 +181,21 @@ router.post("/ece3620", async (req, res) => {
         const { referNickName } = req.body
         if (member === undefined || referNickName == undefined) throw new Error(intergrateMSG.failure)
         const [referMember] = await executeQuery(`select member,nickname from Members where nickname = '${referNickName}' limit 1`)
-        // console.log(referMember);
-        if (referMember !== undefined) {
-            const referMemberList = await executeQuery(`select * from Transactions where action = 9501 and extracode1 = ${referMember.member} and member = ${member} limit 1`)
-            if (referMemberList.length !== 0) throw new Error("등록한 추천인 입니다.")
-            await executeQuery(`insert into Transactions (action,status,extracode1,extrastr1,member) values (9501,1310,${referMember.member},'${referMember.nickname}',${member})`)
-            res.send(resultResponseFormat({ status: 1310, msg: "추천인 코드 등록 완료" }))
-        } else {
+        if (referMember === undefined) {
             throw new Error("존재하지 않는 추천인입니다.")
+        }
+        const reerMemberMinerCount = await executeQuery(`select * from Transactions where action = 7235 and member = ${referMember.member}`)
+        if (reerMemberMinerCount.length !== 0) {
+            if (referMember !== undefined) {
+                const referMemberList = await executeQuery(`select * from Transactions where action = 9501 and extracode1 = ${referMember.member} and member = ${member} limit 1`)
+                if (referMemberList.length !== 0) throw new Error("등록한 추천인 입니다.")
+                await executeQuery(`insert into Transactions (action,status,extracode1,extrastr1,member) values (9501,1310,${referMember.member},'${referMember.nickname}',${member})`)
+                res.send(resultResponseFormat({ status: 1310, msg: "추천인 코드 등록 완료" }))
+            } else {
+                throw new Error("존재하지 않는 추천인입니다.")
+            }
+        } else {
+            throw new Error("")
         }
     }
     catch (error) {

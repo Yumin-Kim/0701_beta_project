@@ -10,12 +10,19 @@ module.exports = {
       "NODE_ENV": "PRD"
     },
   }, {
-    name: "elc_XRP_WS",
-    script: "./xrp.ws.js",
+    name: "elc_TRON_MONITER",
+    script: "./tron.mainnet.js",
     env: {
       "NODE_ENV": "PRD"
     },
   }
+    // {
+    //   name: "elc_XRP_WS",
+    //   script: "./xrp.ws.js",
+    //   env: {
+    //     "NODE_ENV": "PRD"
+    //   },
+    // }
     // {
     //   name: "elc_XRP_WS_Appliaction",
     //   script: "./xrp.ws.js",

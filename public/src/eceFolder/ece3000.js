@@ -48,7 +48,6 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                             $("#timer").text("채굴하기를 눌러주세요")
                             $("#mining").css("display", "block")
                             clearInterval(clearTimer)
-
                         }
                     }, 1000)
                 } else {
@@ -60,7 +59,6 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
             $("#timer").text("채굴기 또는 타일을 모두 구매하셔야합니다.")
         }
         const a = selectCodeNameTpCodeTable({ data, codeName: 7212 })
-
         $('#resourceText').html(bannerList)
         const trickResource = $("#resourceTrick").text()
         trickTimer = setInterval(() => {
@@ -128,7 +126,6 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
         //     }, 1000)
         // })
         const { data: validMinig } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece3000/ece3401_beta?member=${member}` })
-
         if (validMinig.length !== 0) {
             $('#mining').fadeIn();
             $("#mining").click(async () => {
@@ -149,7 +146,8 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                     $("#snackbar").html(`
                 <h3>채굴 완료</h3>
                 <p>${text.join(",").replaceAll(",", " ")}</p>
-                <p>${sp}</p>`)
+                <p>${sp}</p>`);
+                    clearInterval(trickTimer)
                     const { data: resourceBannerText } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece3000/ece3500_beta?member=${member}` })
                     let bannerList = "채굴된 자원이 없습니다."
                     if (resourceBannerText.resoureList.length !== 0) {
@@ -165,11 +163,10 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                     }
                     $('#resourceText').html(bannerList)
                     const trickResource = $("#resourceTrick").text()
-                    clearInterval(trickTimer)
-                    // trickTimer = setInterval(() => {
-                    //     const unixtime = Math.floor(new Date().getTime() / 1000)
-                    //     $("#resourceTrick").text(`${trickResource}.${String(unixtime).slice(5, 10)}`)
-                    // }, 1000)
+                    trickTimer = setInterval(() => {
+                        const unixtime = Math.floor(new Date().getTime() / 1000)
+                        $("#resourceTrick").text(`${trickResource}.${String(unixtime).slice(5, 10)}`)
+                    }, 1000)
                 }
                 $("#mining").css("display", "none")
                 let check = false;

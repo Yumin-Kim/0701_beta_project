@@ -2,6 +2,7 @@ const { executeQuery } = require("../config/db");
 const { resultResponseFormat, resultMSG } = require("../config/result");
 const { parseArrayToIndexNumber, parseIndexNumberToArray } = require('../config/tiles.js');
 const sql = require("../config/sql");
+const { digifinax_request, requestAPI_https } = require("../config/utils");
 const { intergrateMSG, ece8000 } = resultMSG
 const router = require("express").Router()
 /**
@@ -65,7 +66,19 @@ router.post("/ece8120_rev", async (req, res) => {
 })
 router.get("/ece8210", async (req, res) => {
     try {
+        const tronPrice = await digifinax_request("GET", "/ticker", { symbol: "trx_usdt" });
+        const priceAPI = await requestAPI_https(`https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?authkey=QYT1SYyVeJk4SgY9syEe8ncle3EvNqAi&searchdate=${new Date().toISOString().split("T")[0].replaceAll("-", "")}&data=AP01`)
+        let usd_price = 0;
+        priceAPI.forEach(element => {
+            if (element.cur_unit === "USD") {
+                usd_price = Number(element.bkpr.replace(",", ""))
+            }
+        });
+        // const cc = Number(( * 100).toFixed(2))
+        // console.log(1300000 / cc);
+        console.log();
         const data = await executeQuery(sql.ece8210())
+        data[0].currentamount = (100 / tronPrice).toFixed(2)
         res.send(resultResponseFormat({ data, status: 1310, msg: ece8000.ece8210.success }))
     } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
@@ -74,8 +87,10 @@ router.get("/ece8210", async (req, res) => {
 router.get("/ece8211", async (req, res) => {
     try {
         const { member } = req.query;
+
         if (member === undefined) throw new Error(intergrateMSG.failure)
         const data = await executeQuery(sql.ece8211({ member }))
+        console.log(data);
         res.send(resultResponseFormat({ data, status: 1310, msg: ece8000.ece8210.success }))
     } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
