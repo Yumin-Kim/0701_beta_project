@@ -58,7 +58,7 @@ router.get("/ece6100_beta", async (req, res) => {
         FROM
             Transactions as t1
             left join
-            (select * from Transactions where member = ${member} and action = 7235) as t
+            (select * from Transactions where member = ${member} and action in(7235,7236) ) as t
             on t.transaction = t1.extrastr1
         WHERE
             t1.action IN (9901) AND t1.member = ${member} order by t1.transaction desc;
