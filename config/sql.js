@@ -82,12 +82,12 @@ module.exports = {
         findTransactionByResoureceTransactions: ({ member }) => `SELECT DATE_FORMAT(createdt, '%Y.%m.%d') as createdt,transaction,extracode1 as 'tileCount' , extracode2 as 'minerCount'  FROM Transactions where action = 7224 and member = ${member} group by createdt , transaction order by  transaction desc;`,
         findResourceTrnsactionByResouce: ({ transaction }) => `SELECT resource,amount,tiles,minercount FROM  ResourceTransactions where transaction =${transaction}`
     },
-    ece7100: ({ member }) => `select member, email,firstname,lastname,walletaddress,gender from Members where member = ${member}`,
+    ece7100: ({ member }) => `select member, email,firstname,lastname,walletaddress,gender,nickname from Members where member = ${member}`,
     ece7200: {
-        updateMemberInfo: ({ member, email, firstname, lastname, walletaddress, gender }) => `update Members set email = '${email}' , 
-      firstname = '${firstname}' ,lastname = '${lastname}' , walletaddress = '${walletaddress}' , gender = ${gender} where member = ${member}`,
+        updateMemberInfo: ({ member, email, firstname, lastname, walletaddress, gender, nickname }) => `update Members set email = '${email}' , 
+      firstname = '${firstname}' ,lastname = '${lastname}' , walletaddress = '${walletaddress}' , gender = ${gender} , nickname = '${nickname}' where member = ${member}`,
         updateMemberPin: ({ member, pin }) => `UPDATE Members SET pin = hex(aes_encrypt('${pin}','ELC')) WHERE member = ${member};`,
-        findByMember: ({ member }) => `select member, email,firstname,lastname,walletaddress,gender from Members where member = ${member}`,
+        findByMember: ({ member }) => `select member, email,firstname,lastname,walletaddress,gender,nickname from Members where member = ${member}`,
     },
 
     /** 토지 판매자 정보 제공

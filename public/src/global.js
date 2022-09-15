@@ -20,9 +20,9 @@ if (querystring.split("=").length > 2) {
 } else {
     centerLocation = { lng: 126.46573, lat: 33.50650 }
 }
-// const serverURL = "http://localhost:3000";
+const serverURL = "http://localhost:3000";
 // const serverURL = "http://10.0.2.2:3000";
-const serverURL = "http://13.209.96.192:3000"
+// const serverURL = "http://13.209.96.192:3000"
 let tileAdminInfo;
 AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8110?member=${member}` })
     .then(({ data }) => {
