@@ -181,6 +181,10 @@ router.post("/ece3620", async (req, res) => {
         const { referNickName } = req.body
         if (member === undefined || referNickName == undefined) throw new Error(intergrateMSG.failure)
         const [referMember] = await executeQuery(`select member,nickname from Members where nickname = '${referNickName}' limit 1`)
+        const dataRefer = await executeQuery(`select * from Transactions where action = 7232 and member = ${member}`)
+        if (dataRefer.length === 0) {
+            throw new Error("")
+        }
         if (referMember === undefined) {
             throw new Error("존재하지 않는 추천인입니다.")
         }

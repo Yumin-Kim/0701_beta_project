@@ -26,7 +26,7 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
 
         $("#ece3620").click(async () => {
             const ece3620_txt = $("#ece3620_txt").val()
-            console.log();
+            $("#ece3620_txt").val("")
             if (REFERMEBER.length > 9) {
                 $("#errornickname").html("최대 추천인은 10명입니다.")
                 $("#errornickname").fadeIn();
