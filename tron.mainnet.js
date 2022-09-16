@@ -32,6 +32,7 @@ const tronDecimal = 1000000;
     tronWeb.setHeader({ "TRON-PRO-API-KEY": TRONAPIKEY });
     const j = await schedule.scheduleJob(CURRENT_CONFIG_TIME, async () => {
         const ece8210_minerList = await executeQuery(`select extrastr1 as 'userInputAddress',extracode1 as 'minerCount',member , transaction ,extrastr2 as 'amount'  from Transactions where action = 7231 order by transaction desc`)
+        const ece8110_tileList = await executeQuery(`select extrastr1 as 'userInputAddress',extracode1 as 'minerCount',member , transaction ,extrastr2 as 'amount'  from Transactions where action = 7241 order by transaction desc`)
         console.log(`>>>>>>>>>>>>>>>>START NODE TRON MOINTER SCADULE<<<<<<<<<<<<<<<<<<`);
 
         const { data: ownerTransactions } = await trongrid.account.getTransactions(TRONWALLET, options)
@@ -42,6 +43,9 @@ const tronDecimal = 1000000;
             const userAddress = tronWeb.address.fromHex(userTransaction.raw_data.contract[0].parameter.value.owner_address)
             // const ownerAddress = tronWeb.address.fromHex(userTransaction.raw_data.contract[0].parameter.value.to_address)
             const userAmount = userTransaction.raw_data.contract[0].parameter.value.amount;
+            /**
+             * 채굴기 구매자 승인
+             */
             await ece8210_minerList.map(async (value) => {
                 const { userInputAddress, transaction, amount, minerCount, member } = value;
                 const userRequestPrice = Number(amount) * tronDecimal
@@ -55,6 +59,42 @@ const tronDecimal = 1000000;
                         console.log("==================================");
                         console.log("");
                         await executeQuery(`update Transactions set action  = 7232 ,updatedt=NOW()  where transaction = ${transaction}`)
+                        /**
+                         * 마이닝 활성화
+                         * 총 채굴량 
+                         * 현 채굴량
+                         * 마이너 갯수
+                         * 트론 입금 정보 기록
+                         * 사용자 실 입금 금액 , 트랜잭션 번호 , 트랜잭션 hash , 블럭 번호 
+                         */
+                        await executeQuery(`insert into Transactions (action , status , extracode1,extracode2,extrastr1,extrastr2,member) values 
+                     (7235,1310,${Number(minerCount) * 1000},0,'${transaction}','${minerCount}',${member}),
+                     (6202,1310,${userAmount},${transaction},'${txID}','${blockNumber}',${member})`)
+                    } else {
+                        //금액 틀린경우
+                    }
+                } else {
+                    //다른 사용자
+                    // await executeQuery(`insert into Transactions (action , status , extracode1,extracode2,extrastr1,extrastr2,member) values 
+                    //     (6203,1310,${userAmount},${transaction},'${txID}','${userAddress}')`)
+                }
+            })
+            /**
+             * 타일 구매자 승인
+             */
+            await ece8110_tileList.map(async (value) => {
+                const { userInputAddress, transaction, amount, minerCount, member } = value;
+                const userRequestPrice = Number(amount) * tronDecimal
+                if (userInputAddress === userAddress) {
+                    if (userRequestPrice === userAmount) {
+                        console.log("==================================");
+                        console.log(`VERIFY TRON User Address: ${userAddress}`);
+                        console.log(`VERIFY TRON TX ID: ${txID}`);
+                        console.log(`VERIFY TRON MEMBER ID: ${member}`);
+                        console.log(`TRON TYPE : ${userTransaction.raw_data.contract[0].type}`);
+                        console.log("==================================");
+                        console.log("");
+                        await executeQuery(`update Transactions set action  = 7242 ,updatedt=NOW()  where transaction = ${transaction}`)
                         /**
                          * 마이닝 활성화
                          * 총 채굴량 

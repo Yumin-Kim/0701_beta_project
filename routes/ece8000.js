@@ -10,8 +10,27 @@ const router = require("express").Router()
  */
 router.get("/ece8110", async (req, res) => {
     try {
+        const tronPrice = await digifinax_request("GET", "/ticker", { symbol: "trx_usdt" });
+        const priceAPI = await requestAPI_https(`https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?authkey=QYT1SYyVeJk4SgY9syEe8ncle3EvNqAi&searchdate=${new Date().toISOString().split("T")[0].replaceAll("-", "")}&data=AP01`)
+        let usd_price = 0;
+        priceAPI.forEach(element => {
+            if (element.cur_unit === "USD") {
+                usd_price = Number(element.bkpr.replace(",", ""))
+            }
+        });
         const [data] = await executeQuery(sql.ece8110())
+        data.currentamount = ((1000000 / usd_price) * (1 / tronPrice)).toFixed(2)
         res.send(resultResponseFormat({ data, status: 1310, msg: ece8000.ece8110.success }))
+    } catch (error) {
+        res.send(resultResponseFormat({ status: 1320, msg: error.message }))
+    }
+})
+router.get("/ece8111_beta", async (req, res) => {
+    try {
+        const { member } = req.query;
+        if (member === undefined) throw new Error(intergrateMSG.failure)
+        const data = await executeQuery(`select action , extracode1 as 'minerCount' , extrastr2 as 'amount' , createdt from Transactions where action in (7241,7242) and member = ${member}`)
+        res.send(resultResponseFormat({ data, status: 1310, msg: ece8000.ece8210.success }))
     } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
     }
@@ -64,6 +83,17 @@ router.post("/ece8120_rev", async (req, res) => {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
     }
 })
+router.post("/ece8120_beta", async (req, res) => {
+    try {
+        const { member } = req.query;
+        const { tileSet, address, amount } = req.body;
+        if (member === undefined || tileSet === undefined || address === undefined) throw new Error(intergrateMSG.failure)
+        await executeQuery(`insert  Transactions (action , status , extracode1, extrastr1 ,extrastr2,member ) values (7241,1310 , ${tileSet} , '${address}' , '${amount}',${member})`);
+        res.send(resultResponseFormat({ status: 1310, msg: ece8000.ece8220.success }))
+    } catch (error) {
+        res.send(resultResponseFormat({ status: 1320, msg: error.message }))
+    }
+})
 router.get("/ece8210", async (req, res) => {
     try {
         const tronPrice = await digifinax_request("GET", "/ticker", { symbol: "trx_usdt" });
@@ -76,9 +106,9 @@ router.get("/ece8210", async (req, res) => {
         });
         // const cc = Number(( * 100).toFixed(2))
         // console.log(1300000 / cc);
-        console.log();
+
         const data = await executeQuery(sql.ece8210())
-        data[0].currentamount = (100 / tronPrice).toFixed(2)
+        data[0].currentamount = ((1000000 / usd_price) * (1 / tronPrice)).toFixed(2)
         res.send(resultResponseFormat({ data, status: 1310, msg: ece8000.ece8210.success }))
     } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))

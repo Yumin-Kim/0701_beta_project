@@ -24,63 +24,127 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
             const unixtime = Math.floor(new Date().getTime() / 1000)
             $("#resourceTrick").text(`${trickResource}.${String(unixtime).slice(5, 10)}`)
         }, 1000)
-        const { data: adminXRP } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8210?member=${member}` })
-        const [admin] = adminXRP
-        let [firstDecimal, secondDecimal] = admin.currentamount.split(".")
-        firstDecimal = firstDecimal.slice(0, firstDecimal.length - 2) + generateRandomCode(2)
-        secondDecimal = generateRandomCode(2);
-        console.log(firstDecimal);
-        const adminDecimalTronAmount = `${firstDecimal}.${secondDecimal}`
-        $("#message").html(`현재 채굴기 개당 가격은 ${adminDecimalTronAmount}TRX 입니다.`)
-        let sellMinerList = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8211_beta?member=${member}` })
-        console.log(sellMinerList);
-        if (sellMinerList.data.length !== 0) {
-            sellMinerList = sellMinerList.data
-            sellMinerList = sellMinerList.map((v) => {
-                // return innerHTML_MinerHistory({ createdt: v.createdt.split("T")[0], status: selectCodeNameTpCodeTable({ data, codeName: v.action }), xrp: v.xrp, minerCount: v.minercount })
-                return innerHTML_MinerHistory({ createdt: v.createdt.split("T")[0], status: selectCodeNameTpCodeTable({ data, codeName: v.action }), xrp: v.amount, minerCount: v.minerCount })
-            })
-            sellMinerList = sellMinerList.join(",").replaceAll(",", "")
-            $(".ece8210_history_template").html(sellMinerList)
-        }
-        $("#ece8210_ece8220").click(async () => {
-            const minerCount = $("#minerCount").val()
-            const address = $("#address").val()
-            let valid = true
-            if (minerCount.trim() === "") {
-                valid = false;
-                $("#errorminer").fadeIn()
-            } else if (Number(minerCount) < 1) {
-                valid = false;
-                $("#errorminer").html("최소 1개 이상 구매 가능합니다.")
-                $("#errorminer").fadeIn()
-            } else {
-                $("#errorminer").fadeOut()
-            }
-            if (address.trim() === "") {
-                valid = false;
-                $("#erroraddress").fadeIn();
-            } else if (Number(address.length) < 33) {
-                valid = false;
-                $("#erroraddress").html("트론 지갑 주소는 최소 34자리 이상 입력하셔야합니다")
-                $("#erroraddress").fadeIn()
-            } else {
-                $("#erroraddress").fadeOut()
-            }
-            if (valid) {
-                const amount = (Number(adminDecimalTronAmount) * minerCount).toFixed(2)
-                const requestMiner = await AJAXRequestMethod({ method: "POST", requestURL: `${serverURL}/ece8000/ece8220_beta?member=${member}`, data: { miner: minerCount, amount, address } })
-                if (requestMiner.status === 1310) {
-                    location.href = `./ece8220.html?member=${member}&amount=${amount}&miner=${minerCount}&address=${address}`
-                }
-            }
-        })
         const a = querystring.split("&")
         const ece8210_data = { miner: null, xrp: null, dt: null }
         a.forEach(v => {
             const [key, value] = v.split("=");
             ece8210_data[`${key}`] = value
         })
+        // if(){
+
+        // }
+        if (location.pathname === "/ece8129.html") {
+            if (ece8210_data.miner !== null) {
+                const { data: adminInfo } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8210?member=${member}` })
+                $("#admin").html(adminInfo[0].walletaddress)
+                $("#xrp").html(ece8210_data.amount + "TRX")
+                $("#miner").html(ece8210_data.miner)
+                $("#address").html(ece8210_data.address)
+                // $("#dt").html(ece8210_data.dt)
+            }
+        }
+        if (location.pathname === "/ece8119.html") {
+            const { data: tileAmount_tile } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8110?member=${member}` })
+            let [firstDecimal_tiles, secondDecimal_2] = tileAmount_tile.currentamount.split(".")
+            firstDecimal_tiles = firstDecimal_tiles.slice(0, firstDecimal_tiles.length - 2) + generateRandomCode(2)
+            secondDecimal_2 = generateRandomCode(2);
+            console.log(firstDecimal_tiles);
+            const adminDecimalTronAmount_tile = `${firstDecimal_tiles}.${secondDecimal_2}`
+            $("#message_ece8119").html(`현재 1000Tiles 당 가격은 ${adminDecimalTronAmount_tile}TRX 입니다.`)
+
+            /**
+             * 타일 구매
+             */
+            $("#ece8210_ece8229").click(async () => {
+                const e = document.getElementById("ece8229Select");
+                const value = e.value;
+                const text = e.options[e.selectedIndex].text;
+                const address = $("#address").val()
+                let valid = true
+                if (address.trim() === "") {
+                    valid = false;
+                    $("#erroraddress").fadeIn();
+                } else if (Number(address.length) < 33) {
+                    valid = false;
+                    $("#erroraddress").html("트론 지갑 주소는 최소 34자리 이상 입력하셔야합니다")
+                    $("#erroraddress").fadeIn()
+                } else {
+                    $("#erroraddress").fadeOut()
+                }
+                if (valid) {
+                    const amount = (Number(adminDecimalTronAmount_tile) * Number(value)).toFixed(2)
+                    const requestMiner = await AJAXRequestMethod({ method: "POST", requestURL: `${serverURL}/ece8000/ece8120_beta?member=${member}`, data: { tileSet: value, amount, address } })
+                    if (requestMiner.status === 1310) {
+                        location.href = `./ece8129.html?member=${member}&amount=${amount}&miner=${text}&address=${address}`
+                    }
+                }
+            })
+            /**
+             * 타일 구매 기록
+             */
+            let sellTileList = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8111_beta?member=${member}` })
+            if (sellTileList.data.length !== 0) {
+                sellTileList = sellTileList.data
+                sellTileList = sellTileList.map((v) => {
+                    return innerHTML_MinerHistory_Tile({ createdt: v.createdt.split("T")[0], status: selectCodeNameTpCodeTable({ data, codeName: v.action }), xrp: v.amount, minerCount: v.minerCount })
+                })
+                sellTileList = sellTileList.join(",").replaceAll(",", "")
+                $(".ece8210_history_template").html(sellTileList)
+            }
+        }
+        if (location.pathname === "/ece8210.html") {
+            let sellMinerList = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8211_beta?member=${member}` })
+            if (sellMinerList.data.length !== 0) {
+                sellMinerList = sellMinerList.data
+                sellMinerList = sellMinerList.map((v) => {
+                    // return innerHTML_MinerHistory({ createdt: v.createdt.split("T")[0], status: selectCodeNameTpCodeTable({ data, codeName: v.action }), xrp: v.xrp, minerCount: v.minercount })
+                    return innerHTML_MinerHistory({ createdt: v.createdt.split("T")[0], status: selectCodeNameTpCodeTable({ data, codeName: v.action }), xrp: v.amount, minerCount: v.minerCount })
+                })
+                sellMinerList = sellMinerList.join(",").replaceAll(",", "")
+                $(".ece8210_history_template").html(sellMinerList)
+            }
+            const { data: adminXRP } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8210?member=${member}` })
+            const [admin] = adminXRP
+            let [firstDecimal, secondDecimal] = admin.currentamount.split(".")
+            firstDecimal = firstDecimal.slice(0, firstDecimal.length - 2) + generateRandomCode(2)
+            secondDecimal = generateRandomCode(2);
+            console.log(firstDecimal);
+            const adminDecimalTronAmount = `${firstDecimal}.${secondDecimal}`
+            $("#message").html(`현재 채굴기 개당 가격은 ${adminDecimalTronAmount}TRX 입니다.`)
+
+            $("#ece8210_ece8220").click(async () => {
+                const minerCount = $("#minerCount").val()
+                const address = $("#address").val()
+                let valid = true
+                if (minerCount.trim() === "") {
+                    valid = false;
+                    $("#errorminer").fadeIn()
+                } else if (Number(minerCount) < 1) {
+                    valid = false;
+                    $("#errorminer").html("최소 1개 이상 구매 가능합니다.")
+                    $("#errorminer").fadeIn()
+                } else {
+                    $("#errorminer").fadeOut()
+                }
+                if (address.trim() === "") {
+                    valid = false;
+                    $("#erroraddress").fadeIn();
+                } else if (Number(address.length) < 33) {
+                    valid = false;
+                    $("#erroraddress").html("트론 지갑 주소는 최소 34자리 이상 입력하셔야합니다")
+                    $("#erroraddress").fadeIn()
+                } else {
+                    $("#erroraddress").fadeOut()
+                }
+                if (valid) {
+                    const amount = (Number(adminDecimalTronAmount) * minerCount).toFixed(2)
+                    const requestMiner = await AJAXRequestMethod({ method: "POST", requestURL: `${serverURL}/ece8000/ece8220_beta?member=${member}`, data: { miner: minerCount, amount, address } })
+                    if (requestMiner.status === 1310) {
+                        location.href = `./ece8220.html?member=${member}&amount=${amount}&miner=${minerCount}&address=${address}`
+                    }
+                }
+            })
+        }
         if (ece8210_data.miner !== null) {
             const { data: adminInfo } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8210?member=${member}` })
             $("#admin").html(adminInfo[0].walletaddress)
@@ -88,7 +152,6 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
             $("#miner").html(ece8210_data.miner)
             $("#address").html(ece8210_data.address)
             // $("#dt").html(ece8210_data.dt)
-
         }
         $("#ece8110_ece8120").click(async () => {
             //타일수 , 가격 , 멤버 , 타일 정보 
@@ -130,49 +193,7 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
             }
 
         })
-        $("#ece8210_ece8229").click(async () => {
-            const minerCount = $("#tileCount").val()
-            const address = $("#address").val()
-            let valid = true
-            if (minerCount.trim() === "") {
-                valid = false;
-                $("#errorminer").fadeIn()
-            } else if (Number(minerCount) < 1000) {
-                valid = false;
-                $("#errorminer").html("최소 1000Tile 이상 구매 가능합니다.")
-                $("#errorminer").fadeIn()
-            } else if (Number(minerCount) > 10001) {
-                $("#errorminer").html("최대 10000Tile 이상 구매 가능합니다.")
-                $("#errorminer").fadeIn()
-            } else {
-                $("#errorminer").fadeOut()
-            }
-            if (address.trim() === "") {
-                valid = false;
-                $("#erroraddress").fadeIn();
-            } else if (Number(address.length) < 33) {
-                valid = false;
-                $("#erroraddress").html("트론 지갑 주소는 최소 34자리 이상 입력하셔야합니다")
-                $("#erroraddress").fadeIn()
-            } else {
-                $("#erroraddress").fadeOut()
-            }
-            if (valid) {
-                let tileCount = minerCount;
-                if (minerCount.length === 3) {
 
-                }
-                if (minerCount.length === 4) {
-
-                }
-
-                const amount = (Number(adminDecimalTronAmount) * minerCount).toFixed(2)
-                // const requestMiner = await AJAXRequestMethod({ method: "POST", requestURL: `${serverURL}/ece8000/ece8220_beta?member=${member}`, data: { miner: minerCount, amount, address } })
-                if (requestMiner.status === 1310) {
-                    location.href = `./ece8220.html?member=${member}&amount=${amount}&miner=${minerCount}&address=${address}`
-                }
-            }
-        })
     })
 
 function innerHTML_MinerHistory({ createdt, status, xrp, minerCount }) {
@@ -182,6 +203,16 @@ function innerHTML_MinerHistory({ createdt, status, xrp, minerCount }) {
             <span style="float: right">
               <span style="font-size:12px">${xrp}TRX</span>
               <h4>${status.slice(4)}</h4>
+            </span>
+          </div>`
+}
+function innerHTML_MinerHistory_Tile({ createdt, status, xrp, minerCount }) {
+    return `<div class="ece8210_history">
+            <span style="float: left">[${createdt}]</span>
+            <span style="float: left; margin-left:10px">${Number(minerCount) * 1000}Tiles</span>
+            <span style="float: right">
+              <span style="font-size:12px">${xrp}TRX</span>
+              <h4>${status}</h4>
             </span>
           </div>`
 }

@@ -57,7 +57,7 @@ router.get("/ece9100_beta", async (req, res) => {
         FROM
             Transactions
         WHERE
-            action IN (7231,7232) AND member = ${member} order by transaction desc;
+            action IN (7231,7232,7241,7242) AND member = ${member} order by transaction desc;
         `)
         const data = await resoureTransactionList.reduce((prev, cur) => {
             if (prev.length === 0) {

@@ -5,8 +5,6 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
         const { data: resourceBannerText } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece3000/ece3500_beta?member=${member}` })
         let bannerList = "채굴된 자원이 없습니다."
 
-        const { data: tileAdmin } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8210` })
-        const { data: minerAdmin } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8110` })
         if (resourceBannerText.resoureList.length !== 0) {
             bannerList = resourceBannerText.resoureList.map((v) => {
                 const description = selectCodeNameTpCodeTable({ data, codeName: v.resource })
@@ -32,18 +30,19 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                 // title
                 let title = titleInnerHTML({ createdt: historyList.createdt })
                 let historyUlTag = historyList.dayminingData.map((transactionData) => {
-                    const { action, extracode1: minerCount, extrastr1: memberAddress, extrastr2: amount } = transactionData
+                    let { action, extracode1: minerCount, extrastr1: memberAddress, extrastr2: amount } = transactionData
                     const actionName = selectCodeNameTpCodeTable({ data, codeName: action })
                     let toggleName;
                     let per;
                     let wallet;
                     wallet = memberAddress
-                    if (action > 7200) {
+                    if (action < 7240) {
                         toggleName = "채굴기"
                         per = "대"
                     } else {
                         toggleName = "타일"
                         per = "Tiles"
+                        minerCount = Number(minerCount) * 1000
                     }
 
                     return textInnerHTML({ action: actionName, adminWallet: extraData[0].walletaddress, toggleName, amount, count: minerCount, per, wallet })
