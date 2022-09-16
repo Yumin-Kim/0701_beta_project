@@ -44,14 +44,6 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
             }
         }
         if (location.pathname === "/ece8119.html") {
-            const { data: tileAmount_tile } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8110?member=${member}` })
-            let [firstDecimal_tiles, secondDecimal_2] = tileAmount_tile.currentamount.split(".")
-            firstDecimal_tiles = firstDecimal_tiles.slice(0, firstDecimal_tiles.length - 2) + generateRandomCode(2)
-            secondDecimal_2 = generateRandomCode(2);
-            console.log(firstDecimal_tiles);
-            const adminDecimalTronAmount_tile = `${firstDecimal_tiles}.${secondDecimal_2}`
-            $("#message_ece8119").html(`현재 1000Tiles 당 가격은 ${adminDecimalTronAmount_tile}TRX 입니다.`)
-
             /**
              * 타일 구매
              */
@@ -91,6 +83,15 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                 sellTileList = sellTileList.join(",").replaceAll(",", "")
                 $(".ece8210_history_template").html(sellTileList)
             }
+            const { data: tileAmount_tile } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8110?member=${member}` })
+            let [firstDecimal_tiles, secondDecimal_2] = tileAmount_tile.currentamount.split(".")
+            firstDecimal_tiles = firstDecimal_tiles.slice(0, firstDecimal_tiles.length - 2) + generateRandomCode(2)
+            secondDecimal_2 = generateRandomCode(2);
+            console.log(firstDecimal_tiles);
+            const adminDecimalTronAmount_tile = `${firstDecimal_tiles}.${secondDecimal_2}`
+            $("#message_ece8119").html(`현재 1000Tiles 당 가격은 ${adminDecimalTronAmount_tile}TRX 입니다.`)
+
+
         }
         if (location.pathname === "/ece8210.html") {
             let sellMinerList = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8211_beta?member=${member}` })
