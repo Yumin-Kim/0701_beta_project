@@ -16,6 +16,10 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
             bannerList = bannerList.join(",").replaceAll(",", " ")
 
         }
+        $('#popupchange').on('scroll touchmove mousewheel', e => {
+
+        });
+
         $('#resourceText').html(bannerList)
         const trickResource = $("#resourceTrick").text()
         setInterval(() => {
@@ -88,12 +92,19 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
 // #cfaf3d3d;bbbbbb3d;bf7c5b57;ffffff49
 const colors = ["#bf7c5b57", "#fffafa3d", "#cfaf3d3d", "#ffffff49"]
 function options({ chartData, chartCategoryData }) {
+
+    let sortingNumber = chartData.map(v => Number(v))
+    sortingNumber.sort(function (a, b) {
+        if (a > b) return 1;
+        if (a === b) return 0;
+        if (a < b) return -1;
+    });
     return {
         series: [{
             data: chartData
         }],
         markers: {
-            colors: ['#000000',]
+            colors: ['#000000']
         },
 
         chart: {
@@ -126,7 +137,7 @@ function options({ chartData, chartCategoryData }) {
             labels: {
                 style: {
                     // colors:,
-                    fontSize: '10px',
+                    fontSize: '12px',
                     cssClass: 'apexcharts-text-title',
                     textColor: "#fff"
                 }
@@ -134,11 +145,19 @@ function options({ chartData, chartCategoryData }) {
             title: { style: { color: "#fdfdfdf" } }
         }, yaxis: {
             // min: 0,
-            max: 50,
-            tickAmount: 10,
+            max: () => {
+                let data;
+                if (sortingNumber[2] === 0) {
+                    data = sortingNumber[3]
+                } else {
+                    data = Math.round(sortingNumber[2] + sortingNumber[2] / 3)
+                }
+                return data
+            },
+            tickAmount: 4,
             // categories: ["0", "1", "234", "1234"],
             labels: {
-                // show: false,
+                show: false,
                 style: {
                     colors: "#fff"
                 },
