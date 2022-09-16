@@ -453,17 +453,26 @@ body {
       cursor: pointer;
     }
     .sc-timeline-item.exchange {     
-      text-align: center;
-    margin: 0px auto 20px auto;
+      margin: 0px auto 1px auto;
     display: block;
-    width: 194px;
+    width: 40px;
+    text-align: center;
+    padding: 0 1em;
     border-radius: 20px !important;
     border-color: white;
-    font-size: 5px !important;
+    font-size: 4px !important;
     color: white;
-    line-height: 23px;
-    height: 24px;
+    line-height: 20px;
+    height: 20px;
     border: 0.2px solid !important;
+    }
+    .sc-sub-exchanges{
+      display: flex;
+    width: 56px;
+    height: 60px;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: center;
     }
     .sc-timeline-item.exchange a{ 
       font-size: 0.5em;
@@ -473,9 +482,9 @@ body {
       content:'';
     }
     .sc-timeline-item:after {
-      content: url("data:image/svg+xml,%3Csvg width='15' height='26' viewBox='0 0 15 26' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath opacity='0.2' d='M1 1L13 13L1 25' stroke='black' stroke-width='2'/%3E%3C/svg%3E%0A");
+      /* content: url("data:image/svg+xml,%3Csvg width='15' height='26' viewBox='0 0 15 26' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath opacity='0.2' d='M1 1L13 13L1 25' stroke='black' stroke-width='2'/%3E%3C/svg%3E%0A");
       align-self: center;
-      margin-left: 16px;
+      margin-left: 16px; */
     }
     .sc-timeline-item:last-child {
       margin-bottom: 0;
@@ -861,11 +870,11 @@ body {
               </div>
               <h3 class="sc-timeline-title resourceitem">0</h3>
             </div>
-
-            
-          </div>
-          <div class="sc-timeline-item exchange" >
-            <a id="d2s">🔻 은으로 변환하기</a>
+            <div class="sc-sub-exchanges">
+              <div class="sc-timeline-item exchange" >
+                <a id="d2s">🔻변환</a>
+              </div>
+            </div>
           </div>
           
           <div class="sc-timeline-item" event="launch">
@@ -887,11 +896,13 @@ body {
               </div>
               <h3 class="sc-timeline-title resourceitem">0</h3>
             </div>
-          </div>
 
-          <div class="sc-timeline-item exchange" > 
-            <a id="s2g">🔻 금으로 변환하기</a>
-          </div>
+            <div class="sc-sub-exchanges">
+              <div class="sc-timeline-item exchange" >
+                <a id="s2g">🔻변환</a>
+              </div>
+            </div>
+          </div> 
           <div class="sc-timeline-item" event="launch">
             <i
               class="sc-timeline-icon"
@@ -911,11 +922,15 @@ body {
               </div>
               <h3 class="sc-timeline-title resourceitem">0</h3>
             </div>
-          </div>
-
-          <div class="sc-timeline-item exchange" > 
-            <a id="g2d">🔻 다이아로 변환하기</a>
-          </div>
+            <div class="sc-sub-exchanges">
+              <div class="sc-timeline-item exchange" >
+                <a id="g2d">🔺변환</a>
+              </div>
+              <div class="sc-timeline-item exchange" >
+                <a id="g2d">🔻변환</a>
+              </div>
+            </div>
+          </div> 
           <div class="sc-timeline-item" event="launch">
             <i
               class="sc-timeline-icon"
