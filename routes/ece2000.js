@@ -51,7 +51,7 @@ router.post("/ece2320", async (req, res) => {
 })
 
 /**
- * 닉네임 정보 중복 검사
+ * @deprecated 닉네임 정보 중복 검사
  */
 router.post("/ece2321", async (req, res) => {
     try {
@@ -81,7 +81,7 @@ router.post("/ece2322", async (req, res) => {
  */
 router.post("/ece2323", async (req, res) => {
     try {
-        let { email, gender, firstname, lastname, pin, nickname, referCode, referNickname } = req.body;
+        let { email, gender, firstname, lastname, pin, referCode, referNickname } = req.body;
         const [member] = await executeQuery(sql.ece2310.findByMember({ email }));
         let validReferCode = false;
         if (member !== undefined) throw new Error(ece2000.ece2323.validEmail)
@@ -90,9 +90,8 @@ router.post("/ece2323", async (req, res) => {
          */
         if (referCode.trim() === "" || referCode === 0 || referNickname.trim() === "") {
             validReferCode = true
-            // referCode = 999999;
-            // referNickname = "ELC NOT ReferCode";
         }
+        const nickname = generateRandomCode(6);
         const { affectedRows, insertId } = await executeQuery(sql.ece2323.insertMember({ email, firstname, lastname, pin, gender, nickname }))
         if (affectedRows !== 1) throw new Error(ece2000.ece2323.failure);
         if (!validReferCode) {

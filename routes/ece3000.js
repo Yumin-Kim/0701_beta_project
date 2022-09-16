@@ -149,7 +149,7 @@ router.get("/ece3500_beta", async (req, res) => {
     try {
         const { member } = req.query;
         if (member === undefined) throw new Error(intergrateMSG.failure)
-        const currentResoureList = await executeQuery(`SELECT resource , sum(amount) as 'amount' FROM wicfaie.ResourceTransactions where member = ${member} and extracode is not null group by resource;`);
+        const currentResoureList = await executeQuery(`SELECT resource , sum(amount) as 'amount' FROM wicfaie.ResourceTransactions where member = ${member} and extracode is not null group by resource order by resource desc;`);
         const getMemberTileAndMiner = await executeQuery(`select action , sum(extrastr2) as amount from Transactions where action = 7235 and member = ${member} group by action`)
         await res.send(resultResponseFormat({ data: { resoureList: currentResoureList, memberInfo: getMemberTileAndMiner }, status: 1310, msg: ece3000.ece3500.success }))
     }
