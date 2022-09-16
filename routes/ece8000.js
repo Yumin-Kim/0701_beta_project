@@ -5,7 +5,7 @@ const sql = require("../config/sql");
 const { digifinax_request, requestAPI_https } = require("../config/utils");
 const { intergrateMSG, ece8000 } = resultMSG
 const router = require("express").Router()
-let priceAPI = null;
+let priceAPI = [{ cur_unit: "USD", bkpr: "1,389.94" }];
 /**
  * 토지 구매전 판매자 정보 제공
  */
@@ -14,7 +14,7 @@ router.get("/ece8110", async (req, res) => {
         console.log(`https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?authkey=QYT1SYyVeJk4SgY9syEe8ncle3EvNqAi&searchdate=${new Date().toISOString().split("T")[0].replaceAll("-", "")}&data=AP01`);
         const tronPrice = await digifinax_request("GET", "/ticker", { symbol: "trx_usdt" });
         try {
-            priceAPI = await requestAPI_https(`https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?authkey=QYT1SYyVeJk4SgY9syEe8ncle3EvNqAi&searchdate=${new Date().toISOString().split("T")[0].replaceAll("-", "")}&data=AP01`)
+            // priceAPI = await requestAPI_https(`https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?authkey=QYT1SYyVeJk4SgY9syEe8ncle3EvNqAi&searchdate=${new Date().toISOString().split("T")[0].replaceAll("-", "")}&data=AP01`)
         } catch (error) {
             if (priceAPI == null) {
                 priceAPI = [{ cur_unit: "USD", bkpr: "1,389.94" }]
@@ -106,7 +106,7 @@ router.get("/ece8210", async (req, res) => {
     try {
         const tronPrice = await digifinax_request("GET", "/ticker", { symbol: "trx_usdt" });
         try {
-            priceAPI = await requestAPI_https(`https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?authkey=QYT1SYyVeJk4SgY9syEe8ncle3EvNqAi&searchdate=${new Date().toISOString().split("T")[0].replaceAll("-", "")}&data=AP01`)
+            // priceAPI = await requestAPI_https(`https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?authkey=QYT1SYyVeJk4SgY9syEe8ncle3EvNqAi&searchdate=${new Date().toISOString().split("T")[0].replaceAll("-", "")}&data=AP01`)
         } catch (error) {
             if (priceAPI == null) {
                 priceAPI = [{ cur_unit: "USD", bkpr: "1,389.94" }]

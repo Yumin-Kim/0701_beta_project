@@ -1,4 +1,5 @@
-const minerTimer = 0
+const minerTimer = 0;
+let clearTimer;
 let newResourceName;
 let removeResourceName;
 AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
@@ -18,6 +19,12 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
             bannerList = bannerList.join(",").replaceAll(",", " ")
 
         }
+        $('#resourceText').html(bannerList)
+        const trickResource = $("#resourceTrick").text()
+        clearTimer = setInterval(() => {
+            const unixtime = Math.floor(new Date().getTime() / 1000)
+            $("#resourceTrick").text(`${trickResource}.${String(unixtime).slice(5, 10)}`)
+        }, 1000)
         $("#qtySelect").change(() => {
             const e = document.getElementById("qtySelect");
             const value = e.value; // value
@@ -81,7 +88,28 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                 $("#g2d").off("click")
                 $("#s2d").off("click")
                 $("#g2s").off("click")
-                $("#d2g").off("click")
+                $("#d2g").off("click");
+                const { data: resourceBannerText } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece3000/ece3500_beta?member=${member}` })
+                let bannerList = "채굴된 자원이 없습니다."
+                if (resourceBannerText.resoureList.length !== 0) {
+                    bannerList = resourceBannerText.resoureList.map((v) => {
+                        const description = selectCodeNameTpCodeTable({ data, codeName: v.resource })
+                        if (description === "동") {
+                            return `${description}: <span id ="resourceTrick">${v.amount}</span>`
+                        } else {
+                            return `${description}: ${v.amount}`
+                        }
+                    })
+                    bannerList = bannerList.join(",").replaceAll(",", " ")
+
+                }
+                $('#resourceText').html(bannerList)
+                const trickResource = $("#resourceTrick").text()
+                clearInterval(clearTimer)
+                clearTimer = setInterval(() => {
+                    const unixtime = Math.floor(new Date().getTime() / 1000)
+                    $("#resourceTrick").text(`${trickResource}.${String(unixtime).slice(5, 10)}`)
+                }, 1000)
                 //반환
                 if (convertNumberChartData[0] >= 1000) {
                     $("#d2s").click(function (e) {
@@ -174,12 +202,7 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
         });
 
 
-        $('#resourceText').html(bannerList)
-        const trickResource = $("#resourceTrick").text()
-        setInterval(() => {
-            const unixtime = Math.floor(new Date().getTime() / 1000)
-            $("#resourceTrick").text(`${trickResource}.${String(unixtime).slice(5, 10)}`)
-        }, 1000)
+
         AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece5000/ece5100?member=${member}` })
             .then((response) => {
                 const { data: responseData } = response

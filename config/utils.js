@@ -67,10 +67,17 @@ async function requestAPI(url) {
             .end();
     })
 }
+const options = {
+    //...
+    timeout: 3000,
+};
 async function requestAPI_https(url) {
     return new Promise((res, rej) => {
         https
-            .request(url, function (response) {
+            .request({
+                url,
+                // timeout: 3000,
+            }, function (response) {
                 var serverData = "";
                 response.on("data", function (chunk) {
                     serverData += chunk;
@@ -84,8 +91,15 @@ async function requestAPI_https(url) {
                     }
                 });
                 response.on("error", () => {
-                    rej("API Server Error")
+                    if (err.code === "ECONNRESET") {
+                        console.log("Timeout occurs");
+                        //specific error treatment
+                    }
                 })
+                // request.on('timeout', () => {
+                //     request.abort();
+                //     // rej(new Error("시간 제한 "))
+                // });
             })
             .end();
 
