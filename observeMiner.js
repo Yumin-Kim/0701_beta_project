@@ -18,7 +18,7 @@ const resourceRange_2 = 1000;
 const resourceRange_3 = 100;
 // const findTilesR1 = tileFindELC * resourceRange_1 * resourceRange_2 * resourceRange_3;
 const miningTileCount = tileFindELC * resourceRange_3;
-const CURRENT_CONFIG_TIME = process.env.NODE_ENV === "PRD" ? TIMER_1H : TIMER_1M;
+const CURRENT_CONFIG_TIME = process.env.TIME === "1S" ? TIMER_1M : TIMER_1H;
 
 const interval_mining = async ({ instance }) => {
     await instance.beginTransaction();

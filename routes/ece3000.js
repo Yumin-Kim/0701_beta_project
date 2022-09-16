@@ -163,7 +163,21 @@ router.get("/ece3610", async (req, res) => {
 
         const { member } = req.query;
         if (member === undefined) throw new Error(intergrateMSG.failure)
-        const data = await executeQuery(`select createdt , action , extracode1 as 'referMemberCode',extrastr1 as 'referNickname' from Transactions where action = 9501 and member = ${member} order by transaction desc`)
+        const data = await executeQuery(`SELECT 
+        t.createdt,
+        t.action,
+        t.extracode1 AS 'referMemberCode',
+        m.nickname AS 'referNickname'
+    FROM
+        Transactions AS t
+            LEFT JOIN
+        (SELECT 
+            *
+        FROM
+            Members) AS m ON m.member = t.member
+    WHERE
+        action = 9501 AND t.extracode1 = ${member}
+    ORDER BY transaction DESC`)
         const [miner] = await executeQuery(`select sum(extracode1) as 'minerCount' from Transactions where action = 7232 and member = ${member}`)
         let minerSpeedElement = 1;
         if (data.length > 0) {
