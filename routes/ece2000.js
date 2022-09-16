@@ -98,7 +98,7 @@ router.post("/ece2323", async (req, res) => {
             const validMiner = await executeQuery(`select * from Transactions where action = 7235 and member = ${referCode}`)
             if (validMiner.length !== 0) {
                 const referMemberList = await executeQuery(`SELECT * FROM wicfaie.Transactions where action = 9501 and extracode1 = ${referCode};`)
-                if (referMemberList < 10) {
+                if (referMemberList.length < 10) {
                     await executeQuery(sql.ece2323.insertReferCode({ member: insertId, referCode, referNickname }))
                 }
             }
