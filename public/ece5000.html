@@ -455,7 +455,7 @@ body {
     .sc-timeline-item.exchange {
       margin: 0px auto 1px auto;
       display: block;
-      width: 40px;
+      width: 50px;
       text-align: center;
       padding: 0 1em;
       border-radius: 20px !important;
@@ -768,8 +768,8 @@ body {
       margin: 0 0 10px 0;
       color: #3a8ed7;
       font-size: 1em;
-      padding-left: 0.5em;
-      float: right;
+      /* padding-left: 0.5em; */
+      /* float: right; */
     }
     #popupchangeContents a.cancel {
       color: #cb894d;
@@ -781,32 +781,6 @@ body {
       background: #c0c1c2;
     }
   </style>
-  <script>
-    $(function () {
-      $("#doClose").click(function () {
-        $("#popupchange").css("display", "none");
-      });
-
-      $("#d2s").click(function (e) {
-        $("#popupchange").css("display", "block");
-        e.preventDefault();
-        e.stopPropagation();
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      });
-      $("#s2g").click(function (e) {
-        $("#popupchange").css("display", "block");
-        e.preventDefault();
-        e.stopPropagation();
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      });
-      $("#g2d").click(function (e) {
-        $("#popupchange").css("display", "block");
-        e.preventDefault();
-        e.stopPropagation();
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      });
-    });
-  </script>
   <body>
     <div class="resourceTag">
       <p>보유 자원</p>
@@ -877,8 +851,8 @@ body {
               <h3 class="sc-timeline-title resourceitem">0</h3>
             </div>
             <div class="sc-sub-exchanges">
-              <div class="sc-timeline-item exchange">
-                <a id="d2s">🔻변환</a>
+              <div class="sc-timeline-item exchange" id="d2s">
+                <a>🔻변환</a>
               </div>
             </div>
           </div>
@@ -904,8 +878,11 @@ body {
             </div>
 
             <div class="sc-sub-exchanges">
-              <div class="sc-timeline-item exchange">
-                <a id="s2g">🔻변환</a>
+              <div class="sc-timeline-item exchange" id="s2g">
+                <a>🔻변환</a>
+              </div>
+              <div class="sc-timeline-item exchange" id="s2d">
+                <a>🔺분해</a>
               </div>
             </div>
           </div>
@@ -929,11 +906,11 @@ body {
               <h3 class="sc-timeline-title resourceitem">0</h3>
             </div>
             <div class="sc-sub-exchanges">
-              <div class="sc-timeline-item exchange">
-                <a id="g2d">🔺변환</a>
+              <div class="sc-timeline-item exchange" id="g2d">
+                <a>🔻변환</a>
               </div>
-              <div class="sc-timeline-item exchange">
-                <a id="g2d">🔻변환</a>
+              <div class="sc-timeline-item exchange" id="g2s">
+                <a>🔺분해</a>
               </div>
             </div>
           </div>
@@ -957,6 +934,14 @@ body {
                 >
               </div>
               <h3 class="sc-timeline-title resourceitem">0</h3>
+            </div>
+            <div class="sc-sub-exchanges">
+              <!-- <div class="sc-timeline-item exchange">
+                <a id="g2d">🔺변환</a>
+              </div> -->
+              <div class="sc-timeline-item exchange" id="d2g">
+                <a>🔺분해</a>
+              </div>
             </div>
           </div>
           <!-- <div class="sc-timeline-item" event="launch">
@@ -985,27 +970,25 @@ body {
     <div id="popupchange">
       <div id="popupchangeContents">
         <h2>변환하기</h2>
-        <span id="starttmetal">동</span>
+        <span id="starttmetal"></span>
         <select id="qtySelect">
-          <optgroup>
-            <option value="10000">10000</option>
-            <option value="20000">20000</option>
-            <option value="30000">30000</option>
-            <option value="40000">40000</option>
-            <option value="50000">50000</option>
-          </optgroup>
+          <optgroup id="optionBox"></optgroup>
         </select>
         개를
-        <span id="destmetal">은</span>
-        <span id="destmetalqty">35</span>
+        <span id="destmetal"></span>
+        <span id="destmetalqty"></span>
         로 변환
-
-        <a id="doClose" class="cancel">취소</a>
-        <a id="doExchange">실행</a>
+        <div style="margin-top: 10px">
+          <a id="doExchange">실행</a>
+          <a id="doClose" class="cancel">취소</a>
+        </div>
       </div>
     </div>
     <script src="./main.js"></script>
     <script src="./src/jquery_main.js"></script>
     <script src="./src/eceFolder/ece5000.js"></script>
+    <script>
+      $("#popupchange").css("display", "none");
+    </script>
   </body>
 </html>
