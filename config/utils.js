@@ -76,14 +76,22 @@ async function requestAPI_https(url) {
                     serverData += chunk;
                 });
                 response.on("end", function () {
-                    res(JSON.parse(serverData));
+                    try {
+                        console.log(serverData);
+                        res(JSON.parse(serverData));
+                    } catch (error) {
+                        rej(error)
+                    }
                 });
                 response.on("error", () => {
                     rej("API Server Error")
                 })
             })
             .end();
+
     })
+
+
 }
 module.exports = {
     requestAPI, requestAPI_https, digifinax_request
