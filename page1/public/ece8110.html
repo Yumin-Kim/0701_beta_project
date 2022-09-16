@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>ELC_Project</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js"></script>
+    <link
+      href="https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"
+    />
+
+    <script src="./lib/maplibre-grid.min.js"></script>
+    <script src="./assets/js/vender/jquery.js"></script>
+    <script src="./src/global.js"></script>
+    <link href="./custom-style.css" rel="stylesheet" />
+    <link href="./style.css" rel="stylesheet" />
+    <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/flickity@2/dist/flickity.min.css"
+    />
+    <style>
+      .floatbutton {
+        position: fixed;
+        z-index: 1;
+        top: 10%;
+        right: 2%;
+      }
+      .floatDiv {
+        display: none;
+        box-sizing: border-box;
+        padding: 20px 20px;
+        width: 70vw;
+        /* background-color: #ffffff; */
+        color: #fff;
+        background-image: url("./assets/ecePageImage.png");
+        border-radius: 8px;
+        margin-top: 10px;
+      }
+      .floatDiv h3,
+      .floatDiv p {
+        margin: 0px;
+        margin-bottom: 10px;
+      }
+      .miningbox {
+        z-index: 10;
+        border: #1a1a1ae6 4px solid;
+        position: absolute;
+        right: 0;
+        margin-top: -8px;
+        margin-right: 10px;
+        width: 60px;
+        height: 60px;
+        border-radius: 70%;
+        overflow: hidden;
+        box-shadow: 3px 5px 5px 1px black;
+      }
+      .profile {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .cardviewbtn_index {
+        font-size: 12px;
+        font-family: Helvetica, Arial, sans-serif;
+        font-weight: normal;
+        color: #ffffff;
+        text-decoration: none;
+        background-color: #57f5ff33;
+        border: 0px;
+        border-radius: 3px;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        display: inline-block;
+      }
+      #snackbar {
+        visibility: hidden;
+        width: 80vw;
+        background-color: rgba(51, 51, 51, 0.9);
+        color: #fff;
+        text-align: center;
+        border-radius: 2px;
+        padding: 16px;
+        position: fixed;
+        z-index: 100000000;
+        left: 10%;
+        bottom: 30px;
+        font-size: 17px;
+        border-radius: 10px;
+      }
+      #snackbar p {
+        font-size: 16px;
+      }
+      #snackbar p,
+      #snackbar h3 {
+        margin: 0;
+        margin-bottom: 10px;
+      }
+      #snackbar.show {
+        visibility: visible;
+        -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        animation: fadein 0.5s, fadeout 0.5s 2.5s;
+      }
+
+      @-webkit-keyframes fadein {
+        from {
+          bottom: 0;
+          opacity: 0;
+        }
+        to {
+          bottom: 30px;
+          opacity: 1;
+        }
+      }
+
+      @keyframes fadein {
+        from {
+          bottom: 0;
+          opacity: 0;
+        }
+        to {
+          bottom: 30px;
+          opacity: 1;
+        }
+      }
+
+      @-webkit-keyframes fadeout {
+        from {
+          bottom: 30px;
+          opacity: 1;
+        }
+        to {
+          bottom: 0;
+          opacity: 0;
+        }
+      }
+
+      @keyframes fadeout {
+        from {
+          bottom: 30px;
+          opacity: 1;
+        }
+        to {
+          bottom: 0;
+          opacity: 0;
+        }
+      }
+      #topBar {
+        background-image: url("./assets/ece2000.png");
+      }
+      .ece8110_box {
+        padding: 10px 30px;
+        margin: 20px 15px;
+        background-color: #57f4ff45;
+        box-sizing: border-box;
+      }
+      .ece8110_container {
+        position: absolute;
+        z-index: 3;
+        background-image: url("./assets/ece8110_bg.png");
+        bottom: 0;
+        color: #fff;
+        width: 100vw;
+      }
+      .ece8110_box h2,
+      .ece8110_box p {
+        margin: 0;
+      }
+      .ece8110_box h2 {
+        margin-bottom: 18px;
+      }
+      .ece8110_box p {
+        font-size: 12px;
+        margin-bottom: 8px;
+      }
+      .cardviewbtn_w100 {
+        width: 100%;
+        border: #bcfff39e 1px solid;
+        font-size: 16px;
+        font-family: Helvetica, Arial, sans-serif;
+        font-weight: normal;
+        color: #ffffff;
+        text-decoration: none;
+        background-color: #99e7ff24;
+        border-radius: 3px;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        display: inline-block;
+        margin-bottom: 18px;
+      }
+      .carousel {
+        background: #eee;
+      }
+      /* 
+      .carousel-cell {
+        width: 66%;
+        height: 200px;
+        margin-right: 10px;
+        background: #8c8;
+        border-radius: 5px;
+        counter-increment: gallery-cell;
+      } */
+
+      /* cell number */
+      /* .carousel-cell:before {
+        display: block;
+        text-align: center;
+        content: counter(gallery-cell);
+        line-height: 200px;
+        font-size: 80px;
+        color: white;
+      } */
+      .flickity-viewport {
+        height: 92vh !important;
+      }
+      .carousel-cell {
+        height: 100%;
+      }
+      .flickity-button {
+        display: none;
+      }
+      .flickity-page-dots .dot {
+        background-color: #57f4ffa3;
+      }
+      .flickity-page-dots {
+        bottom: 19px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="resourceTag">
+      <p>보유 자원</p>
+      <p id="resourceText">0</p>
+    </div>
+    <div id="topBar">
+      <h3 id="menu-toggle">Menu</h3>
+      <ul id="menu">
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-home"></i>
+          <a class="manuLinkTag" href="./index.html">메인화면</a>
+        </li>
+        <!-- <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-box-open"></i>
+          <a class="manuLinkTag" href="./ece4000.html">내땅보기</a>
+        </li> -->
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-chart-pie"></i>
+          <a class="manuLinkTag" href="./ece5000.html">채굴 통계</a>
+        </li>
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-pen-square"></i
+          ><a class="manuLinkTag" href="./ece6000.html">채굴 기록</a>
+        </li>
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-credit-card"></i>
+          <a class="manuLinkTag" href="./ece8210.html">구매하기</a>
+        </li>
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-shopping-cart"></i>
+          <a class="manuLinkTag" href="./ece9000.html">구매 내역</a>
+        </li>
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-address-card"></i>
+          <a class="manuLinkTag" href="./ece7000.html">내정보</a>
+        </li>
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-sign-out"></i>
+          <a onclick="console.log('logout')">로그아웃</a>
+        </li>
+      </ul>
+    </div>
+    <div class="floatbutton">
+      <div style="overflow: hidden">
+        <div class="miningbox">
+          <img class="profile" src="./assets/minin.gif" alt="" />
+        </div>
+      </div>
+      <div class="floatDiv">
+        <h3>ELC 제주 아일랜드 채굴기</h3>
+        <p style="font-size: 11px" id="timer">채굴 완료 까지 00:00 입니다</p>
+        <button id="mining" class="cardviewbtn_index">채굴 완료</button>
+      </div>
+    </div>
+    <div id="snackbar">
+      <h3>채굴 완료</h3>
+      <p>0</p>
+      <p>특수 자원 2</p>
+    </div>
+    <div id="map"></div>
+    <!-- <div id="map" style="display: none"></div> -->
+    <!-- <img src="./assets/main_1.png" style="width: 100%; height: 100vh" alt="" />
+    <div class="carousel" data-flickity='{ "freeScroll": true }'>
+      <div class="carousel-cell">
+        <img
+          src="./assets/main_1.png"
+          style="width: 100%; height: 100vh"
+          alt=""
+        />
+      </div>
+      <div class="carousel-cell">
+        <img
+          src="./assets/main_1.png"
+          style="width: 100%; height: 100vh"
+          alt=""
+        />
+      </div>
+      <div class="carousel-cell">
+        <img
+          src="./assets/main_1.png"
+          style="width: 100%; height: 100vh"
+          alt=""
+        />
+      </div>
+    </div> -->
+    <div class="ece8110_container">
+      <div class="ece8110_box">
+        <h2 style="margin-top: 18px">
+          토지 구매
+          <span style="font-size: 10px">타일은 2개이상 구매가능합니다</span>
+        </h2>
+        <p id="selectlocation">좌표 :</p>
+        <p>선택한 타일 수 : <span id="selecttile">선택해주세요</span></p>
+        <p>
+          가격 :<span id="selecttileprice">선택해주세요</span> (타일당 가격
+          <span id="adminxrp"></span>TRX)
+        </p>
+        <button
+          id="remove-selected"
+          class="cardviewbtn_w100"
+          style="margin-top: 10px"
+        >
+          선택 타일 삭제
+        </button>
+        <button id="ece8110_ece8120" class="cardviewbtn_w100">구매하기</button>
+      </div>
+    </div>
+    <div style="display: none" id="top-bar">
+      <div class="selected-row">
+        <div class="left-part">
+          <img class="tiles-img" src="./assets/icons/tiles.svg" />
+          <span class="selected-head selected-show" id="no-selected"
+            >No Tiles Selected</span
+          >
+          <span class="selected-head" id="has-selected">
+            <span class="selected-count">
+              <span id="tile-counts">0</span>
+              /
+              <span>1000</span>
+            </span>
+            <span class="selected">Tiles Selected</span>
+          </span>
+        </div>
+        <!-- <img class="arrow-up" src="./assets/icons/arrow-up.svg" /> -->
+      </div>
+      <div class="detail-row" id="has-details">
+        <button class="details-button" id="show-details">DETAILS</button>
+        <button class="clear-selection" id="remove-selected1">
+          <img src="./assets/icons/trash.svg" />
+          clear selection
+        </button>
+      </div>
+      <div class="resource-container" id="has-resource">
+        <div class="first-row" id="resources-btn"></div>
+      </div>
+    </div>
+
+    <script src="./main.js"></script>
+    <script src="./src/jquery_main.js"></script>
+    <script>
+      $(".miningbox").click(() => {
+        $(".floatDiv").fadeToggle(1000);
+      });
+      $(".cardviewbtn_index").click(() => {
+        myFunction();
+      });
+      function myFunction() {
+        var x = document.getElementById("snackbar");
+        x.className = "show";
+        $(".floatDiv").fadeToggle(1000);
+        setTimeout(function () {
+          x.className = x.className.replace("show", "");
+        }, 3000);
+      }
+    </script>
+    <script src="./src/map_script.js"></script>
+    <script src="./src/eceFolder/ece8000.js"></script>
+  </body>
+</html>

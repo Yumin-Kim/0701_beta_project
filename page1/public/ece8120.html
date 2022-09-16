@@ -2,8 +2,8 @@
 <html lang="en">
   <head>
     <title>ELC_Project</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js"></script>
     <link
@@ -26,6 +26,21 @@
     <link href="./custom-style.css" rel="stylesheet" />
   </head>
   <style>
+    .ece8220_txt h3,
+    .ece8220_txt h4,
+    .ece8220_txt p {
+      margin: 0;
+      color: #fff;
+    }
+
+    .ece8220_txt h4 {
+      font-style: bold;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    .ece8220_txt p {
+      margin-bottom: 20px;
+    }
     .cardviewbtn {
       border: #bcfff39e 1px solid;
       font-size: 16px;
@@ -78,11 +93,8 @@
       height: 70vh;
     }
     .ece8210_history {
-      color: #fff;
       overflow: hidden;
-      margin-bottom: 4px;
-      background: #57f5ff6b;
-      padding: 10px 10px;
+      margin-bottom: 10px;
     }
     .ece8210_history span,
     .ece8210_history h4 {
@@ -90,9 +102,6 @@
       margin: 0;
     }
     .ece8210_history_template {
-      overflow-x: hidden;
-      overflow-y: scroll;
-      height: 25vh;
       margin-bottom: 30px;
     }
     * {
@@ -105,27 +114,26 @@
       /* width: 600px;
       margin: 30px auto 0; */
       display: block;
+      background: #fff;
     }
 
     /* form starting stylings ------------------------------- */
     .group {
       position: relative;
-      margin-bottom: 15px;
+      margin-bottom: 45px;
     }
-    .group input {
+    input {
       font-size: 18px;
+      padding: 10px 10px 10px 5px;
       display: block;
       width: 300px;
-      height: 42px;
-      width: 100%;
-      background-color: #57f5ff75;
-      border: 0;
-      color: #fff;
+      border: none;
+      border-bottom: 1px solid #757575;
+    }
+    input:focus {
       outline: none;
     }
-    .group input::placeholder {
-      color: rgba(255, 255, 255, 0.362);
-    }
+
     /* LABEL ======================================= */
     label {
       color: #999;
@@ -135,8 +143,69 @@
       pointer-events: none;
       left: 5px;
       top: 10px;
+      transition: 0.2s ease all;
+      -moz-transition: 0.2s ease all;
+      -webkit-transition: 0.2s ease all;
     }
 
+    /* active state */
+    input:focus ~ label,
+    input:valid ~ label {
+      top: -20px;
+      font-size: 14px;
+      color: #5264ae;
+    }
+
+    /* BOTTOM BARS ================================= */
+    .bar {
+      position: relative;
+      display: block;
+      width: 300px;
+    }
+    .bar:before,
+    .bar:after {
+      content: "";
+      height: 2px;
+      width: 0;
+      bottom: 1px;
+      position: absolute;
+      background: #5264ae;
+      transition: 0.2s ease all;
+      -moz-transition: 0.2s ease all;
+      -webkit-transition: 0.2s ease all;
+    }
+    .bar:before {
+      left: 50%;
+    }
+    .bar:after {
+      right: 50%;
+    }
+    .selectBtn {
+      border: #bcfff3 2px solid;
+    }
+    /* active state */
+    input:focus ~ .bar:before,
+    input:focus ~ .bar:after {
+      width: 50%;
+    }
+
+    /* HIGHLIGHTER ================================== */
+    .highlight {
+      position: absolute;
+      height: 60%;
+      width: 100px;
+      top: 25%;
+      left: 0;
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    /* active state */
+    input:focus ~ .highlight {
+      -webkit-animation: inputHighlighter 0.3s ease;
+      -moz-animation: inputHighlighter 0.3s ease;
+      animation: inputHighlighter 0.3s ease;
+    }
     body {
       background-image: url("./assets/ecePageImage.png");
       background-attachment: fixed;
@@ -149,18 +218,9 @@
       font-size: 24px;
       color: #ffffff;
     }
-    h3 {
+    h3,
+    h4 {
       color: #ffffff;
-    }
-    .alert {
-      color: #57f5ff;
-    }
-    #message {
-      color: #57f5ff;
-      margin: 0;
-    }
-    .selectBtn {
-      border: #bcfff3 2px solid;
     }
   </style>
   <body>
@@ -212,86 +272,41 @@
           <button
             type="button"
             value="./ece8210.html"
-            class="cardviewbtn btn8000 selectBtn"
+            class="cardviewbtn btn8000"
           >
             채굴기
           </button>
-          <!-- <button
-            type="button"
-            value="./ece8110.html"
-            class="cardviewbtn_right btn8000"
-          >
-            타일
-          </button> -->
           <button
             type="button"
-            value="./ece8119.html"
-            class="cardviewbtn_right btn8000"
+            value="./ece8110.html"
+            class="cardviewbtn_right btn8000 selectBtn"
           >
             타일
           </button>
-          <!-- <button
-            type="button"
-            value="./ece8110.html"
-            class="cardviewbtn_right"
-          >
-            타일
-          </button> -->
         </div>
       </div>
       <div class="row_margin">
-        <h3 class="ece8210_title">* 채굴기 수량 입력</h3>
-        <div class="container">
-          <div class="group">
-            <input id="minerCount" type="number" />
-            <div style="background-color: #94e5ff; height: 1px"></div>
-            <p class="alert" id="errorminer">
-              구매할 채굴기 수량을 입력해주세요
-            </p>
-            <p id="message" style="margin-top: 10px; font-size: 12px">
-              개량 가격 :
-            </p>
-          </div>
+        <div class="ece8220_txt">
+          <h3>타일 구매 수량</h3>
+          <h4 id="miner"></h4>
+          <h3>입금 TRX 금액</h3>
+          <p id="xrp"></p>
+          <h3>입급 트론 주소</h3>
+          <p id="admin"></p>
+          <!-- <h3>Destination Tag</h3> -->
+          <!-- <p id="dt"></p>
+          <p style="color: #57f4ffdf; font-style: bold; font-size: 16px">
+            위의 주소로 리플을 송금하세요.<br />
+            Destination Tag 가 없는 거래는 확인되지 않습니다.<br />
+            리플 지갑 사용시 확인 해 주세요.
+          </p> -->
         </div>
-        <h3 class="ece8210_title">* 입금 트론 지갑 주소명</h3>
-        <div class="container">
-          <div class="group">
-            <input
-              id="address"
-              placeholder="TQooBX9o8iSSprLWW96YShBogx7Uwisuim"
-              type="text"
-              style="font-size: 12px"
-            />
-            <div style="background-color: #94e5ff; height: 1px"></div>
-            <p class="alert" id="erroraddress">
-              입금할 트론 지갑 주소를 입력해주세요
-            </p>
-          </div>
-        </div>
-        <h3 class="ece8210_title">채굴기 구매 기록</h3>
-        <div class="ece8210_history_template">
-          <div class="ece8210_history">
-            <span style="text-align: center; display: block"
-              >구매 내역이 존재하지 않습니다.</span
-            >
-          </div>
-          <!-- <div class="ece8210_history">
-            <span style="float: left">2022.07.04</span>
-            <span style="float: right">
-              <span>10개</span>
-              <span>100XRP</span>
-              <h4>승인완료</h4>
-            </span>
-          </div> -->
-        </div>
-
         <button
           type="button"
-          style="margin-bottom: 30px"
-          id="ece8210_ece8220"
-          class="cardviewbtn_w100"
+          value="./index.html"
+          class="cardviewbtn_w100 btn8000"
         >
-          구매하기
+          메인페이지
         </button>
       </div>
     </div>

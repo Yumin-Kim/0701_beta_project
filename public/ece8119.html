@@ -155,7 +155,7 @@
     .alert {
       color: #57f5ff;
     }
-    #message {
+    #message_8119 {
       color: #57f5ff;
       margin: 0;
     }
@@ -212,7 +212,7 @@
           <button
             type="button"
             value="./ece8210.html"
-            class="cardviewbtn btn8000 selectBtn"
+            class="cardviewbtn btn8000"
           >
             채굴기
           </button>
@@ -226,7 +226,7 @@
           <button
             type="button"
             value="./ece8119.html"
-            class="cardviewbtn_right btn8000"
+            class="cardviewbtn_right btn8000 selectBtn"
           >
             타일
           </button>
@@ -240,16 +240,14 @@
         </div>
       </div>
       <div class="row_margin">
-        <h3 class="ece8210_title">* 채굴기 수량 입력</h3>
+        <h3 class="ece8210_title">* 타일 수량 입력</h3>
         <div class="container">
           <div class="group">
-            <input id="minerCount" type="number" />
+            <input id="tileCount" type="number" />
             <div style="background-color: #94e5ff; height: 1px"></div>
-            <p class="alert" id="errorminer">
-              구매할 채굴기 수량을 입력해주세요
-            </p>
-            <p id="message" style="margin-top: 10px; font-size: 12px">
-              개량 가격 :
+            <p class="alert" id="errorminer">구매할 타일 수량을 입력해주세요</p>
+            <p id="message_8119" style="margin-top: 10px; font-size: 12px">
+              타일 구매는 1000단위로 입력해주세요
             </p>
           </div>
         </div>
@@ -262,33 +260,31 @@
               type="text"
               style="font-size: 12px"
             />
-            <div style="background-color: #94e5ff; height: 1px"></div>
+            <div
+              style="
+                background-color: #94e5ff;
+                height: 1px;
+                margin-bottom: 20px;
+              "
+            ></div>
             <p class="alert" id="erroraddress">
               입금할 트론 지갑 주소를 입력해주세요
             </p>
           </div>
         </div>
-        <h3 class="ece8210_title">채굴기 구매 기록</h3>
+        <!-- <h3 class="ece8210_title">채굴기 구매 기록</h3>
         <div class="ece8210_history_template">
           <div class="ece8210_history">
             <span style="text-align: center; display: block"
               >구매 내역이 존재하지 않습니다.</span
             >
           </div>
-          <!-- <div class="ece8210_history">
-            <span style="float: left">2022.07.04</span>
-            <span style="float: right">
-              <span>10개</span>
-              <span>100XRP</span>
-              <h4>승인완료</h4>
-            </span>
-          </div> -->
-        </div>
+        </div> -->
 
         <button
           type="button"
           style="margin-bottom: 30px"
-          id="ece8210_ece8220"
+          id="ece8210_ece8229"
           class="cardviewbtn_w100"
         >
           구매하기

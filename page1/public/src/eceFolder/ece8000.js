@@ -130,49 +130,6 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
             }
 
         })
-        $("#ece8210_ece8229").click(async () => {
-            const minerCount = $("#tileCount").val()
-            const address = $("#address").val()
-            let valid = true
-            if (minerCount.trim() === "") {
-                valid = false;
-                $("#errorminer").fadeIn()
-            } else if (Number(minerCount) < 1000) {
-                valid = false;
-                $("#errorminer").html("최소 1000Tile 이상 구매 가능합니다.")
-                $("#errorminer").fadeIn()
-            } else if (Number(minerCount) > 10001) {
-                $("#errorminer").html("최대 10000Tile 이상 구매 가능합니다.")
-                $("#errorminer").fadeIn()
-            } else {
-                $("#errorminer").fadeOut()
-            }
-            if (address.trim() === "") {
-                valid = false;
-                $("#erroraddress").fadeIn();
-            } else if (Number(address.length) < 33) {
-                valid = false;
-                $("#erroraddress").html("트론 지갑 주소는 최소 34자리 이상 입력하셔야합니다")
-                $("#erroraddress").fadeIn()
-            } else {
-                $("#erroraddress").fadeOut()
-            }
-            if (valid) {
-                let tileCount = minerCount;
-                if (minerCount.length === 3) {
-
-                }
-                if (minerCount.length === 4) {
-
-                }
-
-                const amount = (Number(adminDecimalTronAmount) * minerCount).toFixed(2)
-                // const requestMiner = await AJAXRequestMethod({ method: "POST", requestURL: `${serverURL}/ece8000/ece8220_beta?member=${member}`, data: { miner: minerCount, amount, address } })
-                if (requestMiner.status === 1310) {
-                    location.href = `./ece8220.html?member=${member}&amount=${amount}&miner=${minerCount}&address=${address}`
-                }
-            }
-        })
     })
 
 function innerHTML_MinerHistory({ createdt, status, xrp, minerCount }) {
