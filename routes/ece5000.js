@@ -33,5 +33,4 @@ router.get("/ece5100", async (req, res) => {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
     }
 })
-
 module.exports = router;

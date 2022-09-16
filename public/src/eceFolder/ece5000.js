@@ -86,7 +86,7 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
             })
     })
 // #cfaf3d3d;bbbbbb3d;bf7c5b57;ffffff49
-const colors = ["#bf7c5b57", "#cfaf3d3d", "#bbbbbb3d", "#ffffff49"]
+const colors = ["#bf7c5b57", "#fffafa3d", "#cfaf3d3d", "#ffffff49"]
 function options({ chartData, chartCategoryData }) {
     return {
         series: [{
