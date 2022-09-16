@@ -24,6 +24,7 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
         }, 1000)
         const memberInfoList = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece7000/ece7100?member=${member}` })
         let { firstname, lastname, email, gender, walletaddress, nickname } = memberInfoList.data[0]
+        console.log(nickname);
         $("#firstname").val(firstname)
         $("#lastname").val(lastname)
         $("#email").val(email)
