@@ -122,6 +122,7 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                 //분해
                 if (convertNumberChartData[1] >= 1) {
                     $("#s2d").click(function (e) {
+                        $("#ece5200_txt").html("분해하기")
                         $("#popupchange").css("display", "block");
                         e.preventDefault();
                         e.stopPropagation();
@@ -134,6 +135,7 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                 }
                 if (convertNumberChartData[2] >= 1) {
                     $("#g2s").click(function (e) {
+                        $("#ece5200_txt").html("분해하기")
                         $("#popupchange").css("display", "block");
                         e.preventDefault();
                         e.stopPropagation();
@@ -146,6 +148,7 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                 }
                 if (convertNumberChartData[3] >= 1) {
                     $("#d2g").click(function (e) {
+                        $("#ece5200_txt").html("분해하기")
                         $("#popupchange").css("display", "block");
                         e.preventDefault();
                         e.stopPropagation();
@@ -263,6 +266,7 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                     //분해
                     if (convertNumberChartData[1] >= 1) {
                         $("#s2d").click(function (e) {
+                            $("#ece5200_txt").html("분해하기")
                             $("#popupchange").css("display", "block");
                             e.preventDefault();
                             e.stopPropagation();
@@ -275,6 +279,8 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                     }
                     if (convertNumberChartData[2] >= 1) {
                         $("#g2s").click(function (e) {
+                            $("#ece5200_txt").html("분해하기")
+
                             $("#popupchange").css("display", "block");
                             e.preventDefault();
                             e.stopPropagation();
@@ -287,6 +293,8 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                     }
                     if (convertNumberChartData[3] >= 1) {
                         $("#d2g").click(function (e) {
+                            $("#ece5200_txt").html("분해하기")
+
                             $("#popupchange").css("display", "block");
                             e.preventDefault();
                             e.stopPropagation();
