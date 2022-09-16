@@ -133,10 +133,15 @@ function options({ chartData, chartCategoryData }) {
             },
             title: { style: { color: "#fdfdfdf" } }
         }, yaxis: {
+            // min: 0,
+            max: 50,
+            tickAmount: 10,
+            // categories: ["0", "1", "234", "1234"],
             labels: {
+                // show: false,
                 style: {
                     colors: "#fff"
-                }
+                },
             }
         }
     }

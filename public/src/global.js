@@ -24,10 +24,12 @@ const serverURL = "http://localhost:3000";
 // const serverURL = "http://10.0.2.2:3000";
 // const serverURL = "http://13.209.96.192:3000"
 let tileAdminInfo;
-AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8110?member=${member}` })
-    .then(({ data }) => {
-        tileAdminInfo = data
-    })
+if (location.pathname === "ece8110.html") {
+    AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8110?member=${member}` })
+        .then(({ data }) => {
+            tileAdminInfo = data
+        })
+}
 
 function AJAXRequestMethod({ method, requestURL, data }) {
     return new Promise((res, rej) => {
