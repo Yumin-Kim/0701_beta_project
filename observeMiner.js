@@ -122,7 +122,7 @@ async function interval_minig_beta({ instance }) {
                 await instance.query(`update Transactions set action = 7236 where transaction = ${v.transaction}`)
                 return { id, member, amount, minerCount, msg: "채굴 종료" };
             } else {
-                const [checkReferCodeCount] = await executeQuery(`select count(*) as count from Transactions where action = 9501 and member = ${v.member}`)
+                const [checkReferCodeCount] = await executeQuery(`select count(*) as count from Transactions where action = 9501 and extracode1 = ${v.member}`)
                 let referCount;
                 if (checkReferCodeCount.count === 0) {
                     referCount = 1
