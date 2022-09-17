@@ -151,18 +151,18 @@ async function interval_minig_beta({ instance }) {
     }
 }
 (async () => {
-    const instance = await dbPool.getConnection(async conn => conn)
-    await interval_minig_beta({ instance })
-    // console.log(`=======================================`);
-    // console.log(`[${process.env.NODE_ENV}] start mining`);
-    // console.log(`Mining ${CURRENT_CONFIG_TIME}`);
-    // console.log(`=======================================`);
-    // const j = await schedule.scheduleJob(CURRENT_CONFIG_TIME, async () => {
-    //     console.log(`=======================================`);
-    //     console.log(`Mining ${CURRENT_CONFIG_TIME} START`);
-    //     console.log(`=======================================`);
-    //     const instance = await dbPool.getConnection(async conn => conn)
-    //     await interval_minig_beta({ instance })
-    //     // await interval_mining({ instance });
-    // });
+    // const instance = await dbPool.getConnection(async conn => conn)
+    // await interval_minig_beta({ instance })
+    console.log(`=======================================`);
+    console.log(`[${process.env.NODE_ENV}] start mining`);
+    console.log(`Mining ${CURRENT_CONFIG_TIME}`);
+    console.log(`=======================================`);
+    const j = await schedule.scheduleJob(CURRENT_CONFIG_TIME, async () => {
+        console.log(`=======================================`);
+        console.log(`Mining ${CURRENT_CONFIG_TIME} START`);
+        console.log(`=======================================`);
+        const instance = await dbPool.getConnection(async conn => conn)
+        await interval_minig_beta({ instance })
+        // await interval_mining({ instance });
+    });
 })()
