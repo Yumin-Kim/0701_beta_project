@@ -129,11 +129,18 @@ async function interval_minig_beta({ instance }) {
                 } else {
                     referCount = referPlusEle[checkReferCodeCount.count - 1];
                 }
-
-                const updateData = currentAmount + Math.round((10000000 * minerCount) / 22000 * referCount)
-                await instance.query(`insert ResourceTransactions (resource,amount,minercount,member,transaction) values(7507,${Math.round((10000000 * minerCount) / 22000 * referCount)},${minerCount},${member},${id}) `)
-                await instance.query(`update Transactions set extracode2 = ${updateData} where transaction = ${v.transaction}`)
-                return { id, member, amount, minerCount, referCount }
+                let userAssignAmount = Math.round((10000000 * minerCount) / 22000 * referCount)
+                let updateData = currentAmount + Math.round((10000000 * minerCount) / 22000 * referCount)
+                if ((10000000 * minerCount) <= currentAmount + userAssignAmount) {
+                    updateData = (10000000 * minerCount) - currentAmount;
+                    await instance.query(`insert ResourceTransactions (resource,amount,minercount,member,transaction) values(7507,${updateData},${minerCount},${member},${id}) `)
+                    await instance.query(`update Transactions set action = 7236 ,extracode2 = ${(10000000 * minerCount)} where transaction = ${v.transaction}`)
+                    return { id, member, amount, minerCount, msg: "채굴 종료" };
+                } else {
+                    await instance.query(`insert ResourceTransactions (resource,amount,minercount,member,transaction) values(7507,${userAssignAmount},${minerCount},${member},${id}) `)
+                    await instance.query(`update Transactions set extracode2 = ${updateData} where transaction = ${v.transaction}`)
+                    return { id, member, amount, minerCount, referCount }
+                }
             }
         })
         const craetePromiseLoopResolve = await Promise.all(craetePromiseLoop)
@@ -144,18 +151,18 @@ async function interval_minig_beta({ instance }) {
     }
 }
 (async () => {
-    // const instance = await dbPool.getConnection(async conn => conn)
-    // await interval_minig_beta({ instance })
-    console.log(`=======================================`);
-    console.log(`[${process.env.NODE_ENV}] start mining`);
-    console.log(`Mining ${CURRENT_CONFIG_TIME}`);
-    console.log(`=======================================`);
-    const j = await schedule.scheduleJob(CURRENT_CONFIG_TIME, async () => {
-        console.log(`=======================================`);
-        console.log(`Mining ${CURRENT_CONFIG_TIME} START`);
-        console.log(`=======================================`);
-        const instance = await dbPool.getConnection(async conn => conn)
-        await interval_minig_beta({ instance })
-        // await interval_mining({ instance });
-    });
+    const instance = await dbPool.getConnection(async conn => conn)
+    await interval_minig_beta({ instance })
+    // console.log(`=======================================`);
+    // console.log(`[${process.env.NODE_ENV}] start mining`);
+    // console.log(`Mining ${CURRENT_CONFIG_TIME}`);
+    // console.log(`=======================================`);
+    // const j = await schedule.scheduleJob(CURRENT_CONFIG_TIME, async () => {
+    //     console.log(`=======================================`);
+    //     console.log(`Mining ${CURRENT_CONFIG_TIME} START`);
+    //     console.log(`=======================================`);
+    //     const instance = await dbPool.getConnection(async conn => conn)
+    //     await interval_minig_beta({ instance })
+    //     // await interval_mining({ instance });
+    // });
 })()
