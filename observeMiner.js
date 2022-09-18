@@ -158,6 +158,7 @@ async function interval_minig_beta({ instance }) {
     console.log(`[${process.env.NODE_ENV}] start mining`);
     console.log(`Mining ${CURRENT_CONFIG_TIME}`);
     console.log(`=======================================`);
+    await executeQuery(`insert Transactions (action , status ) values (1410 , 1310)`);
     const j = await schedule.scheduleJob(CURRENT_CONFIG_TIME, async () => {
         console.log(`=======================================`);
         console.log(`Mining ${CURRENT_CONFIG_TIME} START`);
