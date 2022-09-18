@@ -146,6 +146,7 @@ async function interval_minig_beta({ instance }) {
         const craetePromiseLoopResolve = await Promise.all(craetePromiseLoop)
         console.log(`${JSON.stringify(craetePromiseLoopResolve)}`);
         console.log(`총 : ${craetePromiseLoopResolve.length} 업데이트 완료 했습니다.`);
+        await instance.query(`insert Transactions (action , status ,extracode1) values (1410 , 1310 , ${craetePromiseLoopResolve.length})`)
         await instance.commit();
         await instance.release();
     }
@@ -162,7 +163,13 @@ async function interval_minig_beta({ instance }) {
         console.log(`Mining ${CURRENT_CONFIG_TIME} START`);
         console.log(`=======================================`);
         const instance = await dbPool.getConnection(async conn => conn)
-        await interval_minig_beta({ instance })
-        // await interval_mining({ instance });
+        try {
+            await interval_minig_beta({ instance })
+        } catch (error) {
+            await instance.query(`insert Transactions (action , status ) values (1420 , 1310)`)
+            await instance.commit();
+            await instance.release();
+            process.exit();
+        }
     });
 })()

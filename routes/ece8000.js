@@ -27,7 +27,25 @@ router.get("/ece8110", async (req, res) => {
             }
         });
         const [data] = await executeQuery(sql.ece8110())
-        data.currentamount = ((1000000 / usd_price) * (1 / tronPrice)).toFixed(2)
+        data.currentamount = String(Math.floor((1000000 / usd_price) * (1 / tronPrice)))
+        const memberPrice = await executeQuery(`select extrastr2 from Transactions where action in (7231, 7241 , 7242 , 7232) order by transaction desc limit 1;`)
+        if (memberPrice.length === 0) {
+            data.currentamount = data.currentamount + ".001"
+        } else {
+            let decimal = Number(String(memberPrice[0].extrastr2).split(".")[1])
+            if (decimal === 200) {
+                data.currentamount = data.currentamount + ".001"
+            } else {
+                decimal += 1;
+                if (decimal < 10) {
+                    data.currentamount = `${data.currentamount}.00${decimal}`
+                } else if (decimal < 100) {
+                    data.currentamount = `${data.currentamount}.0${decimal}`
+                } else {
+                    data.currentamount = `${data.currentamount}.${decimal}`
+                }
+            }
+        }
         res.send(resultResponseFormat({ data, status: 1310, msg: ece8000.ece8110.success }))
     } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
@@ -96,7 +114,9 @@ router.post("/ece8120_beta", async (req, res) => {
         const { member } = req.query;
         const { tileSet, address, amount } = req.body;
         if (member === undefined || tileSet === undefined || address === undefined) throw new Error(intergrateMSG.failure)
-        await executeQuery(`insert  Transactions (action , status , extracode1, extrastr1 ,extrastr2,member ) values (7241,1310 , ${tileSet} , '${address}' , '${amount}',${member})`);
+        // 채굴기 이름
+        const minerName = generateRandomString(2) + generateRandomCode(6)
+        await executeQuery(`insert  Transactions (action , status , extracode1, extrastr1 ,extrastr2,extrastr4,member ) values (7241,1310 , ${tileSet} , '${address}' , '${amount}','${minerName}',${member})`);
         res.send(resultResponseFormat({ status: 1310, msg: ece8000.ece8220.success }))
     } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
@@ -122,7 +142,25 @@ router.get("/ece8210", async (req, res) => {
         // console.log(1300000 / cc);
 
         const data = await executeQuery(sql.ece8210())
-        data[0].currentamount = ((1000000 / usd_price) * (1 / tronPrice)).toFixed(2)
+        data[0].currentamount = String(Math.floor((1000000 / usd_price) * (1 / tronPrice)))
+        const memberPrice = await executeQuery(`select extrastr2 from Transactions where action in (7231, 7241 , 7242 , 7232) order by transaction desc limit 1;`)
+        if (memberPrice.length === 0) {
+            data[0].currentamount = data[0].currentamount + ".001"
+        } else {
+            let decimal = Number(String(memberPrice[0].extrastr2).split(".")[1])
+            if (decimal === 200) {
+                data[0].currentamount = data[0].currentamount + ".001"
+            } else {
+                decimal += 1;
+                if (decimal < 10) {
+                    data[0].currentamount = `${data[0].currentamount}.00${decimal}`
+                } else if (decimal < 100) {
+                    data[0].currentamount = `${data[0].currentamount}.0${decimal}`
+                } else {
+                    data[0].currentamount = `${data[0].currentamount}.${decimal}`
+                }
+            }
+        }
         res.send(resultResponseFormat({ data, status: 1310, msg: ece8000.ece8210.success }))
     } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
@@ -169,7 +207,9 @@ router.post("/ece8220_beta", async (req, res) => {
         const { member } = req.query;
         const { miner, address, amount } = req.body;
         if (member === undefined || miner === undefined || address === undefined) throw new Error(intergrateMSG.failure)
-        await executeQuery(`insert  Transactions (action , status , extracode1, extrastr1 ,extrastr2,member ) values (7231,1310 , ${miner} , '${address}' , '${amount}',${member})`);
+        // 채굴기 이름
+        const minerName = generateRandomString(2) + generateRandomCode(6)
+        await executeQuery(`insert  Transactions (action , status , extracode1, extrastr1 ,extrastr2,extrastr4,member ) values (7231,1310 , ${miner} , '${address}' , '${amount}','${minerName}',${member})`);
         res.send(resultResponseFormat({ status: 1310, msg: ece8000.ece8220.success }))
     } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
@@ -183,5 +223,14 @@ function generateRandomCode(n) {
         str += num
     }
     return str
+}
+const generateRandomString = (num) => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    let result = '';
+    const charactersLength = characters.length;
+    for (let i = 0; i < num; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
 }
 module.exports = router;

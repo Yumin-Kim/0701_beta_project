@@ -86,7 +86,7 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
             const { data: tileAmount_tile } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8110?member=${member}` })
             let [firstDecimal_tiles, secondDecimal_2] = tileAmount_tile.currentamount.split(".")
             firstDecimal_tiles = firstDecimal_tiles.slice(0, firstDecimal_tiles.length - 2) + generateRandomCode(2)
-            secondDecimal_2 = generateRandomCode(2);
+            // secondDecimal_2 = generateRandomCode(2);
             console.log(firstDecimal_tiles);
             const adminDecimalTronAmount_tile = `${firstDecimal_tiles}.${secondDecimal_2}`
             $("#message_ece8119").html(`현재 1000Tiles 당 가격은 ${adminDecimalTronAmount_tile}TRX 입니다.`)
@@ -108,7 +108,7 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
             const [admin] = adminXRP
             let [firstDecimal, secondDecimal] = admin.currentamount.split(".")
             firstDecimal = firstDecimal.slice(0, firstDecimal.length - 2) + generateRandomCode(2)
-            secondDecimal = generateRandomCode(2);
+            // secondDecimal = generateRandomCode(2);
             console.log(firstDecimal);
             const adminDecimalTronAmount = `${firstDecimal}.${secondDecimal}`
             $("#message").html(`현재 채굴기 개당 가격은 ${adminDecimalTronAmount}TRX 입니다.`)
