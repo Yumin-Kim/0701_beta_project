@@ -3,6 +3,7 @@ const sql = require("./config/sql.js")
 const schedule = require('node-schedule');
 const axios = require("axios")
 const { default: axiosOBJ } = require("axios");
+const { requestAPI_internationalCurrencyPrice_usdt } = require("./config/utils.js");
 
 // const resouceList = [7505, 7506, 7507, 7602]
 const resouceList = [7507]
@@ -166,26 +167,7 @@ async function interval_minig_beta({ instance }) {
 }
 async function interval_mining_v1({ instance }) {
     const { data: ELCPrice } = await axios.get(URL_LABK_ELCPRICE)
-    // const { data: priceAPI } = await axios.get(CURRENCY_PRICE)
-    const instanceAxios = axiosOBJ.create();
-    instanceAxios.defaults.timeout = 2000;
-    try {
-        const { data } = await instanceAxios.get(CURRENCY_PRICE)
-        priceAPI = data
-    } catch (error) {
-        if (priceAPI == null) {
-            priceAPI = [{ cur_unit: "USD", bkpr: "1,389.94" }]
-        }
-    }
-    if (priceAPI.length !== 0) {
-        priceAPI.forEach(element => {
-            if (element.cur_unit === "USD") {
-                usd_price = Number(element.bkpr.replace(",", ""))
-            }
-        });
-    } else {
-        usd_price = 1394;
-    }
+    usd_price = await requestAPI_internationalCurrencyPrice_usdt()
     elc_price = ELCPrice.data[0].ticker.latest
     let elc_price_kr = (usd_price * elc_price)
     let memberAllRes = MINERPRICE / elc_price_kr
@@ -200,26 +182,39 @@ async function interval_mining_v1({ instance }) {
     console.log(`1시간 채굴 금액 ELC ${HourOfferAmount} ELC`);
     console.log(`1시간 채굴 금액 KR ${HourOfferAmount * elc_price_kr} 원`);
     console.log(`1시간 채굴 금액 Resource convert dong ${HourOfferResDong}`);
-    const [findMemberByMiner] = await instance.query(`select * from Transactions where action = 7235`)
+    const [findMemberByMiner] = await instance.query(`SELECT 
+    t.transaction,
+    t.member,
+    t.miner,
+    t.extracode1,
+    t.createdt,
+    t.extrastr2,
+    m.name
+FROM
+    Transactions AS t
+        LEFT JOIN
+    (SELECT 
+        *
+    FROM
+        Miners) AS m ON m.miner = t.miner
+WHERE
+    action = 7235;
+`)
     const toFixedKR = elc_price_kr.toFixed(5);
     let count = 0;
     let resourceQuery = `insert ResourceTransactions (resource,amount,minercount,member,transaction) values`
-    let minerTransactionQuery = `insert MinerTransactions (transaction , member, minerlife , resourceamount , remainamount , offeramount , elcKRW , elcUSD , tileamount , mineramount ,name) values`
+    let minerTransactionQuery = `insert MinerTransactions (transaction , member, minerlife , resourceamount , remainamount , offeramount , elcKRW , elcUSD , tileamount , mineramount ,name,miner) values`
     const createbulkQuery = await findMemberByMiner.map(async (data) => {
-        const { transaction, member, extrastr2: minerCount, extracode1: tileCount, createdt, extrastr4 } = data;
-        console.log(new Date().getMinutes() > createdt.getMinutes());
-        console.log(createdt.getMinutes());
-        console.log(new Date().getMinutes());
+        const { transaction, member, extrastr2: minerCount, extracode1: tileCount, createdt, name, miner } = data;
         if (new Date().getMinutes() !== createdt.getMinutes()) return;
         else {
             const [validMemberList] = await instance.query(`select * from MinerTransactions where transaction = ${transaction} order by minertransaction desc `)
-            console.log(extrastr4);
             if (validMemberList.length === 0) {
                 // 초기
                 const memberOfferAmount = (HourOfferKRPrice * minerCount).toFixed(2);
                 const memberOfferResourceDong = HourOfferResDong * minerCount;
                 const memberRemainAmount = (Number(MINERPRICE * minerCount) - Number(memberOfferAmount)).toFixed(2);
-                minerTransactionQuery += `(${transaction} , ${member} , ${day - 1} , ${memberOfferResourceDong} , ${memberRemainAmount} , ${memberOfferAmount},${toFixedKR},${elc_price},${tileCount},${minerCount} , '${extrastr4}'),`
+                minerTransactionQuery += `(${transaction} , ${member} , ${day - 1} , ${memberOfferResourceDong} , ${memberRemainAmount} , ${memberOfferAmount},${toFixedKR},${elc_price},${tileCount},${minerCount} , '${name}',${miner}),`
                 resourceQuery += `(7507,${memberOfferResourceDong},${minerCount},${member},${transaction}),`
             } else {
                 const { transaction, member, minerlife, resourceamount, remainamount, offeramount, tileamount, mineramount } = validMemberList[0]
@@ -229,12 +224,12 @@ async function interval_mining_v1({ instance }) {
                 // 제공금액 > 잔여 금액보다 큰경우
                 if (Number(memberOfferAmount) > Number(remainamount)) {
                     const memberFinishDong = Math.floor((remainamount / toFixedKR) * DONGDECIMAL)
-                    minerTransactionQuery += `(${transaction} , ${member} , ${0} , ${memberFinishDong} , 0 , ${remainamount},${toFixedKR},${elc_price},${tileCount},${minerCount},'${extrastr4}'),`
+                    minerTransactionQuery += `(${transaction} , ${member} , ${0} , ${memberFinishDong} , 0 , ${remainamount},${toFixedKR},${elc_price},${tileCount},${minerCount},'${name}',${miner}),`
                     resourceQuery += `(7507,${memberOfferResourceDong},${minerCount},${member},${transaction}),`
                     await instance.query(`update Transactions set action = 7236 ,extracode2 = ${99999999} where transaction = ${transaction}`)
                 } else if (minerlife === 1) {
                     const memberFinishDong = Math.floor((remainamount / toFixedKR) * DONGDECIMAL)
-                    minerTransactionQuery += `(${transaction} , ${member} , ${0} , ${memberFinishDong} , 0 , ${remainamount},${toFixedKR},${elc_price},${tileCount},${minerCount},'${extrastr4}'),`
+                    minerTransactionQuery += `(${transaction} , ${member} , ${0} , ${memberFinishDong} , 0 , ${remainamount},${toFixedKR},${elc_price},${tileCount},${minerCount},'${name}',${miner}),`
                     resourceQuery += `(7507,${memberOfferResourceDong},${minerCount},${member},${transaction}),`
                     await instance.query(`update Transactions set action = 7236 ,extracode2 = ${99999999} where transaction = ${transaction}`)
                 } else if (minerlife === 0 || remainamount === 0) {
@@ -243,11 +238,11 @@ async function interval_mining_v1({ instance }) {
                 }
                 else {
                     //존재시
-                    minerTransactionQuery += `(${transaction} , ${member} , ${minerlife - 1} , ${memberOfferResourceDong} , ${memberRemainAmount} , ${memberOfferAmount},${toFixedKR},${elc_price},${tileCount},${minerCount},'${extrastr4}'),`
+                    minerTransactionQuery += `(${transaction} , ${member} , ${minerlife - 1} , ${memberOfferResourceDong} , ${memberRemainAmount} , ${memberOfferAmount},${toFixedKR},${elc_price},${tileCount},${minerCount},'${name}',${miner}),`
                     resourceQuery += `(7507,${memberOfferResourceDong},${minerCount},${member},${transaction}),`
                 }
-                count++;
             }
+            count++;
             return {
                 minerTransactionQuery,
                 resourceQuery
@@ -263,33 +258,38 @@ async function interval_mining_v1({ instance }) {
         await instance.query(minerTransactionQuery)
         // 자원 정보 저장
         await instance.query(resourceQuery)
+        console.log(`총 ${count}대 동작완료 성공`);
     }
-    console.log(`총 ${findMemberByMiner.length}대 채굴기 동작중`);
+    console.log(`총 ${findMemberByMiner.length}대 채굴기 존재`);
+    console.log(`==========END : ${new Date()}==========`);
     await instance.query(`insert  Transactions (action , status ,extracode1) values (1410 , 1310 , ${findMemberByMiner.length})`)
     await instance.commit();
     await instance.release();
 
 }
 (async () => {
-    // const instance = await dbPool.getConnection(async conn => conn)
-    // await interval_minig_beta({ instance })
-    // console.log(`=======================================`);
-    // console.log(`[${process.env.NODE_ENV}] start mining`);
-    // console.log(`Mining ${CURRENT_CONFIG_TIME}`);
-    // console.log(`=======================================`);
-    // await executeQuery(`insert Transactions (action , status ) values (1410 , 1310)`);
-    // const j = await schedule.scheduleJob(CURRENT_CONFIG_TIME, async () => {
-    //     console.log(`=======================================`);
-    //     console.log(`Mining ${CURRENT_CONFIG_TIME} START`);
-    //     console.log(`=======================================`);
-    const instance = await dbPool.getConnection(async conn => conn)
-    try {
-        await interval_mining_v1({ instance })
-    } catch (error) {
-        await instance.query(`insert Transactions (action , status ) values (1420 , 1310)`)
-        await instance.commit();
-        await instance.release();
-        process.exit();
-    }
-    // });
+    console.log(`=======================================`);
+    console.log(`[${process.env.NODE_ENV}] start mining`);
+    console.log(`Mining ${CURRENT_CONFIG_TIME}`);
+    console.log(`=======================================`);
+    await executeQuery(`insert Transactions (action , status ) values (1410 , 1310)`);
+    const j = await schedule.scheduleJob(CURRENT_CONFIG_TIME, async () => {
+        console.log(`=======================================`);
+        console.log(`Mining ${CURRENT_CONFIG_TIME} START`);
+        console.log(`=======================================`);
+        const instance = await dbPool.getConnection(async conn => conn)
+        try {
+            console.log(`==========START : ${new Date()}==========`);
+            await interval_mining_v1({ instance })
+        } catch (error) {
+            await instance.query(`insert Transactions (action , status ) values (1420 , 1310)`)
+            await instance.commit();
+            await instance.release();
+            process.exit();
+        }
+    });
+    // await setInterval(async () => {
+    //     await interval_mining_v1({ instance })
+    // }, 1000 * 5)
+
 })()
