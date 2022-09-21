@@ -4,8 +4,15 @@ const { parseArrayToIndexNumber } = require('../../config/tiles.js');
 const sql = require("../../config/sql");
 const { intergrateMSG, ece4000 } = resultMSG
 const router = require("express").Router()
-const axios = require("axios")
-
+const axios = require("axios");
+const { requestAPI_internationalCurrencyPrice_usdt } = require("../../config/utils");
+///
+const day = 24 * 11 * 30;
+let usd_price;
+let elc_price;
+const MINERPRICE = 1000000;
+const URL_LABK_ELCPRICE = "https://api.lbkex.com/v2/ticker/24hr.do?symbol=elc_usdt"
+//
 async function getOffserDIAResourceData() {
     let usd_price;
     let elc_price;
@@ -96,8 +103,8 @@ router.post("/ece8220", async (req, res) => {
         const { affectedRows, insertId } = await executeQuery(`insert Miners (name , mineramount , tileamount , member) values ('${minername}' , ${minerCount} , ${Number(minerCount) * 1000} , ${member})`);
         if (affectedRows !== 0) {
             const memberAllRes = await getOffserDIAResourceData()
-            await executeQuery(`insert ResourceTransactions (resource , amount ,member,extracode) values 
-            (7602,${Math.floor(memberAllRes * minerCount)},${member},9910);`);
+            await executeQuery(`insert ResourceTransactions (resource , amount ,member,extracode,minercount) values 
+            (7602,${Math.floor(memberAllRes * minerCount)},${member},9910,${minerCount});`);
             /**
              * 마이닝 활성화
              * 총 채굴량 
@@ -107,6 +114,17 @@ router.post("/ece8220", async (req, res) => {
             await executeQuery(`insert into Transactions (action , status , extracode1,extracode2,extrastr1,extrastr2,member,miner) values 
              (7235,1310,${Number(minerCount) * 1000},0,'${transaction}','${minerCount}',${member},${insertId}),
              (6203,1310,${amount},${transaction},'관리자 처리','처리',${member},${insertId})`);
+            const { data: ELCPrice } = await axios.get(URL_LABK_ELCPRICE)
+            usd_price = await requestAPI_internationalCurrencyPrice_usdt()
+            elc_price = ELCPrice.data[0].ticker.latest
+            let elc_price_kr = (usd_price * elc_price)
+            const toFixedKR = elc_price_kr.toFixed(5);
+            const memberRemainAmount = (Number(MINERPRICE * minerCount)).toFixed(2);
+
+            await executeQuery(`insert MinerTransactions (transaction , member, minerlife , resourceamount , remainamount , offeramount , elcKRW , elcUSD , tileamount , mineramount ,name,miner) values
+            (${transaction} , ${member} , ${day} , 0 , ${memberRemainAmount} , 0,${toFixedKR},${elc_price},${Number(minerCount) * 1000},${minerCount} , '${minername}',${insertId})`)
+
+
             res.send(resultResponseFormat({ status: 1310, msg: "채굴기 구매 입금 확인 처리 되었습니다.", data: { member, minerCount, amount, tron } }))
         }
     } catch (error) {
@@ -125,9 +143,10 @@ router.post("/ece8120", async (req, res) => {
          */
         const { affectedRows, insertId } = await executeQuery(`insert Miners (name , mineramount , tileamount , member) values ('${minername}' , ${minerCount} , ${Number(minerCount) * 1000} , ${member})`);
         if (affectedRows !== 0) {
+            console.log(minerCount);
             const memberAllRes = await getOffserDIAResourceData()
-            await executeQuery(`insert ResourceTransactions (resource , amount ,member,extracode) values 
-            (7602,${Math.floor(memberAllRes * minerCount)},${member},9910);`);
+            await executeQuery(`insert ResourceTransactions (resource , amount ,member,extracode,minercount) values 
+            (7602,${Math.floor(memberAllRes * minerCount)},${member},9910,${minerCount});`);
             /**
              * 마이닝 활성화
              * 총 채굴량 
@@ -137,6 +156,18 @@ router.post("/ece8120", async (req, res) => {
             await executeQuery(`insert into Transactions (action , status , extracode1,extracode2,extrastr1,extrastr2,member,miner) values 
              (7235,1310,${Number(minerCount) * 1000},0,'${transaction}','${minerCount}',${member},${insertId}),
              (6203,1310,${amount},${transaction},'관리자 처리','처리',${member},${insertId})`);
+
+            const { data: ELCPrice } = await axios.get(URL_LABK_ELCPRICE)
+            usd_price = await requestAPI_internationalCurrencyPrice_usdt()
+            elc_price = ELCPrice.data[0].ticker.latest
+            let elc_price_kr = (usd_price * elc_price)
+            const toFixedKR = elc_price_kr.toFixed(5);
+            const memberRemainAmount = (Number(MINERPRICE * minerCount)).toFixed(2);
+
+            await executeQuery(`insert MinerTransactions (transaction , member, minerlife , resourceamount , remainamount , offeramount , elcKRW , elcUSD , tileamount , mineramount ,name,miner) values
+             (${transaction} , ${member} , ${day} , 0 , ${memberRemainAmount} , 0,${toFixedKR},${elc_price},${Number(minerCount) * 1000},${minerCount} , '${minername}',${insertId})`)
+
+
             res.send(resultResponseFormat({ status: 1310, msg: "타일 구매 입금 확인 처리 되었습니다.", data: { member, minerCount, amount, tron } }))
         }
     } catch (error) {

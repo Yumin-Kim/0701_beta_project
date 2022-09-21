@@ -3,9 +3,14 @@ const { executeQuery } = require("../config/db.js");
 const { resultResponseFormat, resultMSG } = require("../config/result.js");
 const sql = require("../config/sql.js");
 const { ece2000, intergrateMSG } = resultMSG
+const axios = require("axios");
+const { requestAPI_internationalCurrencyPrice_usdt } = require("../config/utils.js");
 const router = require("express").Router()
 const MAINSENDER = ' ecoinsbay" <ecoinsbay@ecoinsbay.net>'
-const SENDMAILTITLE = "ELC Miner on our jejuiland 인증 코드"
+const SENDMAILTITLE = "ELC Miner on our jejuiland 인증 코드";
+const ReferOfferPrice = 90000;
+const DONGDECIMAL = 1000000;
+
 /**
  * 이메일 인증 코드 요청
  */
@@ -66,18 +71,18 @@ router.post("/ece2321", async (req, res) => {
 /**
  * @deprecated 추천인 정보 중복 검사
  */
-router.post("/ece2322", async (req, res) => {
-    try {
-        const { nickname } = req.body;
-        const data = await executeQuery(`select member,nickname from Members where nickname = '${nickname}' limit 1`);
-        if (data.length == 0) throw new Error("존재하지 않은 추천인 닉네임 입니다.");
-        res.send(resultResponseFormat({ status: 1310, msg: "존재하는 추천인 입니다.", data: { referCode: data[0].member, nickname: data[0].nickname } }))
-    } catch (error) {
-        res.send(resultResponseFormat({ status: 1320, msg: error.message }))
-    }
-})
+// router.post("/ece2322", async (req, res) => {
+//     try {
+//         const { nickname } = req.body;
+//         const data = await executeQuery(`select member,nickname from Members where nickname = '${nickname}' limit 1`);
+//         if (data.length == 0) throw new Error("존재하지 않은 추천인 닉네임 입니다.");
+//         res.send(resultResponseFormat({ status: 1310, msg: "존재하는 추천인 입니다.", data: { referCode: data[0].member, nickname: data[0].nickname } }))
+//     } catch (error) {
+//         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
+//     }
+// })
 
-router.post("/ece2322_beta", async (req, res) => {
+router.post("/ece2322", async (req, res) => {
     try {
         const { nickname } = req.body;
         const data = await executeQuery(`select m.miner , m.name from Miners as m left outer join 
@@ -94,6 +99,7 @@ router.post("/ece2322_beta", async (req, res) => {
  */
 router.post("/ece2323", async (req, res) => {
     try {
+        let extrastr = "추천인 미등록 처리"
         let { email, gender, firstname, lastname, pin, referCode, referNickname } = req.body;
         const [member] = await executeQuery(sql.ece2310.findByMember({ email }));
         let validReferCode = false;
@@ -109,48 +115,116 @@ router.post("/ece2323", async (req, res) => {
         await executeQuery(`insert Transactions (action , status , member) values (9160 , 1310 , ${insertId})`)
         if (affectedRows !== 1) throw new Error(ece2000.ece2323.failure);
         if (!validReferCode) {
+
+            // 사용자 간 추천인
+            // const validMiner = await executeQuery(`select * from Transactions where action = 7235 and member = ${referCode}`)
+            // if (validMiner.length !== 0) {
+            //     const referMemberList = await executeQuery(`SELECT * FROM wicfaie.Transactions where action = 9501 and extracode1 = ${referCode};`)
+            //     if (referMemberList.length < 10) {
+            //         await executeQuery(sql.ece2323.insertReferCode({ member: insertId, referCode, referNickname }))
+            //     }
+            // }
+
             /**
+            * 사용자 간 채굴기 추천
              * @TODO 추천인 입력시
              * 채굴기 끼리 추천인 등록 ** 
              * 추천인 등록시 8~9만원 다이아 지급 
              * 채굴기 잔여 금액에서 소모 
-             * 마이너 갯수 체크 중요
+             * 마이너 갯수 체크 중요 
              */
-            // 사용자 간 추천인
-            const validMiner = await executeQuery(`select * from Transactions where action = 7235 and member = ${referCode}`)
+            const validMiner = await executeQuery(`select 
+            m.miner , m.name , m.member as 'referOfferMember',
+            m.mineramount ,t1.transaction , mt.remainamount as 'remainamount',
+            m.tileamount as 'tileamount' , mt.minerlife as 'minerlife'
+            from Miners as m left outer join 
+            (select * from Transactions where action = 7235) as t1
+            on t1.miner = m.miner 
+            left join
+            (select * from MinerTransactions where miner = ${referCode} order by minertransaction desc limit 1) as mt
+            on mt.miner = t1.miner
+            where m.miner = ${referCode};`)
             if (validMiner.length !== 0) {
-                const referMemberList = await executeQuery(`SELECT * FROM wicfaie.Transactions where action = 9501 and extracode1 = ${referCode};`)
-                if (referMemberList.length < 10) {
-                    await executeQuery(sql.ece2323.insertReferCode({ member: insertId, referCode, referNickname }))
+                const { miner, name, referOfferMember, mineramount, transaction, remainamount, tileamount, minerlife } = validMiner[0];
+                if (remainamount !== null) {
+                    const referMemberList = await executeQuery(`select count(*) as 'count' from Transactions where action = 9501 and miner = ${referCode};`)
+                    const { count } = referMemberList[0]
+                    if (count < 10) {
+                        extrastr = "추천인 등록 완료"
+                        // 추천인 등록
+                        const { insertId: insertReferInfo } = await executeQuery(sql.ece2323.insertReferCodeMiner({ member: insertId, miner, referNickname: name }))
+                        const { usd_price, elc_price_kr, referOfferDIA, referOfferPrice, elc_price } = await getELCPrice(mineramount)
+                        // 잔여 금액이 적은 경우
+                        if (Number(remainamount) < referOfferPrice) {
+                            const referRemainAmount = Number(remainamount) / elc_price_kr;
+                            let convertDONG = Math.round(referRemainAmount * DONGDECIMAL)
+                            convertDONG = String(convertDONG);
+                            let s1 = null, s2 = null, s3 = null, s4 = null;
+                            s1 = convertDONG.slice(-3)
+                            s2 = convertDONG.slice(-5, -3)
+                            s3 = convertDONG.slice(-6, -5)
+                            s4 = convertDONG.slice(0, -6)
+                            let insertResourceQuery = "insert ResourceTransactions (resource , amount ,member,extracode) values";
+                            if (s1.trim() !== "") {
+                                insertResourceQuery += `(7507,${s1},${referOfferMember},9503),`
+                            }
+                            if (s2.trim() !== "") {
+                                insertResourceQuery += `(7508,${s2},${referOfferMember},9503),`
+                            }
+                            if (s3.trim() !== "") {
+                                insertResourceQuery += `(7509,${s3},${referOfferMember},9503),`
+                            }
+                            if (s4.trim() !== "") {
+                                insertResourceQuery += `(7602,${s4},${referOfferMember},9503),`
+                            }
+                            insertResourceQuery = insertResourceQuery.slice(0, -1);
+                            const { insertId: insertReferOfferResourceId } = await executeQuery(insertResourceQuery);
+                            // 채굴기 금액 정정
+                            const { insertId: insertReferOfferMinerInfoId } = await executeQuery(`insert MinerTransactions 
+                            (transaction , member,minerlife,resourceamount , remainamount , offeramount , elcKRW , elcUSD , tileamount , mineramount ,name,miner) 
+                            values
+                            (${transaction},${referOfferMember},0,${convertDONG} ,${0} , ${remainamount} , ${elc_price_kr} , ${elc_price},${tileamount},${mineramount},'${name}',${referCode})`)
+                            // 추천인 등록으로 인한 트랜잭션 기록
+                            // 추천인 등록 트랜잭션 code1 , 자원 트랜잭션 code2 추천한사람 member(추천인 아님 채굴기 정보 저장), 추천 채굴기 miner, 채굴기 금액 정정 str1,  
+                            await executeQuery(`insert Transactions (action , status, extracode1,extracode2,extrastr1,member,miner) 
+                        values (9503,1310,${insertReferInfo},${insertReferOfferResourceId},${insertReferOfferMinerInfoId},${insertId},${miner})`);
+                            await executeQuery(`update Transactions set action = 7236 ,extracode2 = ${99999999} where transaction = ${transaction}`)
+
+                        } else {
+                            // 자원 제공
+                            const { insertId: insertReferOfferResourceId } = await executeQuery(`insert ResourceTransactions (resource , amount ,member,extracode) values 
+                        (7602,${Math.floor(referOfferDIA)},${referOfferMember},9503);`);
+                            // 채굴기 금액 정정
+                            const { insertId: insertReferOfferMinerInfoId } = await executeQuery(`insert MinerTransactions 
+                        (transaction , member,minerlife,resourceamount , remainamount , offeramount , elcKRW , elcUSD , tileamount , mineramount ,name,miner) 
+                        values
+                        (${transaction},${referOfferMember},${minerlife},${referOfferDIA * DONGDECIMAL} ,${remainamount - referOfferPrice} , ${referOfferPrice} , ${elc_price_kr} , ${elc_price},${tileamount},${mineramount},'${name}',${referCode})`)
+                            // 추천인 등록으로 인한 트랜잭션 기록
+                            // 추천인 등록 트랜잭션 code1 , 자원 트랜잭션 code2 추천한사람 member(추천인 아님 채굴기 정보 저장), 추천 채굴기 miner, 채굴기 금액 정정 str1,  
+                            await executeQuery(`insert Transactions (action , status, extracode1,extracode2,extrastr1,member,miner) 
+                        values (9503,1310,${insertReferInfo},${insertReferOfferResourceId},${insertReferOfferMinerInfoId},${insertId},${miner})`)
+                        }
+                    }
                 }
             }
-            // 사용자 간 채굴기 추천
-            // const validMiner = await executeQuery(`select m.miner , m.name from Miners as m left outer join 
-            // (select * from Transactions where action = 7235) as t1
-            // on t1.miner = m.miner where m.miner = ${referCode}`)
-            // if (validMiner.length !== 0) {
-            //     const { miner, name } = validMiner[0];
-            //     const referMemberList = await executeQuery(`select count(*) as 'count' from Transactions where action = 9501 and miner = ${referCode};`)
-            //     console.log(referMemberList);
-            //     if (referMemberList.length === 0) {
-            //         await executeQuery(sql.ece2323.insertReferCodeMiner({ member: insertId, miner, referNickname: name }))
-            //     } else {
-            //         const { count } = referMemberList[0]
-            //         if (count < 10) {
-            //             await executeQuery(sql.ece2323.insertReferCodeMiner({ member: insertId, miner, referNickname: name }))
-            //         }
-            //     }
-            // }
-
-
         } else {
             await executeQuery(sql.ece2323.insertNotReferCode({ member: insertId }))
         }
-        if (affectedRows === 1) await res.send(resultResponseFormat({ data: { member: insertId }, msg: ece2000.ece2323.success, status: 1310 }))
+        if (affectedRows === 1) await res.send(resultResponseFormat({ data: { member: insertId }, msg: ece2000.ece2323.success, status: 1310, extraData: extrastr }))
     } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
     }
 })
+async function getELCPrice(minerAmount) {
+    const URL_LABK_ELCPRICE = "https://api.lbkex.com/v2/ticker/24hr.do?symbol=elc_usdt"
+    const { data: ELCPrice } = await axios.get(URL_LABK_ELCPRICE)
+    usd_price = await requestAPI_internationalCurrencyPrice_usdt()
+    elc_price = ELCPrice.data[0].ticker.latest
+    let elc_price_kr = (usd_price * elc_price)
+    let referOfferDIA = (ReferOfferPrice / elc_price_kr) * minerAmount
+    let referOfferPrice = ReferOfferPrice * minerAmount
+    return { usd_price, elc_price_kr, referOfferDIA, referOfferPrice, elc_price }
+}
 /**
  * 회원 가입 완료 사용자 로그인 안내 페이지 접근
  */

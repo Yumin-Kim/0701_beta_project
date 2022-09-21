@@ -2,7 +2,7 @@ const { executeQuery } = require("../config/db");
 const { resultResponseFormat, resultMSG } = require("../config/result");
 const { parseArrayToIndexNumber, parseIndexNumberToArray } = require('../config/tiles.js');
 const sql = require("../config/sql");
-const { digifinax_request, requestAPI_https } = require("../config/utils");
+const { digifinax_request, requestAPI_https, requestAPI_internationalCurrencyPrice_usdt } = require("../config/utils");
 const { default: axios } = require("axios");
 const { intergrateMSG, ece8000 } = resultMSG
 const router = require("express").Router()
@@ -12,24 +12,8 @@ let priceAPI = [{ cur_unit: "USD", bkpr: "1,389.94" }];
  */
 router.get("/ece8110", async (req, res) => {
     try {
-        const instance = axios.create();
-        instance.defaults.timeout = 2000;
         const tronPrice = await digifinax_request("GET", "/ticker", { symbol: "trx_usdt" });
-        try {
-            const { data } = await instance.get(`https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?authkey=QYT1SYyVeJk4SgY9syEe8ncle3EvNqAi&searchdate=${new Date().toISOString().split("T")[0].replaceAll("-", "")}&data=AP01`)
-            priceAPI = data
-        } catch (error) {
-            if (priceAPI == null) {
-                priceAPI = [{ cur_unit: "USD", bkpr: "1,389.94" }]
-            }
-        }
-        console.log(priceAPI);
-        let usd_price = 0;
-        priceAPI.forEach(element => {
-            if (element.cur_unit === "USD") {
-                usd_price = Number(element.bkpr.replace(",", ""))
-            }
-        });
+        let usd_price = await requestAPI_internationalCurrencyPrice_usdt()
         const [data] = await executeQuery(sql.ece8110())
         data.currentamount = String(Math.floor((1000000 / usd_price) * (1 / tronPrice)))
         const memberPrice = await executeQuery(`select extrastr2 from Transactions where action in (7231, 7241 , 7242 , 7232) order by transaction desc limit 1;`)
