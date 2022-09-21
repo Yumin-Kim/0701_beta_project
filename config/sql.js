@@ -16,6 +16,7 @@ module.exports = {
     ece2323: {
         insertMember: ({ email, gender, firstname, lastname, pin, nickname }) => `INSERT INTO Members (email, firstname, lastname, gender,nickname ,pin) VALUES ('${email}','${firstname}','${lastname}',${gender},'${nickname}',hex(aes_encrypt('${pin}','ELC')));`,
         insertReferCode: ({ referNickname, referCode, member }) => `insert Transactions (action , status ,extracode1,extrastr1,member) values (9501,1310,${referCode},'${referNickname}',${member})`,
+        insertReferCodeMiner: ({ referNickname, miner, member }) => `insert Transactions (action , status ,extrastr1,member,miner) values (9501,1310,'${referNickname}',${member},${miner})`,
         insertNotReferCode: ({ member }) => `insert Transactions (action , status ,member) values (9502,1310,${member})`,
     },
     ece2324: ({ member }) => `select * from Members where member = ${member}`,

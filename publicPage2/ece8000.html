@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>ELC_Project</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js"></script>
+    <link
+      href="https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css"
+      rel="stylesheet"
+    />
+    <script src="./lib/maplibre-grid.min.js"></script>
+    <script src="./assets/js/vender/jquery.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"
+    />
+
+    <link href="./style.css" rel="stylesheet" />
+    <link href="./custom-style.css" rel="stylesheet" />
+  </head>
+  <style>
+    .cardviewbtn {
+      width: 150px;
+      font-size: 16px;
+      font-family: Helvetica, Arial, sans-serif;
+      font-weight: normal;
+      color: #ffffff;
+      text-decoration: none;
+      background-color: #5d9cec;
+      border-radius: 3px;
+      -webkit-border-radius: 3px;
+      -moz-border-radius: 3px;
+      display: inline-block;
+    }
+    .cardviewbtn_right {
+      width: 150px;
+      float: right;
+      font-size: 16px;
+      font-family: Helvetica, Arial, sans-serif;
+      font-weight: normal;
+      color: #ffffff;
+      text-decoration: none;
+      background-color: #5d9cec;
+      border-radius: 3px;
+      -webkit-border-radius: 3px;
+      -moz-border-radius: 3px;
+      display: inline-block;
+    }
+    .row_margin img {
+      width: 100%;
+      height: 70vh;
+    }
+  </style>
+  <body>
+    <div id="topBar">
+      <h3 id="menu-toggle">Menu</h3>
+      <ul id="menu">
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-home"></i>
+          <a class="manuLinkTag" href="./index.html">메인화면</a>
+        </li>
+        <!-- <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-box-open"></i>
+          <a class="manuLinkTag" href="./ece4000.html">내땅보기</a>
+        </li> -->
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-chart-pie"></i>
+          <a class="manuLinkTag" href="./ece5000.html">채굴 통계</a>
+        </li>
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-pen-square"></i
+          ><a class="manuLinkTag" href="./ece6000.html">채굴 기록</a>
+        </li>
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-credit-card"></i>
+          <a class="manuLinkTag" href="./ece8210.html">구매하기</a>
+        </li>
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-shopping-cart"></i>
+          <a class="manuLinkTag" href="./ece9000.html">구매 내역</a>
+        </li>
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-address-card"></i>
+          <a class="manuLinkTag" href="./ece7000.html">내정보</a>
+        </li>
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-sign-out"></i>
+          <a onclick="console.log('logout')">로그아웃</a>
+        </li>
+      </ul>
+    </div>
+    <div id="contents">
+      <div class="row_margin">
+        <h1>구매하기</h1>
+        <div>
+          <button
+            type="button"
+            onclick="location.href='./ece8210.html'"
+            class="cardviewbtn"
+          >
+            채굴기
+          </button>
+          <button type="button" class="cardviewbtn_right">타일</button>
+        </div>
+      </div>
+      <div class="row_margin">
+        <img src="https://dummyimage.com/320x600" alt="" />
+      </div>
+    </div>
+    <script src="./main.js"></script>
+    <script src="./src/jquery_main.js"></script>
+    <script src="./src/chart.js"></script>
+  </body>
+</html>

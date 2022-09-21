@@ -64,7 +64,7 @@ router.post("/ece2321", async (req, res) => {
     }
 })
 /**
- * 추천인 정보 중복 검사
+ * @deprecated 추천인 정보 중복 검사
  */
 router.post("/ece2322", async (req, res) => {
     try {
@@ -72,6 +72,19 @@ router.post("/ece2322", async (req, res) => {
         const data = await executeQuery(`select member,nickname from Members where nickname = '${nickname}' limit 1`);
         if (data.length == 0) throw new Error("존재하지 않은 추천인 닉네임 입니다.");
         res.send(resultResponseFormat({ status: 1310, msg: "존재하는 추천인 입니다.", data: { referCode: data[0].member, nickname: data[0].nickname } }))
+    } catch (error) {
+        res.send(resultResponseFormat({ status: 1320, msg: error.message }))
+    }
+})
+
+router.post("/ece2322_beta", async (req, res) => {
+    try {
+        const { nickname } = req.body;
+        const data = await executeQuery(`select m.miner , m.name from Miners as m left outer join 
+        (select * from Transactions where action = 7235) as t1
+        on t1.miner = m.miner where BINARY name = '${nickname}'`);
+        if (data.length == 0) throw new Error("존재하지 않은 추천인 닉네임 입니다.");
+        res.send(resultResponseFormat({ status: 1310, msg: "존재하는 추천인 입니다.", data: { referCode: data[0].miner, nickname: data[0].name } }))
     } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
     }
@@ -93,8 +106,17 @@ router.post("/ece2323", async (req, res) => {
         }
         const nickname = generateRandomCode(6);
         const { affectedRows, insertId } = await executeQuery(sql.ece2323.insertMember({ email, firstname, lastname, pin, gender, nickname }))
+        await executeQuery(`insert Transactions (action , status , member) values (9160 , 1310 , ${insertId})`)
         if (affectedRows !== 1) throw new Error(ece2000.ece2323.failure);
         if (!validReferCode) {
+            /**
+             * @TODO 추천인 입력시
+             * 채굴기 끼리 추천인 등록 ** 
+             * 추천인 등록시 8~9만원 다이아 지급 
+             * 채굴기 잔여 금액에서 소모 
+             * 마이너 갯수 체크 중요
+             */
+            // 사용자 간 추천인
             const validMiner = await executeQuery(`select * from Transactions where action = 7235 and member = ${referCode}`)
             if (validMiner.length !== 0) {
                 const referMemberList = await executeQuery(`SELECT * FROM wicfaie.Transactions where action = 9501 and extracode1 = ${referCode};`)
@@ -102,6 +124,25 @@ router.post("/ece2323", async (req, res) => {
                     await executeQuery(sql.ece2323.insertReferCode({ member: insertId, referCode, referNickname }))
                 }
             }
+            // 사용자 간 채굴기 추천
+            // const validMiner = await executeQuery(`select m.miner , m.name from Miners as m left outer join 
+            // (select * from Transactions where action = 7235) as t1
+            // on t1.miner = m.miner where m.miner = ${referCode}`)
+            // if (validMiner.length !== 0) {
+            //     const { miner, name } = validMiner[0];
+            //     const referMemberList = await executeQuery(`select count(*) as 'count' from Transactions where action = 9501 and miner = ${referCode};`)
+            //     console.log(referMemberList);
+            //     if (referMemberList.length === 0) {
+            //         await executeQuery(sql.ece2323.insertReferCodeMiner({ member: insertId, miner, referNickname: name }))
+            //     } else {
+            //         const { count } = referMemberList[0]
+            //         if (count < 10) {
+            //             await executeQuery(sql.ece2323.insertReferCodeMiner({ member: insertId, miner, referNickname: name }))
+            //         }
+            //     }
+            // }
+
+
         } else {
             await executeQuery(sql.ece2323.insertNotReferCode({ member: insertId }))
         }

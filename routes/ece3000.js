@@ -189,6 +189,9 @@ router.get("/ece3610", async (req, res) => {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
     }
 })
+/**
+ * @Deprecated
+ */
 router.post("/ece3620", async (req, res) => {
     try {
         const { member } = req.query;

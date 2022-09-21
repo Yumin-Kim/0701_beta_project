@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>ELC_Project</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js"></script>
+    <link
+      href="https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css"
+      rel="stylesheet"
+    />
+    <script src="./lib/maplibre-grid.min.js"></script>
+    <script src="./assets/js/vender/jquery.js"></script>
+    <script src="./src/global.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"
+    />
+
+    <link href="./style.css" rel="stylesheet" />
+  </head>
+  <link rel="stylesheet" href="./ece7000.css" />
+  <style>
+    .sc-searchbox {
+      position: relative;
+    }
+    .sc-searchbox-field {
+      border-radius: 0;
+      height: 42px;
+      width: 100%;
+      background-color: #57f5ff75;
+      border: 0;
+      outline: aliceblue;
+      color: #fff;
+    }
+    .sc-searchbox-placeholder {
+      position: absolute;
+      color: #fff;
+      display: flex;
+
+      height: 100%;
+      width: 100%;
+      align-items: center;
+      justify-content: center;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      transition: ease-in-out 0.2s;
+    }
+    .selectBtn {
+      border: #bcfff3 2px solid;
+    }
+    .alert {
+      color: #57f5ff;
+      display: none;
+    }
+    body {
+      background-image: url("./assets/ecePageImage.png");
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+      background-size: cover;
+      width: 100vw;
+      height: 100vh;
+    }
+    h1 {
+      font-size: 24px;
+      color: #ffffff;
+    }
+    h3,
+    p {
+      color: #ffffff;
+    }
+  </style>
+  <body>
+    <div class="resourceTag">
+      <p>보유 자원</p>
+      <p id="resourceText"></p>
+    </div>
+    <div id="topBar">
+      <h3 id="menu-toggle">Menu</h3>
+      <ul id="menu">
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-home"></i>
+          <a class="manuLinkTag" href="./index.html">메인화면</a>
+        </li>
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-box-open"></i>
+          <a class="manuLinkTag" href="./ece4000.html">내땅보기</a>
+        </li>
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-chart-pie"></i>
+          <a class="manuLinkTag" href="./ece5000.html">채굴 통계</a>
+        </li>
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-pen-square"></i
+          ><a class="manuLinkTag" href="./ece6000.html">채굴 기록</a>
+        </li>
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-credit-card"></i>
+          <a class="manuLinkTag" href="./ece8210.html">구매하기</a>
+        </li>
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-shopping-cart"></i>
+          <a class="manuLinkTag" href="./ece9000.html">구매 내역</a>
+        </li>
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-address-card"></i>
+          <a class="manuLinkTag" href="./ece7000.html">내정보</a>
+        </li>
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-sign-out"></i>
+          <a onclick="console.log('logout')">로그아웃</a>
+        </li>
+      </ul>
+    </div>
+    <div id="contents">
+      <div class="row_margin">
+        <h1>내정보</h1>
+        <h3>이메일</h3>
+        <div class="sc-searchbox">
+          <input type="email" id="email" class="sc-searchbox-field" />
+          <div class="sc-searchbox-placeholder"></div>
+          <div style="background-color: #94e5ff; height: 1px"></div>
+          <p class="alert" id="erroremail">이메일을 입력해주세요</p>
+        </div>
+        <h3>성</h3>
+        <div class="sc-searchbox">
+          <input type="text" id="firstname" class="sc-searchbox-field" />
+          <div class="sc-searchbox-placeholder"></div>
+          <div style="background-color: #94e5ff; height: 1px"></div>
+          <p class="alert" id="errorfirstname">성을 입력해주세요</p>
+        </div>
+        <h3>이름</h3>
+        <div class="sc-searchbox">
+          <input type="text" id="lastname" class="sc-searchbox-field" />
+          <div class="sc-searchbox-placeholder"></div>
+          <div style="background-color: #94e5ff; height: 1px"></div>
+          <p class="alert" id="errorlastname">이름을 입력해주세요</p>
+        </div>
+        <h3>추천인 코드</h3>
+        <div class="sc-searchbox">
+          <!-- <h4 id="nickname" style="color: #fff"></h4> -->
+          <input
+            type="text"
+            id="nickname"
+            class="sc-searchbox-field"
+            readonly
+          />
+          <div class="sc-searchbox-placeholder"></div>
+          <div style="background-color: #94e5ff; height: 1px"></div>
+        </div>
+        <h3>성별</h3>
+        <div>
+          <button type="button" value="9211" id="btn9211" class="cardviewbtn">
+            남성
+          </button>
+          <button
+            type="button"
+            value="9212"
+            id="btn9212"
+            class="cardviewbtn_right"
+          >
+            여성
+          </button>
+        </div>
+        <button
+          type="button"
+          value="./index.html"
+          class="cardviewbtn_w100 btn7000"
+        >
+          메인 페이지
+        </button>
+        <button type="button" id="updatememberInfo" class="cardviewbtn_w100">
+          변경
+        </button>
+      </div>
+    </div>
+    <script src="./main.js"></script>
+    <script src="./src/jquery_main.js"></script>
+    <script src="./src/eceFolder/ece7000.js"></script>
+  </body>
+</html>

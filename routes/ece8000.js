@@ -33,7 +33,7 @@ router.get("/ece8110", async (req, res) => {
             data.currentamount = data.currentamount + ".001"
         } else {
             let decimal = Number(String(memberPrice[0].extrastr2).split(".")[1])
-            if (decimal === 200) {
+            if (decimal > 200) {
                 data.currentamount = data.currentamount + ".001"
             } else {
                 decimal += 1;
@@ -55,7 +55,7 @@ router.get("/ece8111_beta", async (req, res) => {
     try {
         const { member } = req.query;
         if (member === undefined) throw new Error(intergrateMSG.failure)
-        const data = await executeQuery(`select action , extracode1 as 'minerCount' , extrastr2 as 'amount' , createdt from Transactions where action in (7241,7242) and member = ${member}`)
+        const data = await executeQuery(`select action , extracode1 as 'minerCount' , extrastr2 as 'amount' , createdt from Transactions where action in (7241,7242) and member = ${member} order by transaction desc`)
         res.send(resultResponseFormat({ data, status: 1310, msg: ece8000.ece8210.success }))
     } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
@@ -148,7 +148,7 @@ router.get("/ece8210", async (req, res) => {
             data[0].currentamount = data[0].currentamount + ".001"
         } else {
             let decimal = Number(String(memberPrice[0].extrastr2).split(".")[1])
-            if (decimal === 200) {
+            if (decimal > 200) {
                 data[0].currentamount = data[0].currentamount + ".001"
             } else {
                 decimal += 1;
@@ -166,6 +166,9 @@ router.get("/ece8210", async (req, res) => {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
     }
 })
+/**
+ * @deprecated
+ */
 router.get("/ece8211", async (req, res) => {
     try {
         const { member } = req.query;
@@ -178,11 +181,12 @@ router.get("/ece8211", async (req, res) => {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
     }
 })
+
 router.get("/ece8211_beta", async (req, res) => {
     try {
         const { member } = req.query;
         if (member === undefined) throw new Error(intergrateMSG.failure)
-        const data = await executeQuery(`select action , extracode1 as 'minerCount' , extrastr2 as 'amount' , createdt from Transactions where action in (7231,7232) and member = ${member}`)
+        const data = await executeQuery(`select action , extracode1 as 'minerCount' , extrastr2 as 'amount' , createdt from Transactions where action in (7231,7232) and member = ${member} order by transaction desc`)
         res.send(resultResponseFormat({ data, status: 1310, msg: ece8000.ece8210.success }))
     } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))

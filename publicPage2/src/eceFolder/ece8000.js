@@ -2,6 +2,7 @@ const minerTimer = 0
 $("#errorminer").css("display", "none")
 $("#erroraddress").css("display", "none")
 AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
+
     .then(async (response) => {
         const { data } = response
         const { data: resourceBannerText } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece3000/ece3500_beta?member=${member}` })
@@ -33,20 +34,22 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
         // if(){
 
         // }
-        if (location.pathname === "/ece8129.html") {
+        if (location.pathname === "/page2/ece8129.html") {
             if (ece8210_data.miner !== null) {
                 const { data: adminInfo } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8210?member=${member}` })
                 $("#admin").html(adminInfo[0].walletaddress)
                 $("#xrp").html(ece8210_data.amount + "TRX")
                 $("#miner").html(ece8210_data.miner)
                 $("#address").html(ece8210_data.address)
-                // $("#dt").html(ece8210_data.dt)
             }
         }
-        if (location.pathname === "/ece8119.html") {
+        if (location.pathname === "/page2/ece8119.html") {
             /**
              * 타일 구매
              */
+
+            const adminDecimalTronAmount_tile = `11943.083`
+            $("#message_ece8119").html(`현재 1000Tiles 당 가격은 ${adminDecimalTronAmount_tile}TRX 입니다.`)
             $("#ece8210_ece8229").click(async () => {
                 const e = document.getElementById("ece8229Select");
                 const value = e.value;
@@ -66,6 +69,7 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                 if (valid) {
                     const amount = (Number(adminDecimalTronAmount_tile) * Number(value)).toFixed(3)
                     const requestMiner = await AJAXRequestMethod({ method: "POST", requestURL: `${serverURL}/ece8000/ece8120_beta?member=${member}`, data: { tileSet: value, amount, address } })
+                    console.log(requestMiner);
                     if (requestMiner.status === 1310) {
                         location.href = `./ece8129.html?member=${member}&amount=${amount}&miner=${text}&address=${address}`
                     }
@@ -83,15 +87,13 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                 sellTileList = sellTileList.join(",").replaceAll(",", "")
                 $(".ece8210_history_template").html(sellTileList)
             }
-            const { data: tileAmount_tile } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8110?member=${member}` })
-            let [firstDecimal_tiles, secondDecimal_2] = tileAmount_tile.currentamount.split(".")
-            firstDecimal_tiles = firstDecimal_tiles.slice(0, firstDecimal_tiles.length - 2) + generateRandomCode(2)
+            // const { data: tileAmount_tile } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8110?member=${member}` })
+            // let [firstDecimal_tiles, secondDecimal_2] = tileAmount_tile.currentamount.split(".")
+            // firstDecimal_tiles = firstDecimal_tiles.slice(0, firstDecimal_tiles.length - 2) + generateRandomCode(2)
             // secondDecimal_2 = generateRandomCode(2);
-            console.log(firstDecimal_tiles);
-            const adminDecimalTronAmount_tile = `${firstDecimal_tiles}.${secondDecimal_2}`
-            $("#message_ece8119").html(`현재 1000Tiles 당 가격은 ${adminDecimalTronAmount_tile}TRX 입니다.`)
+
         }
-        if (location.pathname === "/ece8210.html") {
+        if (location.pathname === "/page2/ece8210.html") {
             let sellMinerList = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8211_beta?member=${member}` })
             if (sellMinerList.data.length !== 0) {
                 sellMinerList = sellMinerList.data
@@ -102,12 +104,12 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                 sellMinerList = sellMinerList.join(",").replaceAll(",", "")
                 $(".ece8210_history_template").html(sellMinerList)
             }
-            const { data: adminXRP } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8210?member=${member}` })
-            const [admin] = adminXRP
-            let [firstDecimal, secondDecimal] = admin.currentamount.split(".")
-            firstDecimal = firstDecimal.slice(0, firstDecimal.length - 2) + generateRandomCode(2)
-            console.log(firstDecimal);
-            const adminDecimalTronAmount = `${firstDecimal}.${secondDecimal}`
+            // const { data: adminXRP } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece8000/ece8210?member=${member}` })
+            // const [admin] = adminXRP
+            // let [firstDecimal, secondDecimal] = admin.currentamount.split(".")
+            // firstDecimal = firstDecimal.slice(0, firstDecimal.length - 2) + generateRandomCode(2)
+            // console.log(firstDecimal);
+            const adminDecimalTronAmount = `11943.083`
             $("#message").html(`현재 채굴기 개당 가격은 ${adminDecimalTronAmount}TRX 입니다.`)
 
             $("#ece8210_ece8220").click(async () => {

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>ELC_Project</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js"></script>
+    <link
+      href="https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css"
+      rel="stylesheet"
+    />
+    <script src="./lib/maplibre-grid.min.js"></script>
+    <script src="./assets/js/vender/jquery.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"
+    />
+
+    <link href="./style.css" rel="stylesheet" />
+    <link href="./custom-style.css" rel="stylesheet" />
+    <script src="./src/global.js"></script>
+  </head>
+  <style>
+    .notebooks {
+      margin-bottom: 20px;
+      width: 100%;
+      padding: 15px;
+      border-radius: 5px;
+      max-height: 450px;
+    }
+
+    .notebooks ul {
+      margin: 0 auto;
+      padding: 0;
+      max-height: 390px;
+      overflow-y: auto;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      padding: 5px 5px 0 5px;
+      border-left: none;
+      border-right: none;
+    }
+    .notebooks ul p,
+    .notebooks ul h4,
+    .notebooks ul h3 {
+      margin-top: 0px;
+      margin-bottom: 10px;
+    }
+    .notebooks li {
+      list-style: none;
+      background-image: linear-gradient(
+        90deg,
+        #57f4ff6c 10px,
+        transparent 11px
+      );
+      background-color: #57f4ff6c;
+      color: #ffffff;
+      padding: 10px 15px 10px 25px;
+      /* box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.5); */
+      margin-bottom: 5px;
+      width: 100%;
+      box-sizing: border-box;
+      cursor: pointer;
+      border-radius: 3px;
+    }
+
+    #query {
+      width: 100%;
+      box-sizing: border-box;
+      font-size: 19px;
+      padding: 5px;
+      font-family: calibri light;
+      margin-bottom: 10px;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      border-radius: 3px;
+    }
+
+    .notebooks span {
+      display: block;
+      position: absolute;
+      background: #5d9cec;
+      bottom: -35px;
+      left: -1px;
+      width: 360px;
+      border-radius: 0 0 5px 5px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      padding: 10px;
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+      box-shadow: inset 1px 1px rgba(255, 255, 255, 0.5);
+    }
+
+    .notebooks select {
+      width: 120px;
+      margin-left: 230px;
+      margin-top: -45px;
+      border-radius: 0 3px 3px 0;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      border-left: 1px solid rgba(0, 0, 0, 0.1);
+      position: absolute;
+      padding: 7.5px;
+      box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .notebooks select:focus,
+    #query:focus {
+      border: 1px solid #5d9cec;
+      box-shadow: 0 0 10px rgba(255, 255, 0, 0.1);
+      outline: none;
+    }
+    .flex2 {
+      display: flex;
+      justify-content: space-between;
+    }
+    .flex-items {
+      font-size: 12px;
+    }
+    body {
+      background-image: url("./assets/ecePageImage.png");
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+      background-size: cover;
+      width: 100vw;
+      height: 100vh;
+    }
+    h1 {
+      font-size: 24px;
+      color: #ffffff;
+    }
+    h3 {
+      color: #ffffff;
+    }
+  </style>
+  <body>
+    <div class="resourceTag">
+      <p>보유 자원</p>
+      <p id="resourceText"></p>
+    </div>
+    <div id="topBar">
+      <h3 id="menu-toggle">Menu</h3>
+      <ul id="menu">
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-home"></i>
+          <a class="manuLinkTag" href="./index.html">메인화면</a>
+        </li>
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-box-open"></i>
+          <a class="manuLinkTag" href="./ece4000.html">내땅보기</a>
+        </li>
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-chart-pie"></i>
+          <a class="manuLinkTag" href="./ece5000.html">채굴 통계</a>
+        </li>
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-pen-square"></i
+          ><a class="manuLinkTag" href="./ece6000.html">채굴 기록</a>
+        </li>
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-credit-card"></i>
+          <a class="manuLinkTag" href="./ece8210.html">구매하기</a>
+        </li>
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-shopping-cart"></i>
+          <a class="manuLinkTag" href="./ece9000.html">구매 내역</a>
+        </li>
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-address-card"></i>
+          <a class="manuLinkTag" href="./ece7000.html">내정보</a>
+        </li>
+        <li>
+          <i class="sc-searchbox-placeholder-icon fas fa-sign-out"></i>
+          <a onclick="console.log('logout')">로그아웃</a>
+        </li>
+      </ul>
+    </div>
+    <div id="contents">
+      <div class="row_margin">
+        <h1>채굴 기록</h1>
+        <div id="template">
+          <div
+            class="notebooks"
+            ng-app="notebooks"
+            ng-controller="NotebookListCtrl"
+          >
+            <ul id="notebook_ul">
+              <li>
+                <p id="ece6000_txt">데이터 조회중...</p>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <!-- <div
+          class="notebooks"
+          ng-app="notebooks"
+          ng-controller="NotebookListCtrl"
+        >
+          <ul id="notebook_ul">
+            <h3>2022.07.03</h3>
+            <li>
+              <div style="overflow: hidden">
+                <h4 style="float: left">채굴기 : 10</h4>
+                <h4 style="color: #12e1f0; float: right">CR : 45</h4>
+              </div>
+              <p>타일 갯수 : 100</p>
+              <div class="flex2">
+                <div class="flex-items">얼음 : 10</div>
+                <div class="flex-items">물 : 10</div>
+                <div class="flex-items">나무 : 10</div>
+                <div class="flex-items">모래 : 10</div>
+              </div>
+            </li>
+            <li>
+              <div style="overflow: hidden">
+                <h4 style="float: left">채굴기 : 10</h4>
+                <h4 style="color: #12e1f0; float: right">CR : 45</h4>
+              </div>
+              <p>타일 갯수 : 100</p>
+              <div class="flex2">
+                <div class="flex-items">얼음 : 10</div>
+                <div class="flex-items">물 : 10</div>
+                <div class="flex-items">나무 : 10</div>
+                <div class="flex-items">모래 : 10</div>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div
+          class="notebooks"
+          ng-app="notebooks"
+          ng-controller="NotebookListCtrl"
+        >
+          <ul id="notebook_ul">
+            <h3>2022.07.02</h3>
+            <li>
+              <h4>채굴기 : 10</h4>
+              <p>타일 갯수 : 100</p>
+              <div class="flex2">
+                <div class="flex-items">얼음 : 10</div>
+                <div class="flex-items">물 : 10</div>
+                <div class="flex-items">나무 : 10</div>
+                <div class="flex-items">모래 : 10</div>
+                <div class="flex-items">특수자원 : 1</div>
+              </div>
+            </li>
+            <li>
+              <h4>채굴기 : 10</h4>
+              <p>타일 갯수 : 100</p>
+              <div class="flex2">
+                <div class="flex-items">얼음 : 10</div>
+                <div class="flex-items">물 : 10</div>
+                <div class="flex-items">나무 : 10</div>
+                <div class="flex-items">모래 : 10</div>
+                <div class="flex-items">특수자원 : 1</div>
+              </div>
+            </li>
+          </ul>
+        </div> -->
+      </div>
+      <div class="row_margin"></div>
+    </div>
+    <script src="./main.js"></script>
+    <script src="./src/jquery_main.js"></script>
+    <script src="./src/eceFolder/ece6000.js"></script>
+  </body>
+</html>
