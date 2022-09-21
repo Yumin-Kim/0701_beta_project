@@ -23,7 +23,17 @@ router.get("/ece5100", async (req, res) => {
                         resource: name,
                         amount: 0,
                     }
-                    data.push(obj)
+                    let checkIndexing = false;
+                    data.forEach((value) => {
+                        if (Number(value.resource) > name) {
+                            checkIndexing = true
+                        }
+                    })
+                    if (checkIndexing) {
+                        data.unshift(obj)
+                    } else {
+                        data.push(obj)
+                    }
                 }
             })
         }
