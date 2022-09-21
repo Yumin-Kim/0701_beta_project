@@ -3,6 +3,7 @@ const { resultResponseFormat, resultMSG } = require("../config/result");
 const { parseArrayToIndexNumber, parseIndexNumberToArray } = require('../config/tiles.js');
 const sql = require("../config/sql");
 const { digifinax_request, requestAPI_https } = require("../config/utils");
+const { default: axios } = require("axios");
 const { intergrateMSG, ece8000 } = resultMSG
 const router = require("express").Router()
 let priceAPI = [{ cur_unit: "USD", bkpr: "1,389.94" }];
@@ -11,15 +12,18 @@ let priceAPI = [{ cur_unit: "USD", bkpr: "1,389.94" }];
  */
 router.get("/ece8110", async (req, res) => {
     try {
-        console.log(`https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?authkey=QYT1SYyVeJk4SgY9syEe8ncle3EvNqAi&searchdate=${new Date().toISOString().split("T")[0].replaceAll("-", "")}&data=AP01`);
+        const instance = axios.create();
+        instance.defaults.timeout = 2000;
         const tronPrice = await digifinax_request("GET", "/ticker", { symbol: "trx_usdt" });
         try {
-            // priceAPI = await requestAPI_https(`https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?authkey=QYT1SYyVeJk4SgY9syEe8ncle3EvNqAi&searchdate=${new Date().toISOString().split("T")[0].replaceAll("-", "")}&data=AP01`)
+            const { data } = await instance.get(`https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?authkey=QYT1SYyVeJk4SgY9syEe8ncle3EvNqAi&searchdate=${new Date().toISOString().split("T")[0].replaceAll("-", "")}&data=AP01`)
+            priceAPI = data
         } catch (error) {
             if (priceAPI == null) {
                 priceAPI = [{ cur_unit: "USD", bkpr: "1,389.94" }]
             }
         }
+        console.log(priceAPI);
         let usd_price = 0;
         priceAPI.forEach(element => {
             if (element.cur_unit === "USD") {
@@ -125,8 +129,11 @@ router.post("/ece8120_beta", async (req, res) => {
 router.get("/ece8210", async (req, res) => {
     try {
         const tronPrice = await digifinax_request("GET", "/ticker", { symbol: "trx_usdt" });
+        const instance = axios.create();
+        instance.defaults.timeout = 2000;
         try {
-            // priceAPI = await requestAPI_https(`https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?authkey=QYT1SYyVeJk4SgY9syEe8ncle3EvNqAi&searchdate=${new Date().toISOString().split("T")[0].replaceAll("-", "")}&data=AP01`)
+            const { data } = await instance.get(`https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?authkey=QYT1SYyVeJk4SgY9syEe8ncle3EvNqAi&searchdate=${new Date().toISOString().split("T")[0].replaceAll("-", "")}&data=AP01`)
+            priceAPI = data
         } catch (error) {
             if (priceAPI == null) {
                 priceAPI = [{ cur_unit: "USD", bkpr: "1,389.94" }]

@@ -20,6 +20,7 @@ const TRONWALLET = 'TWwnZgk83H9rFo4cn6P3qrDNGgokJMemvL'
 const TRONAPIKEY = process.env.NODE_ENV === "PRD" ? "1eec9900-b417-426e-aa65-fb65615c7040" : '96e8ccd9-1048-448d-9d45-1887d30e267f';
 const CURRENT_CONFIG_TIME = TIMER_1M;
 const axios = require("axios")
+const { default: axiosOBJ } = require("axios");
 
 async function getOffserDIAResourceData() {
     let usd_price;
@@ -28,7 +29,17 @@ async function getOffserDIAResourceData() {
     const CURRENCY_PRICE = `https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?authkey=QYT1SYyVeJk4SgY9syEe8ncle3EvNqAi&searchdate=${new Date().toISOString().split("T")[0].replaceAll("-", "")}&data=AP01`
     const MINERPRICE = 1000000;
     const { data: ELCPrice } = await axios.get(URL_LABK_ELCPRICE)
-    const { data: priceAPI } = await axios.get(CURRENCY_PRICE)
+    const instance = axiosOBJ.create();
+    instance.defaults.timeout = 2000;
+    try {
+        const { data } = await instance.get(CURRENCY_PRICE)
+        priceAPI = data
+    } catch (error) {
+        if (priceAPI == null) {
+            priceAPI = [{ cur_unit: "USD", bkpr: "1,389.94" }]
+        }
+    }
+
     if (priceAPI.length !== 0) {
         priceAPI.forEach(element => {
             if (element.cur_unit === "USD") {

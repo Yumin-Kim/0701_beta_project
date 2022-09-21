@@ -2,6 +2,8 @@ const { executeQuery, dbPool } = require("./config/db.js")
 const sql = require("./config/sql.js")
 const schedule = require('node-schedule');
 const axios = require("axios")
+const { default: axiosOBJ } = require("axios");
+
 // const resouceList = [7505, 7506, 7507, 7602]
 const resouceList = [7507]
 const TIMER_1M = '59 * * * * *'
@@ -164,8 +166,17 @@ async function interval_minig_beta({ instance }) {
 }
 async function interval_mining_v1({ instance }) {
     const { data: ELCPrice } = await axios.get(URL_LABK_ELCPRICE)
-    const { data: priceAPI } = await axios.get(CURRENCY_PRICE)
-    console.log(priceAPI);
+    // const { data: priceAPI } = await axios.get(CURRENCY_PRICE)
+    const instanceAxios = axiosOBJ.create();
+    instanceAxios.defaults.timeout = 2000;
+    try {
+        const { data } = await instanceAxios.get(CURRENCY_PRICE)
+        priceAPI = data
+    } catch (error) {
+        if (priceAPI == null) {
+            priceAPI = [{ cur_unit: "USD", bkpr: "1,389.94" }]
+        }
+    }
     if (priceAPI.length !== 0) {
         priceAPI.forEach(element => {
             if (element.cur_unit === "USD") {
