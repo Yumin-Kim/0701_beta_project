@@ -114,9 +114,11 @@ async function requestAPI_internationalCurrencyPrice_usdt() {
     instance.defaults.timeout = TIMEOUT_AXIOS_VERSION;
     try {
         const { data } = await instance.get(`https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?authkey=QYT1SYyVeJk4SgY9syEe8ncle3EvNqAi&searchdate=${new Date().toISOString().split("T")[0].replaceAll("-", "")}&data=AP01`)
+        console.log(`https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?authkey=QYT1SYyVeJk4SgY9syEe8ncle3EvNqAi&searchdate=${new Date().toISOString().split("T")[0].replaceAll("-", "")}&data=AP01`);
+        if (data.length === 0) throw new Error("Error")
         currecyPrice_list = data
     } catch (error) {
-        if (currecyPrice_list == null) {
+        if (currecyPrice_list === null || currecyPrice_list.length === 0) {
             currecyPrice_list = [{ cur_unit: "USD", bkpr: "1,388.94" }]
         }
     }

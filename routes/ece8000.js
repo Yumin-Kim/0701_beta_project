@@ -21,6 +21,7 @@ router.get("/ece8110", async (req, res) => {
             data.currentamount = data.currentamount + ".001"
         } else {
             let decimal = Number(String(memberPrice[0].extrastr2).split(".")[1])
+            if (String(decimal) === `NaN`) decimal = 189
             if (decimal > 200) {
                 data.currentamount = data.currentamount + ".001"
             } else {
@@ -113,25 +114,7 @@ router.post("/ece8120_beta", async (req, res) => {
 router.get("/ece8210", async (req, res) => {
     try {
         const tronPrice = await digifinax_request("GET", "/ticker", { symbol: "trx_usdt" });
-        const instance = axios.create();
-        instance.defaults.timeout = 2000;
-        try {
-            const { data } = await instance.get(`https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?authkey=QYT1SYyVeJk4SgY9syEe8ncle3EvNqAi&searchdate=${new Date().toISOString().split("T")[0].replaceAll("-", "")}&data=AP01`)
-            priceAPI = data
-        } catch (error) {
-            if (priceAPI == null) {
-                priceAPI = [{ cur_unit: "USD", bkpr: "1,389.94" }]
-            }
-        }
-        let usd_price = 0;
-        priceAPI.forEach(element => {
-            if (element.cur_unit === "USD") {
-                usd_price = Number(element.bkpr.replace(",", ""))
-            }
-        });
-        // const cc = Number(( * 100).toFixed(2))
-        // console.log(1300000 / cc);
-
+        let usd_price = await requestAPI_internationalCurrencyPrice_usdt()
         const data = await executeQuery(sql.ece8210())
         data[0].currentamount = String(Math.floor((1000000 / usd_price) * (1 / tronPrice)))
         const memberPrice = await executeQuery(`select extrastr2 from Transactions where action in (7231, 7241 , 7242 , 7232) order by transaction desc limit 1;`)
@@ -139,6 +122,7 @@ router.get("/ece8210", async (req, res) => {
             data[0].currentamount = data[0].currentamount + ".001"
         } else {
             let decimal = Number(String(memberPrice[0].extrastr2).split(".")[1])
+            if (String(decimal) === `NaN`) decimal = 189
             if (decimal > 200) {
                 data[0].currentamount = data[0].currentamount + ".001"
             } else {

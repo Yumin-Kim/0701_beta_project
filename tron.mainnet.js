@@ -20,35 +20,22 @@ const TRONWALLET = 'TWwnZgk83H9rFo4cn6P3qrDNGgokJMemvL'
 const TRONAPIKEY = process.env.NODE_ENV === "PRD" ? "1eec9900-b417-426e-aa65-fb65615c7040" : '96e8ccd9-1048-448d-9d45-1887d30e267f';
 const CURRENT_CONFIG_TIME = TIMER_1M;
 const axios = require("axios")
-const { default: axiosOBJ } = require("axios");
+const { requestAPI_internationalCurrencyPrice_usdt } = require('./config/utils.js');
+///
+const day = 24 * 11 * 30;
+let usd_price;
+let elc_price;
+const MINERPRICE = 1000000;
+const URL_LABK_ELCPRICE = "https://api.lbkex.com/v2/ticker/24hr.do?symbol=elc_usdt"
+//
 
 async function getOffserDIAResourceData() {
     let usd_price;
     let elc_price;
     const URL_LABK_ELCPRICE = "https://api.lbkex.com/v2/ticker/24hr.do?symbol=elc_usdt"
-    const CURRENCY_PRICE = `https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?authkey=QYT1SYyVeJk4SgY9syEe8ncle3EvNqAi&searchdate=${new Date().toISOString().split("T")[0].replaceAll("-", "")}&data=AP01`
     const MINERPRICE = 1000000;
     const { data: ELCPrice } = await axios.get(URL_LABK_ELCPRICE)
-    const instance = axiosOBJ.create();
-    instance.defaults.timeout = 2000;
-    try {
-        const { data } = await instance.get(CURRENCY_PRICE)
-        priceAPI = data
-    } catch (error) {
-        if (priceAPI == null) {
-            priceAPI = [{ cur_unit: "USD", bkpr: "1,389.94" }]
-        }
-    }
-
-    if (priceAPI.length !== 0) {
-        priceAPI.forEach(element => {
-            if (element.cur_unit === "USD") {
-                usd_price = Number(element.bkpr.replace(",", ""))
-            }
-        });
-    } else {
-        usd_price = 1394;
-    }
+    usd_price = await requestAPI_internationalCurrencyPrice_usdt()
     elc_price = ELCPrice.data[0].ticker.latest
     let elc_price_kr = (usd_price * elc_price)
     return MINERPRICE / elc_price_kr
@@ -106,8 +93,20 @@ const tronDecimal = 1000000;
                          * 다이아 지급 현 시세 기준
                          */
                         const memberAllRes = await getOffserDIAResourceData()
-                        await executeQuery(`insert ResourceTransactions (resource , amount ,member,extracode) values 
-                        (7602,${Math.floor(memberAllRes * minerCount)},${member},9910);`);
+                        await executeQuery(`insert ResourceTransactions (resource , amount ,member,extracode,minercount) values 
+                        (7602,${Math.floor(memberAllRes * minerCount)},${member},9910,${minerCount});`);
+
+                        /**
+                         * 채굴기 금액 초기화
+                         */
+                        const { data: ELCPrice } = await axios.get(URL_LABK_ELCPRICE)
+                        usd_price = await requestAPI_internationalCurrencyPrice_usdt()
+                        elc_price = ELCPrice.data[0].ticker.latest
+                        let elc_price_kr = (usd_price * elc_price)
+                        const toFixedKR = elc_price_kr.toFixed(5);
+                        const memberRemainAmount = (Number(MINERPRICE * minerCount)).toFixed(2);
+                        await executeQuery(`insert MinerTransactions (transaction , member, minerlife , resourceamount , remainamount , offeramount , elcKRW , elcUSD , tileamount , mineramount ,name,miner) values
+                          (${transaction} , ${member} , ${day} , 0 , ${memberRemainAmount} , 0,${toFixedKR},${elc_price},${Number(minerCount) * 1000},${minerCount} , '${minername}',${insertId})`)
                         /**
                          * 마이닝 활성화
                          * 총 채굴량 
@@ -116,9 +115,6 @@ const tronDecimal = 1000000;
                          * 트론 입금 정보 기록
                          * 사용자 실 입금 금액 , 트랜잭션 번호 , 트랜잭션 hash , 블럭 번호 
                          */
-                        //     await executeQuery(`insert into Transactions (action , status , extracode1,extracode2,extrastr1,extrastr2,member) values 
-                        //  (7235,1310,${Number(minerCount) * 1000},0,'${transaction}','${minerCount}',${member}),
-                        //  (6202,1310,${userAmount},${transaction},'${txID}','${blockNumber}',${member})`);
                         await executeQuery(`insert into Transactions (action , status , extracode1,extracode2,extrastr1,extrastr2,member,miner) values 
                     (7235,1310,${Number(minerCount) * 1000},0,'${transaction}','${minerCount}',${member},${insertId}),
                     (6202,1310,${userAmount},${transaction},'${txID}','${blockNumber}',${member},${insertId})`);
@@ -156,8 +152,21 @@ const tronDecimal = 1000000;
                          * 다이아 지급 현 시세 기준
                          */
                         const memberAllRes = await getOffserDIAResourceData()
-                        await executeQuery(`insert ResourceTransactions (resource , amount ,member,extracode) values 
-                        (7602,${Math.floor(memberAllRes * minerCount)},${member},9910);`);
+                        await executeQuery(`insert ResourceTransactions (resource , amount ,member,extracode,minercount) values 
+                        (7602,${Math.floor(memberAllRes * minerCount)},${member},9910,${minerCount});`);
+
+                        /**
+                         * 채굴기 금액 초기화
+                         */
+                        const { data: ELCPrice } = await axios.get(URL_LABK_ELCPRICE)
+                        usd_price = await requestAPI_internationalCurrencyPrice_usdt()
+                        elc_price = ELCPrice.data[0].ticker.latest
+                        let elc_price_kr = (usd_price * elc_price)
+                        const toFixedKR = elc_price_kr.toFixed(5);
+                        const memberRemainAmount = (Number(MINERPRICE * minerCount)).toFixed(2);
+                        await executeQuery(`insert MinerTransactions (transaction , member, minerlife , resourceamount , remainamount , offeramount , elcKRW , elcUSD , tileamount , mineramount ,name,miner) values
+                          (${transaction} , ${member} , ${day} , 0 , ${memberRemainAmount} , 0,${toFixedKR},${elc_price},${Number(minerCount) * 1000},${minerCount} , '${minername}',${insertId})`)
+
                         /**
                          * 마이닝 활성화
                          * 총 채굴량 

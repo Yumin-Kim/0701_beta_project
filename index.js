@@ -18,7 +18,7 @@ const ece8000Router = require("./routes/ece8000.js")
 const ece9000Router = require("./routes/ece9000.js")
 const adminTestRouter = require("./routes/admin/test.js")
 const swaggerRouter = require("./config/swagger.js")
-const { tiles } = require("./config/tiles")
+const { tiles } = require("./config/tiles");
 /** 
  * 환경 변수
  */
@@ -31,6 +31,8 @@ app.use(express.json())
 app.use(express.static("public"))
 app.use(logger('combined'))
 /** */
+
+
 app.use(swaggerRouter)
 app.use("/ece1000", ece1000Router)
 app.use("/ece2000", ece2000Router)
