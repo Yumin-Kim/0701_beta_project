@@ -367,27 +367,27 @@ WHERE
 
 }
 (async () => {
-    // console.log(`=======================================`);
-    // console.log(`[${process.env.NODE_ENV}] start mining`);
-    // console.log(`Mining ${CURRENT_CONFIG_TIME}`);
-    // console.log(`=======================================`);
-    // await executeQuery(`insert Transactions (action , status ) values (1410 , 1310)`);
-    // const j = await schedule.scheduleJob(CURRENT_CONFIG_TIME, async () => {
-    //     console.log(`=======================================`);
-    //     console.log(`Mining ${CURRENT_CONFIG_TIME} START`);
-    //     console.log(`=======================================`);
-    //     const instance = await dbPool.getConnection(async conn => conn)
-    //     try {
-    //         console.log(`==========START : ${new Date()}==========`);
-    //         await interval_mining_v1({ instance })
-    //     } catch (error) {
-    //         await instance.query(`insert Transactions (action , status ) values (1420 , 1310)`)
-    //         await instance.commit();
-    //         await instance.release();
-    //         process.exit();
-    //     }
-    // });
-    const instance = await dbPool.getConnection(async conn => conn)
-    await interval_mining_v1_test({ instance })
+    console.log(`=======================================`);
+    console.log(`[${process.env.NODE_ENV}] start mining`);
+    console.log(`Mining ${CURRENT_CONFIG_TIME}`);
+    console.log(`=======================================`);
+    await executeQuery(`insert Transactions (action , status ) values (1410 , 1310)`);
+    const j = await schedule.scheduleJob(CURRENT_CONFIG_TIME, async () => {
+        console.log(`=======================================`);
+        console.log(`Mining ${CURRENT_CONFIG_TIME} START`);
+        console.log(`=======================================`);
+        const instance = await dbPool.getConnection(async conn => conn)
+        try {
+            console.log(`==========START : ${new Date()}==========`);
+            await interval_mining_v1({ instance })
+        } catch (error) {
+            await instance.query(`insert Transactions (action , status ) values (1420 , 1310)`)
+            await instance.commit();
+            await instance.release();
+            process.exit();
+        }
+    });
+    // const instance = await dbPool.getConnection(async conn => conn)
+    // await interval_mining_v1_test({ instance })
 
 })()
