@@ -95,38 +95,43 @@ router.post("/ece8220", async (req, res) => {
         const { tron, amount } = req.body;
         const [selectData] = await executeQuery(`select * from Transactions where action = 7231 and extrastr1 = '${tron}' and extrastr2='${amount}' order by transaction desc limit 1;`)
         if (selectData === undefined) throw new Error("입력하신 정보는 조회 할 수 없는 트론 주소 , 금액 입니다.")
-        const { transaction, extrastr4: minername, extracode1: minerCount, member } = selectData
+        const { transaction, extrastr4, extracode1: minerCount, member } = selectData
+
         await executeQuery(`update Transactions set action  = 7232 ,updatedt=NOW()  where transaction = ${selectData.transaction}`)
         /**
          * 채굴기 테이블 저장
          */
-        const { affectedRows, insertId } = await executeQuery(`insert Miners (name , mineramount , tileamount , member) values ('${minername}' , ${minerCount} , ${Number(minerCount) * 1000} , ${member})`);
-        if (affectedRows !== 0) {
-            const memberAllRes = await getOffserDIAResourceData()
-            await executeQuery(`insert ResourceTransactions (resource , amount ,member,extracode,minercount) values 
-            (7602,${Math.floor(memberAllRes * minerCount)},${member},9910,${minerCount});`);
-            /**
-             * 마이닝 활성화
-             * 총 채굴량 
-             * 현 채굴량
-             * 마이너 갯수
-             */
-            await executeQuery(`insert into Transactions (action , status , extracode1,extracode2,extrastr1,extrastr2,member,miner) values 
-             (7235,1310,${Number(minerCount) * 1000},0,'${transaction}','${minerCount}',${member},${insertId}),
-             (6203,1310,${amount},${transaction},'관리자 처리','처리',${member},${insertId})`);
-            const { data: ELCPrice } = await axios.get(URL_LABK_ELCPRICE)
-            usd_price = await requestAPI_internationalCurrencyPrice_usdt()
-            elc_price = ELCPrice.data[0].ticker.latest
-            let elc_price_kr = (usd_price * elc_price)
-            const toFixedKR = elc_price_kr.toFixed(5);
-            const memberRemainAmount = (Number(MINERPRICE * minerCount)).toFixed(2);
+        const inserstMiner = await Array(minerCount).fill().map(async (count) => {
+            const minername = generateRandomString(2) + generateRandomCode(6)
+            const amount = 1;
+            const { affectedRows, insertId } = await executeQuery(`insert Miners (name , mineramount , tileamount , member) values ('${minername}' , ${amount} , ${Number(amount) * 1000} , ${member})`);
+            if (affectedRows !== 0) {
+                const memberAllRes = await getOffserDIAResourceData()
+                await executeQuery(`insert ResourceTransactions (resource , amount ,member,extracode,minercount) values 
+                (7602,${Math.floor(memberAllRes * amount)},${member},9910,${amount});`);
+                /**
+                 * 마이닝 활성화
+                 * 총 채굴량 
+                 * 현 채굴량
+                 * 마이너 갯수
+                 */
+                await executeQuery(`insert into Transactions (action , status , extracode1,extracode2,extrastr1,extrastr2,member,miner) values 
+                 (7235,1310,${Number(amount) * 1000},0,'${transaction}','${amount}',${member},${insertId}),
+                 (6203,1310,${amount},${transaction},'관리자 처리','처리',${member},${insertId})`);
+                const { data: ELCPrice } = await axios.get(URL_LABK_ELCPRICE)
+                usd_price = await requestAPI_internationalCurrencyPrice_usdt()
+                elc_price = ELCPrice.data[0].ticker.latest
+                let elc_price_kr = (usd_price * elc_price)
+                const toFixedKR = elc_price_kr.toFixed(5);
+                const memberRemainAmount = (Number(MINERPRICE * amount)).toFixed(2);
 
-            await executeQuery(`insert MinerTransactions (transaction , member, minerlife , resourceamount , remainamount , offeramount , elcKRW , elcUSD , tileamount , mineramount ,name,miner) values
-            (${transaction} , ${member} , ${day} , 0 , ${memberRemainAmount} , 0,${toFixedKR},${elc_price},${Number(minerCount) * 1000},${minerCount} , '${minername}',${insertId})`)
-
-
-            res.send(resultResponseFormat({ status: 1310, msg: "채굴기 구매 입금 확인 처리 되었습니다.", data: { member, minerCount, amount, tron } }))
-        }
+                await executeQuery(`insert MinerTransactions (transaction , member, minerlife , resourceamount , remainamount , offeramount , elcKRW , elcUSD , tileamount , mineramount ,name,miner) values
+                (${transaction} , ${member} , ${day} , 0 , ${memberRemainAmount} , 0,${toFixedKR},${elc_price},${Number(amount) * 1000},${amount} , '${minername}',${insertId})`)
+                return { minerTable: insertId, member, transaction }
+            }
+        })
+        const minerInsertInfo = await Promise.all(inserstMiner)
+        res.send(resultResponseFormat({ status: 1310, msg: "채굴기 구매 입금 확인 처리 되었습니다.", data: minerInsertInfo }))
     } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
     }
@@ -136,42 +141,63 @@ router.post("/ece8120", async (req, res) => {
         const { tron, amount } = req.body;
         const [selectData] = await executeQuery(`select * from Transactions where action = 7241 and extrastr1 = '${tron}' and extrastr2='${amount}' order by transaction desc limit 1;`)
         if (selectData === undefined) throw new Error("입력하신 정보는 조회 할 수 없는 트론 주소 , 금액 입니다.")
-        const { transaction, extrastr4: minername, extracode1: minerCount, member } = selectData
+        const { transaction, extrastr4, extracode1: minerCount, member } = selectData
         await executeQuery(`update Transactions set action  = 7242 ,updatedt=NOW()  where transaction = ${selectData.transaction}`)
         /**
          * 채굴기 테이블 저장
          */
-        const { affectedRows, insertId } = await executeQuery(`insert Miners (name , mineramount , tileamount , member) values ('${minername}' , ${minerCount} , ${Number(minerCount) * 1000} , ${member})`);
-        if (affectedRows !== 0) {
-            console.log(minerCount);
-            const memberAllRes = await getOffserDIAResourceData()
-            await executeQuery(`insert ResourceTransactions (resource , amount ,member,extracode,minercount) values 
-            (7602,${Math.floor(memberAllRes * minerCount)},${member},9910,${minerCount});`);
-            /**
-             * 마이닝 활성화
-             * 총 채굴량 
-             * 현 채굴량
-             * 마이너 갯수
-             */
-            await executeQuery(`insert into Transactions (action , status , extracode1,extracode2,extrastr1,extrastr2,member,miner) values 
-             (7235,1310,${Number(minerCount) * 1000},0,'${transaction}','${minerCount}',${member},${insertId}),
-             (6203,1310,${amount},${transaction},'관리자 처리','처리',${member},${insertId})`);
 
-            const { data: ELCPrice } = await axios.get(URL_LABK_ELCPRICE)
-            usd_price = await requestAPI_internationalCurrencyPrice_usdt()
-            elc_price = ELCPrice.data[0].ticker.latest
-            let elc_price_kr = (usd_price * elc_price)
-            const toFixedKR = elc_price_kr.toFixed(5);
-            const memberRemainAmount = (Number(MINERPRICE * minerCount)).toFixed(2);
+        const inserstMiner = await Array(minerCount).fill().map(async (count) => {
+            const amount = 1;
+            const minername = generateRandomString(2) + generateRandomCode(6)
+            const { affectedRows, insertId } = await executeQuery(`insert Miners (name , mineramount , tileamount , member) values ('${minername}' , ${amount} , ${Number(amount) * 1000} , ${member})`);
+            if (affectedRows !== 0) {
+                const memberAllRes = await getOffserDIAResourceData()
+                await executeQuery(`insert ResourceTransactions (resource , amount ,member,extracode,minercount) values 
+                (7602,${Math.floor(memberAllRes * amount)},${member},9910,${amount});`);
+                /**
+                 * 마이닝 활성화
+                 * 총 채굴량 
+                 * 현 채굴량
+                 * 마이너 갯수
+                 */
+                await executeQuery(`insert into Transactions (action , status , extracode1,extracode2,extrastr1,extrastr2,member,miner) values 
+                 (7235,1310,${Number(amount) * 1000},0,'${transaction}','${amount}',${member},${insertId}),
+                 (6203,1310,${amount},${transaction},'관리자 처리','처리',${member},${insertId})`);
+                const { data: ELCPrice } = await axios.get(URL_LABK_ELCPRICE)
+                usd_price = await requestAPI_internationalCurrencyPrice_usdt()
+                elc_price = ELCPrice.data[0].ticker.latest
+                let elc_price_kr = (usd_price * elc_price)
+                const toFixedKR = elc_price_kr.toFixed(5);
+                const memberRemainAmount = (Number(MINERPRICE * amount)).toFixed(2);
 
-            await executeQuery(`insert MinerTransactions (transaction , member, minerlife , resourceamount , remainamount , offeramount , elcKRW , elcUSD , tileamount , mineramount ,name,miner) values
-             (${transaction} , ${member} , ${day} , 0 , ${memberRemainAmount} , 0,${toFixedKR},${elc_price},${Number(minerCount) * 1000},${minerCount} , '${minername}',${insertId})`)
-
-
-            res.send(resultResponseFormat({ status: 1310, msg: "타일 구매 입금 확인 처리 되었습니다.", data: { member, minerCount, amount, tron } }))
-        }
+                await executeQuery(`insert MinerTransactions (transaction , member, minerlife , resourceamount , remainamount , offeramount , elcKRW , elcUSD , tileamount , mineramount ,name,miner) values
+                (${transaction} , ${member} , ${day} , 0 , ${memberRemainAmount} , 0,${toFixedKR},${elc_price},${Number(amount) * 1000},${amount} , '${minername}',${insertId})`)
+                return { minerTable: insertId, member, transaction }
+            }
+        })
+        const minerInsertInfo = await Promise.all(inserstMiner)
+        res.send(resultResponseFormat({ status: 1310, msg: "타일 구매 입금 확인 처리 되었습니다.", data: minerInsertInfo }))
     } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
     }
 })
+function generateRandomCode(n) {
+    let str = ''
+    for (let i = 0; i < n; i++) {
+        let num = Math.floor(Math.random() * 10)
+        num === 0 ? num = 1 : num = num;
+        str += num
+    }
+    return str
+}
+const generateRandomString = (num) => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    let result = '';
+    const charactersLength = characters.length;
+    for (let i = 0; i < num; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
 module.exports = router;

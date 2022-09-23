@@ -84,41 +84,37 @@ const tronDecimal = 1000000;
                         console.log("==================MINER Purchase================");
                         console.log("");
                         await executeQuery(`update Transactions set action  = 7232 ,updatedt=NOW()  where transaction = ${transaction}`)
-                        /**
-                         * 채굴기 테이블 정보 저장
-                         */
-                        const { affectedRows, insertId } = await executeQuery(`insert Miners (name , mineramount , tileamount , member) values ('${minername}' , ${minerCount} , ${Number(minerCount) * 1000} , ${member})`);
-
-                        /**
-                         * 다이아 지급 현 시세 기준
-                         */
-                        const memberAllRes = await getOffserDIAResourceData()
-                        await executeQuery(`insert ResourceTransactions (resource , amount ,member,extracode,minercount) values 
-                        (7602,${Math.floor(memberAllRes * minerCount)},${member},9910,${minerCount});`);
-
-                        /**
-                         * 채굴기 금액 초기화
-                         */
-                        const { data: ELCPrice } = await axios.get(URL_LABK_ELCPRICE)
-                        usd_price = await requestAPI_internationalCurrencyPrice_usdt()
-                        elc_price = ELCPrice.data[0].ticker.latest
-                        let elc_price_kr = (usd_price * elc_price)
-                        const toFixedKR = elc_price_kr.toFixed(5);
-                        const memberRemainAmount = (Number(MINERPRICE * minerCount)).toFixed(2);
-                        await executeQuery(`insert MinerTransactions (transaction , member, minerlife , resourceamount , remainamount , offeramount , elcKRW , elcUSD , tileamount , mineramount ,name,miner) values
-                          (${transaction} , ${member} , ${day} , 0 , ${memberRemainAmount} , 0,${toFixedKR},${elc_price},${Number(minerCount) * 1000},${minerCount} , '${minername}',${insertId})`)
-                        /**
-                         * 마이닝 활성화
-                         * 총 채굴량 
-                         * 현 채굴량
-                         * 마이너 갯수
-                         * 트론 입금 정보 기록
-                         * 사용자 실 입금 금액 , 트랜잭션 번호 , 트랜잭션 hash , 블럭 번호 
-                         */
-                        await executeQuery(`insert into Transactions (action , status , extracode1,extracode2,extrastr1,extrastr2,member,miner) values 
-                    (7235,1310,${Number(minerCount) * 1000},0,'${transaction}','${minerCount}',${member},${insertId}),
-                    (6202,1310,${userAmount},${transaction},'${txID}','${blockNumber}',${member},${insertId})`);
                         //  await executeQuery(`insert into Transactions ()`)
+                        const inserstMiner = await Array(minerCount).fill().map(async (count) => {
+                            const minername = generateRandomString(2) + generateRandomCode(6)
+                            const amount = 1;
+                            const { affectedRows, insertId } = await executeQuery(`insert Miners (name , mineramount , tileamount , member) values ('${minername}' , ${amount} , ${Number(amount) * 1000} , ${member})`);
+                            if (affectedRows !== 0) {
+                                const memberAllRes = await getOffserDIAResourceData()
+                                await executeQuery(`insert ResourceTransactions (resource , amount ,member,extracode,minercount) values 
+                                (7602,${Math.floor(memberAllRes * amount)},${member},9910,${amount});`);
+                                /**
+                                 * 마이닝 활성화
+                                 * 총 채굴량 
+                                 * 현 채굴량
+                                 * 마이너 갯수
+                                 */
+                                await executeQuery(`insert into Transactions (action , status , extracode1,extracode2,extrastr1,extrastr2,member,miner) values 
+                                 (7235,1310,${Number(amount) * 1000},0,'${transaction}','${amount}',${member},${insertId}),
+                                 (6202,1310,${userAmount},${transaction},'${txID}','${blockNumber}',${member},${insertId})`);
+                                const { data: ELCPrice } = await axios.get(URL_LABK_ELCPRICE)
+                                usd_price = await requestAPI_internationalCurrencyPrice_usdt()
+                                elc_price = ELCPrice.data[0].ticker.latest
+                                let elc_price_kr = (usd_price * elc_price)
+                                const toFixedKR = elc_price_kr.toFixed(5);
+                                const memberRemainAmount = (Number(MINERPRICE * amount)).toFixed(2);
+
+                                await executeQuery(`insert MinerTransactions (transaction , member, minerlife , resourceamount , remainamount , offeramount , elcKRW , elcUSD , tileamount , mineramount ,name,miner) values
+                                (${transaction} , ${member} , ${day} , 0 , ${memberRemainAmount} , 0,${toFixedKR},${elc_price},${Number(amount) * 1000},${amount} , '${minername}',${insertId})`)
+                                return { minerTable: insertId, member, transaction }
+                            }
+                        })
+                        await Promise.all(inserstMiner)
                     } else {
                         //금액 틀린경우
                     }
@@ -144,40 +140,36 @@ const tronDecimal = 1000000;
                         console.log("=================TILE Purchase=================");
                         console.log("");
                         await executeQuery(`update Transactions set action  = 7242 ,updatedt=NOW()  where transaction = ${transaction}`)
-                        /**
-                         * 채굴기 테이블 정보 저장
-                         */
-                        const { affectedRows, insertId } = await executeQuery(`insert Miners (name , mineramount , tileamount , member) values ('${minername}' , ${minerCount} , ${Number(minerCount) * 1000} , ${member})`);
-                        /**
-                         * 다이아 지급 현 시세 기준
-                         */
-                        const memberAllRes = await getOffserDIAResourceData()
-                        await executeQuery(`insert ResourceTransactions (resource , amount ,member,extracode,minercount) values 
-                        (7602,${Math.floor(memberAllRes * minerCount)},${member},9910,${minerCount});`);
+                        const inserstMiner = await Array(minerCount).fill().map(async (count) => {
+                            const amount = 1;
+                            const minername = generateRandomString(2) + generateRandomCode(6)
+                            const { affectedRows, insertId } = await executeQuery(`insert Miners (name , mineramount , tileamount , member) values ('${minername}' , ${amount} , ${Number(amount) * 1000} , ${member})`);
+                            if (affectedRows !== 0) {
+                                const memberAllRes = await getOffserDIAResourceData()
+                                await executeQuery(`insert ResourceTransactions (resource , amount ,member,extracode,minercount) values 
+                                (7602,${Math.floor(memberAllRes * amount)},${member},9910,${amount});`);
+                                /**
+                                 * 마이닝 활성화
+                                 * 총 채굴량 
+                                 * 현 채굴량
+                                 * 마이너 갯수
+                                 */
+                                await executeQuery(`insert into Transactions (action , status , extracode1,extracode2,extrastr1,extrastr2,member,miner) values 
+                                 (7235,1310,${Number(amount) * 1000},0,'${transaction}','${amount}',${member},${insertId}),
+                                 (7602,${Math.floor(memberAllRes * minerCount)},${member},9910,${minerCount});`);
+                                const { data: ELCPrice } = await axios.get(URL_LABK_ELCPRICE)
+                                usd_price = await requestAPI_internationalCurrencyPrice_usdt()
+                                elc_price = ELCPrice.data[0].ticker.latest
+                                let elc_price_kr = (usd_price * elc_price)
+                                const toFixedKR = elc_price_kr.toFixed(5);
+                                const memberRemainAmount = (Number(MINERPRICE * amount)).toFixed(2);
 
-                        /**
-                         * 채굴기 금액 초기화
-                         */
-                        const { data: ELCPrice } = await axios.get(URL_LABK_ELCPRICE)
-                        usd_price = await requestAPI_internationalCurrencyPrice_usdt()
-                        elc_price = ELCPrice.data[0].ticker.latest
-                        let elc_price_kr = (usd_price * elc_price)
-                        const toFixedKR = elc_price_kr.toFixed(5);
-                        const memberRemainAmount = (Number(MINERPRICE * minerCount)).toFixed(2);
-                        await executeQuery(`insert MinerTransactions (transaction , member, minerlife , resourceamount , remainamount , offeramount , elcKRW , elcUSD , tileamount , mineramount ,name,miner) values
-                          (${transaction} , ${member} , ${day} , 0 , ${memberRemainAmount} , 0,${toFixedKR},${elc_price},${Number(minerCount) * 1000},${minerCount} , '${minername}',${insertId})`)
-
-                        /**
-                         * 마이닝 활성화
-                         * 총 채굴량 
-                         * 현 채굴량
-                         * 마이너 갯수
-                         * 트론 입금 정보 기록
-                         * 사용자 실 입금 금액 , 트랜잭션 번호 , 트랜잭션 hash , 블럭 번호 
-                         */
-                        await executeQuery(`insert into Transactions (action , status , extracode1,extracode2,extrastr1,extrastr2,member,miner) values 
-                    (7235,1310,${Number(minerCount) * 1000},0,'${transaction}','${minerCount}',${member},${insertId}),
-                    (6202,1310,${userAmount},${transaction},'${txID}','${blockNumber}',${member},${insertId})`);
+                                await executeQuery(`insert MinerTransactions (transaction , member, minerlife , resourceamount , remainamount , offeramount , elcKRW , elcUSD , tileamount , mineramount ,name,miner) values
+                                (${transaction} , ${member} , ${day} , 0 , ${memberRemainAmount} , 0,${toFixedKR},${elc_price},${Number(amount) * 1000},${amount} , '${minername}',${insertId})`)
+                                return { minerTable: insertId, member, transaction }
+                            }
+                        })
+                        await Promise.all(inserstMiner)
                     } else {
                         //금액 틀린경우
                     }

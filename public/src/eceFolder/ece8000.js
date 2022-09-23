@@ -52,7 +52,9 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                 const value = e.value;
                 const text = e.options[e.selectedIndex].text;
                 const address = $("#address").val()
+                const referMinerName = $("#minername").val()
                 let valid = true
+                $("#message_ece8119_limit").fadeOut()
                 if (address.trim() === "") {
                     valid = false;
                     $("#erroraddress").fadeIn();
@@ -65,10 +67,14 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                 }
                 if (valid) {
                     const amount = (Number(adminDecimalTronAmount_tile) * Number(value)).toFixed(3)
-                    const requestMiner = await AJAXRequestMethod({ method: "POST", requestURL: `${serverURL}/ece8000/ece8120_beta?member=${member}`, data: { tileSet: value, amount, address } })
+                    const requestMiner = await AJAXRequestMethod({ method: "POST", requestURL: `${serverURL}/ece8000/ece8120_beta?member=${member}`, data: { tileSet: value, amount, address, referMinerName } })
                     if (requestMiner.status === 1310) {
                         location.href = `./ece8129.html?member=${member}&amount=${amount}&miner=${text}&address=${address}`
+                    } else {
+                        $("#message_ece8119_limit").html(requestMiner.msg)
+                        $("#message_ece8119_limit").fadeIn()
                     }
+
                 }
             })
             /**
@@ -113,6 +119,7 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
             $("#ece8210_ece8220").click(async () => {
                 const minerCount = $("#minerCount").val()
                 const address = $("#address").val()
+                const referMinerName = $("#minername").val()
                 let valid = true
                 if (minerCount.trim() === "") {
                     valid = false;
@@ -136,9 +143,12 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                 }
                 if (valid) {
                     const amount = (Number(adminDecimalTronAmount) * minerCount).toFixed(3)
-                    const requestMiner = await AJAXRequestMethod({ method: "POST", requestURL: `${serverURL}/ece8000/ece8220_beta?member=${member}`, data: { miner: minerCount, amount, address } })
+                    const requestMiner = await AJAXRequestMethod({ method: "POST", requestURL: `${serverURL}/ece8000/ece8220_beta?member=${member}`, data: { miner: minerCount, amount, address, referMinerName } })
                     if (requestMiner.status === 1310) {
                         location.href = `./ece8220.html?member=${member}&amount=${amount}&miner=${minerCount}&address=${address}`
+                    } else {
+                        $("#errorminer").html(requestMiner.msg)
+                        $("#errorminer").fadeIn()
                     }
                 }
             })

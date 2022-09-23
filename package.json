@@ -8,7 +8,7 @@
     "db_dev": "NODE_ENV=DEV PORT=3000 nodemon ./config/db.js",
     "dev": "NODE_ENV=DEV PORT=3000 nodemon",
     "miner_dev": "NODE_ENV=DEV TIME=1S nodemon ./observeMiner.js",
-    "miner_prd": "NODE_ENV=PRD TIME=1S nodemon ./observeMiner.js",
+    "miner_prd": "NODE_ENV=PRD nodemon ./observeMiner.js",
     "tron_dev": "NODE_ENV=DEV TIME=1S nodemon ./tron.mainnet.js",
     "tron_prd": "NODE_ENV=PRD TIME=1S nodemon ./tron.mainnet.js",
     "xrpws_test": "NODE_ENV=PRD  nodemon ./xrp.ws.js",
