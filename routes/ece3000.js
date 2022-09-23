@@ -227,7 +227,7 @@ router.get("/ece3700", async (req, res) => {
     try {
         const { member } = req.query;
         if (member === undefined) throw new Error(intergrateMSG.failure)
-        let data = await executeQuery(`select m.name,m.tileamount,t.action , min,m.miner from Miners as m
+        let data = await executeQuery(`select m.name,m.tileamount,t.action , min,m.miner,m.createdt from Miners as m
         left join
         (select * from Transactions where action in (7235,7236)) as t
         on t.miner = m.miner 
@@ -284,12 +284,40 @@ WHERE
             value.min = convertPer + "%"
             return value
         })
-        let doReferName = null;
-        if (selectDoReferCode.length !== 0) {
-            doReferName = selectDoReferCode[0].doReferCode
+        let doReferName = await executeQuery(`select name from Miners where
+        miner = (select miner from Transactions where action = 9501 and extracode2 = ${miner})`);
+        if (doReferName.length !== 0) {
+            doReferName = doReferName[0].name
+        } else {
+            doReferName = null
         }
-        const result = { doReferCode: doReferName, minerInfo: selectMinerInfo[0], count }
+        const referList = await executeQuery(`select * from Transactions where action = 9501 and miner = ${miner}`)
+        const result = { doReferCode: doReferName, minerInfo: selectMinerInfo[0], count, referList }
         res.send(resultResponseFormat({ status: 1310, msg: "사용자 채굴기 리스트 정보 제공", data: result }))
+    }
+    catch (error) {
+        res.send(resultResponseFormat({ status: 1320, msg: error.message }))
+    }
+})
+
+router.get("/ece3720", async (req, res) => {
+    try {
+        const { member, miner } = req.query;
+        if (member === undefined) throw new Error(intergrateMSG.failure)
+        let data = await executeQuery(`select extracode1,createdt from Transactions 
+        where action = 9501 and miner = ${miner};
+        `)
+        data = await data.map(async (v) => {
+            const { extracode1, createdt } = v
+            const [minerName] = await executeQuery(`select name from Miners 
+            where miner = (select miner 
+                from Transactions where action = 7235 and extrastr1 = ${extracode1} 
+                order by transaction asc limit 1)`)
+            return { name: minerName.name, createdt }
+        })
+        console.log(data);
+        data = await Promise.all(data)
+        res.send(resultResponseFormat({ status: 1310, msg: "사용자 채굴기 리스트 정보 제공", data }))
     }
     catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))

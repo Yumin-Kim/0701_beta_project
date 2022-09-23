@@ -181,65 +181,113 @@
     </div>
     <div id="contents">
       <div class="row_margin">
-        <h1 style="margin: 10px 0 0 10px">채굴기 현황 </h1>
-        <table id="distillers">
-          <thead>
-            <th>ID</th>
-            <th>설치일</th>
-            <th>진행도</th> 
-          </thead>
-          <tfoot>
-            -- 채굴기 현황
-          </tfoot>
-          <tbody>
-            <tr>
-              <td>er51547</td>
-              <td>2022-09-16</td>
-              <td>34%</td>
-            </tr>
-            <tr>
-              <td>er51547</td>
-              <td>2022-09-16</td>
-              <td>34%</td>
-            </tr>
-            <tr>
-              <td>er51547</td>
-              <td>2022-09-16</td>
-              <td>34%</td>
-            </tr>
-            <tr>
-              <td>er51547</td>
-              <td>2022-09-16</td>
-              <td>34%</td>
-            </tr>
-            <tr>
-              <td>er51547</td>
-              <td>2022-09-16</td>
-              <td>34%</td>
-            </tr>
-            <tr>
-              <td>er51547</td>
-              <td>2022-09-16</td>
-              <td>34%</td>
-            </tr>
-            <tr>
-              <td>er51547</td>
-              <td>2022-09-16</td>
-              <td>34%</td>
-            </tr>
-            <tr>
-              <td>er51547</td>
-              <td>2022-09-16</td>
-              <td>34%</td>
-            </tr>
-          </tbody>
-        </table>
+        <h1 style="margin: 10px 0 0">채굴기 현황</h1>
+        <h3
+          class="ece8210_referName"
+          id="txt_title"
+          style="color: #fff; font-size: 17px; margin: 0; margin-top: 10px"
+        ></h3>
+        <div style="margin: 0 auto; text-align: center" id="guages">
+          <canvas id="foo"></canvas>
+          <h3
+            id="title"
+            style="
+              display: none;
+              text-align: center;
+              margin: 0px;
+              margin-top: -25px;
+              margin-bottom: 25px;
+              font-size: 25px;
+            "
+          ></h3>
+          <p
+            id="notMiner"
+            style="display: none; text-align: center; margin-top: 20px"
+          >
+            채굴기를 구매하셔야합니다.
+          </p>
+          <h4
+            style="
+              text-align: center;
+              color: #fff;
+              margin: 10px 0;
+              font-size: 12px;
+              display: none;
+            "
+          >
+            "추천인을 늘려 더욱 빠른 채굴을 즐기세요"
+          </h4>
+          <button id="mining" style="display: none" class="cardviewbtn_index">
+            채굴 하기
+          </button>
+          <!-- <button id="mining1" class="cardviewbtn_index">채굴 하기</button> -->
+        </div>
+        <!-- <h3>추천인 코드</h3>
+        <div class="sc-searchbox" style="overflow: hidden">
+          <div style="width: 70%; float: left; margin-right: 10px">
+            <input type="text" id="ece3620_txt" class="sc-searchbox-field" />
+            <div class="sc-searchbox-placeholder"></div>
+            <div style="background-color: #94e5ff; height: 1px"></div>
+            <p class="alert" id="errornickname">추천인 닉네임을 입력해주세요</p>
+          </div>
+          <div>
+            <button
+              class="cardviewbtn_w100"
+              id="ece3620"
+              style="width: 25%; float: left; margin: 0 !important"
+            >
+              등록
+            </button>
+          </div>
+        </div> -->
+
+        <h2
+          class="ece8210_referName"
+          id="referName"
+          style="
+            color: #fff;
+            display: none;
+            font-size: 17px;
+            margin: 0;
+            margin-top: 10px;
+          "
+        >
+          추천한 채굴기 : cd123456
+        </h2>
+        <div style="overflow: hidden">
+          <h3
+            class="ece8210_title"
+            style="float: left; margin: 10px 0; float: left"
+          >
+            추천인 현황
+          </h3>
+          <h3
+            class="ece8210_title"
+            id="referLevel"
+            style="float: right; margin: 10px 0"
+          ></h3>
+        </div>
+        <div class="ece8210_history_template">
+          <div class="ece8210_history">
+            <span style="text-align: center; display: block"
+              >추천인 내역이 존재하지 않습니다.</span
+            >
+          </div>
+          <!-- <div class="ece8210_history">
+            <span style="float: left">2022.07.04</span>
+            <span style="float: right">
+              <span>Guest001</span>
+              <h4>추천인 승인 완료</h4>
+            </span>
+          </div> -->
+        </div>
         <button
           type="button"
           value="./index.html"
+          id="btn"
           class="cardviewbtn_w100 btn7000"
         >
-          메인 페이지
+          이전 페이지
         </button>
       </div>
 
@@ -277,11 +325,9 @@
     </div>
     <script src="./main.js"></script>
     <script src="./src/jquery_main.js"></script>
-    <link rel="stylesheet" type="text/css" href="DataTables/datatables.min.css"/>
-    <script type="text/javascript" src="DataTables/datatables.min.js"></script>
-
     <script src="./src/eceFolder/ece3600.js"></script>
     <script src="./src/eceFolder/ece3000.js"></script>
+    <script src="./src/global.js"></script>
     <script>
       $("#mining").click(() => {
         myFunction();
@@ -294,20 +340,75 @@
           x.className = x.className.replace("show", "");
         }, 3000);
       }
-    </script>
-    <script>
-      $(document).ready(function(){
-        $("#distillers").DataTable({
-          "searching": false,
-          "info": false,
-          "lengthChange": false
+      window.onload = () => {
+        const aLinkTag = document.getElementsByClassName("manuLinkTag");
+        Array(aLinkTag.length)
+          .fill()
+          .forEach((v, i) => {
+            aLinkTag[i].setAttribute(
+              "href",
+              `${aLinkTag[i].getAttribute("href")}?member=${member}`
+            );
+          });
+        const btn8000 = document.getElementsByClassName("btn8000");
+        if (btn8000.length !== 0) {
+          Array(btn8000.length)
+            .fill()
+            .forEach((v, i) => {
+              if (btn8000[i].value.trim() !== "") {
+                btn8000[i].setAttribute(
+                  "onclick",
+                  `location.href='${btn8000[i].getAttribute(
+                    "value"
+                  )}?member=${member}'`
+                );
+              }
+            });
+        }
+
+        $("#btn").click(() => {
+          location.href = `./ece3600.html?member=${member}`;
         });
-      });
-    </script>
-    <style>
-      #distillers{
-        color: white !important;
+        const [miner, minerId] = location.search.split("&")[1].split("=");
+        AJAXRequestMethod({
+          method: "GET",
+          requestURL: `${serverURL}/ece3000/ece3710?member=${member}&miner=${minerId}`,
+        }).then(({ data }) => {
+          const { count, doReferCode, minerInfo } = data;
+          console.log(doReferCode);
+          if (doReferCode !== null) {
+            $("#referName").html(`추천한 채굴기 : ${doReferCode}`);
+            $("#referName").css("display", "block");
+          }
+          $("#txt_title").html(`채굴기 명 : ${minerInfo.name}`);
+          AJAXRequestMethod;
+        });
+        AJAXRequestMethod({
+          method: "GET",
+          requestURL: `${serverURL}/ece3000/ece3720?member=${member}&miner=${minerId}`,
+        }).then(({ data: referList }) => {
+          $("#referLevel").text(`현황 : ${referList.length}명 `);
+          if (referList.length !== 0) {
+            let referListHTML = referList.map((v) => {
+              return innerHTML_MinerHistory({
+                createdt: v.createdt.split("T")[0],
+                nickname: v.name,
+              });
+            });
+            referListHTML = referListHTML.join(",").replaceAll(",", "");
+            $(".ece8210_history_template").html(referListHTML);
+          }
+        });
+      };
+      function innerHTML_MinerHistory({ createdt, nickname }) {
+        return `<div class="ece8210_history">
+                <span style="float: left">[${createdt}]</span>
+                <h4 style="font-size:14px; margin-left:11px">${nickname}</h4>
+                <span style="float: right">
+                  <h4>추천인 등록 완료</h4>
+                </span>
+              </div>`;
       }
-    </style>
+    </script>
   </body>
 </html>

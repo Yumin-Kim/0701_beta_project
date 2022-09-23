@@ -119,7 +119,7 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                 gauge.set(0);
                 clearTimer = setInterval(() => {
                     if (minerCount !== null) {
-                        var rnd = Math.round(minerSpeed + Math.floor(Math.random() * 100));
+                        var rnd = Math.round(2500 + Math.floor(Math.random() * 100));
                         title.innerHTML = rnd + "%";
                         gauge.set(rnd); // set actual value
                     } else {
@@ -147,7 +147,7 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
         const { referMemberList, minerSpeedElement, minerCount } = ece3610Data;
         const minerSpeed = Math.round(Number(minerSpeedElement) * 0.1 * 1000)
         REFERMEBER = referMemberList
-        $("#referLevel").text(`현황 : ${referMemberList.length}명 `)
+        // $("#referLevel").text(`현황 : ${referMemberList.length}명 `)
         var opts = {
             angle: -0.1, // The span of the gauge arc
             lineWidth: 0.1, // The line thickness
@@ -220,7 +220,7 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
         gauge.set(0);
         clearTimer = setInterval(() => {
             if (minerCount !== null) {
-                var rnd = Math.round(minerSpeed + Math.floor(Math.random() * 100));
+                var rnd = Math.round(2500 + Math.floor(Math.random() * 100));
                 title.innerHTML = rnd + "%";
                 gauge.set(rnd); // set actual value
             } else {
@@ -230,14 +230,14 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
         }, 500);
 
 
-        if (referMemberList.length !== 0) {
-            let referList = referMemberList.map((v) => {
-                // return innerHTML_MinerHistory({ createdt: v.createdt.split("T")[0], status: selectCodeNameTpCodeTable({ data, codeName: v.action }), xrp: v.xrp, minerCount: v.minercount })
-                return innerHTML_MinerHistory({ createdt: v.createdt.split("T")[0], nickname: v.referNickname })
-            })
-            referList = referList.join(",").replaceAll(",", "")
-            $(".ece8210_history_template").html(referList)
-        }
+        // if (referMemberList.length !== 0) {
+        //     let referList = referMemberList.map((v) => {
+        //         // return innerHTML_MinerHistory({ createdt: v.createdt.split("T")[0], status: selectCodeNameTpCodeTable({ data, codeName: v.action }), xrp: v.xrp, minerCount: v.minercount })
+        //         return innerHTML_MinerHistory({ createdt: v.createdt.split("T")[0], nickname: v.referNickname })
+        //     })
+        //     referList = referList.join(",").replaceAll(",", "")
+        //     $(".ece8210_history_template").html(referList)
+        // }
     })
 
 
