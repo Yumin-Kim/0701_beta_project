@@ -50,19 +50,12 @@ router.get("/ece6100_beta", async (req, res) => {
         if (member === undefined) throw new Error(intergrateMSG.notSendclientInfo)
         const resoureTransactionList = await executeQuery(`
         SELECT 
-            DATE_FORMAT(t1.createdt, '%Y.%m.%d') AS createdt,
-            t1.extracode1 AS 'amount',
-            t1.extracode2 AS 'resource',
-            t.extracode1 as 'tileCount',
-            t.extrastr2 as 'minerCount'    
-        FROM
-            Transactions as t1
-            left join
-            (select * from Transactions where member = ${member} and action in(7235,7236) ) as t
-            on t.transaction = t1.extrastr1
-        WHERE
-            t1.action IN (9901) AND t1.member = ${member} order by t1.transaction desc;
-        `)
+DATE_FORMAT(createdt, '%Y.%m.%d') AS createdt,
+            resourceamount AS 'amount',
+			if (extrastr is null , "7507",0 ) as 'resource',
+            tileamount as 'tileCount',
+            mineramount as 'minerCount'  
+            FROM wicfaie.MinerTransactions where member = ${member} and resourceamount > 1;`)
         const data = await resoureTransactionList.reduce((prev, cur) => {
             if (prev.length === 0) {
                 prev.push({ createdt: cur.createdt, dayminingData: [cur] })
