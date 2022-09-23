@@ -73,24 +73,17 @@ router.post("/ece5200", async (req, res) => {
         await executeQuery(`insert ResourceTransactions (resource , amount ,member,extracode) values 
         (${removeResourceName},-${removeResource},${member},9910),
         (${newResourceName},${newResource},${member},9910);`);
-        let data = await executeQuery(sql.ece5100({ member }));
-        if (data.length !== currentResource.length) {
-            await currentResource.map(async (name) => {
-                let check = false;
-                await data.forEach(({ resource, amount }) => {
-                    if (resource === name) {
-                        check = true;
-                    }
-                })
-                if (!check) {
-                    const obj = {
-                        resource: name,
-                        amount: 0,
-                    }
-                    data.push(obj)
-                }
-            })
-        }
+        let data = await executeQuery(`select  if( 0 = 99, 0, 7507) as "resource", if(sum(amount) is null , 0 , sum(amount) )  as 'amount' from ResourceTransactions
+        where member = ${member} and resource = 7507 and extracode is not null
+        union all
+        select  if( 0 = 99, 0, 7508) as "resource", if(sum(amount) is null , 0 , sum(amount) ) as 'amount' from ResourceTransactions
+        where member = ${member} and resource = 7508 and extracode is not null
+        union all
+        select  if( 0 = 99, 0, 7509) as "resource", if(sum(amount) is null , 0 , sum(amount) ) as 'amount'  from ResourceTransactions
+        where member = ${member} and resource = 7509 and extracode is not null
+        union all
+        select  if( 0 = 99, 0, 7602) as "resource", if(sum(amount) is null , 0 , sum(amount) ) as 'amount'  from ResourceTransactions
+        where member = ${member} and resource = 7602 and extracode is not null;`);
         res.send(resultResponseFormat({ status: 1310, msg: "자원 반환 완료", data }))
     } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
