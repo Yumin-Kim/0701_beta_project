@@ -248,11 +248,12 @@ router.post("/ece8220_beta", async (req, res) => {
 })
 // 미승인 상태 추천인 기록
 async function insertReferMiner({ referMinerName, member, insertId }) {
-    const validMiner = await executeQuery(`select if(m.miner is null , "0",m.miner) as miner , m.name from Miners as m left outer join 
+    const validMiner = await executeQuery(`select if(m.miner is null , "0",m.miner) as miner,m.member , m.name from Miners as m left outer join 
     (select * from Transactions where action = 7235) as t1
     on t1.miner = m.miner where BINARY name = '${referMinerName}'`)
     if (validMiner.length !== 0) {
-        const { miner } = validMiner[0]
+        const { miner, member: minerOwner } = validMiner[0]
+        if (Number(member) === minerOwner) return "본인 채굴기는 추천할 수 없습니다."
         const referMemberList = await executeQuery(`select count(*) as 'count' from Transactions where action = 9501 and miner = ${miner};`)
         const { count } = referMemberList[0]
         if (count < 5) {

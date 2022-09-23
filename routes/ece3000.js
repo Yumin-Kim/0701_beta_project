@@ -225,10 +225,9 @@ router.post("/ece3620", async (req, res) => {
 })
 router.get("/ece3700", async (req, res) => {
     try {
-
         const { member } = req.query;
         if (member === undefined) throw new Error(intergrateMSG.failure)
-        let data = await executeQuery(`select m.name,m.tileamount,t.action , min from Miners as m
+        let data = await executeQuery(`select m.name,m.tileamount,t.action , min,m.miner from Miners as m
         left join
         (select * from Transactions where action in (7235,7236)) as t
         on t.miner = m.miner 
@@ -237,9 +236,60 @@ router.get("/ece3700", async (req, res) => {
         on mt.miner= m.miner
         where m.member = ${member}`)
         data = data.map((value) => {
-            value
+            const { name, tileamount, action, min } = value
+            const convertPer = 100 - Math.floor(min / 10000)
+            value.min = convertPer + "%"
+            return value
         })
         res.send(resultResponseFormat({ status: 1310, msg: "사용자 채굴기 리스트 정보 제공", data }))
+    }
+    catch (error) {
+        res.send(resultResponseFormat({ status: 1320, msg: error.message }))
+    }
+})
+// 채굴기 이름 , 진행도 채굴기 
+router.get("/ece3710", async (req, res) => {
+    try {
+        const { member, miner } = req.query;
+        if (member === undefined || miner === undefined) throw new Error(intergrateMSG.failure)
+        const [selectReferMemberCount] = await executeQuery(`select count(*) as count from Transactions where action = 9501 and miner = ${miner};`)
+        const { count } = selectReferMemberCount
+        let selectDoReferCode = await executeQuery(`
+        SELECT 
+    if(extrastr1 is null , "" , extrastr1) as 'doReferCode'
+FROM
+    Transactions
+WHERE
+    extracode1 = (SELECT 
+            extrastr1
+        FROM
+            Transactions
+        WHERE
+            member = ${member} AND action IN (7235)
+                AND miner = ${miner}
+        LIMIT 1)
+        AND member = ${member};`)
+
+        let selectMinerInfo = await executeQuery(`select m.name,m.tileamount,t.action , min,m.miner from Miners as m
+        left join
+        (select * from Transactions where action in (7235,7236)) as t
+        on t.miner = m.miner 
+        left join
+        (select min(remainamount) as min , miner from MinerTransactions where member = ${member} group by miner) as mt
+        on mt.miner= m.miner
+        where m.member = ${member} and m.miner = ${miner}`)
+        selectMinerInfo = selectMinerInfo.map((value) => {
+            const { name, tileamount, action, min } = value
+            const convertPer = 100 - Math.floor(min / 10000)
+            value.min = convertPer + "%"
+            return value
+        })
+        let doReferName = null;
+        if (selectDoReferCode.length !== 0) {
+            doReferName = selectDoReferCode[0].doReferCode
+        }
+        const result = { doReferCode: doReferName, minerInfo: selectMinerInfo[0], count }
+        res.send(resultResponseFormat({ status: 1310, msg: "사용자 채굴기 리스트 정보 제공", data: result }))
     }
     catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))

@@ -10,16 +10,16 @@ router.get("/ece5100", async (req, res) => {
         const { member } = req.query;
         if (member === undefined) throw new Error(intergrateMSG.notSendclientInfo)
         let data = await executeQuery(`select  if( 0 = 99, 0, 7507) as "resource", if(sum(amount) is null , 0 , sum(amount) )  as 'amount' from ResourceTransactions
-        where member = ${member} and resource = 7507
+        where member = ${member} and resource = 7507 and extracode is not null
         union all
         select  if( 0 = 99, 0, 7508) as "resource", if(sum(amount) is null , 0 , sum(amount) ) as 'amount' from ResourceTransactions
-        where member = ${member} and resource = 7508
+        where member = ${member} and resource = 7508 and extracode is not null
         union all
         select  if( 0 = 99, 0, 7509) as "resource", if(sum(amount) is null , 0 , sum(amount) ) as 'amount'  from ResourceTransactions
-        where member = ${member} and resource = 7509
+        where member = ${member} and resource = 7509 and extracode is not null
         union all
         select  if( 0 = 99, 0, 7602) as "resource", if(sum(amount) is null , 0 , sum(amount) ) as 'amount'  from ResourceTransactions
-        where member = ${member} and resource = 7602;`);
+        where member = ${member} and resource = 7602 and extracode is not null;`);
         // if (data.length !== currentResource.length) {
         //     await currentResource.map(async (name) => {
         //         let check = false;
