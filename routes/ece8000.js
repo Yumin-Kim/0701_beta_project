@@ -253,6 +253,9 @@ async function insertReferMiner({ referMinerName, member, insertId }) {
     on t1.miner = m.miner where BINARY name = '${referMinerName}'`)
     if (validMiner.length !== 0) {
         const { miner, member: minerOwner } = validMiner[0]
+        console.log(Number(member) === minerOwner);
+        console.log(minerOwner);
+        console.log(Number(member));
         if (Number(member) === minerOwner) return "본인 채굴기는 추천할 수 없습니다."
         const referMemberList = await executeQuery(`select count(*) as 'count' from Transactions where action = 9501 and miner = ${miner};`)
         const { count } = referMemberList[0]
