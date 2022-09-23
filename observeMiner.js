@@ -202,7 +202,7 @@ WHERE
 `)
     const toFixedKR = elc_price_kr.toFixed(5);
     let count = 0;
-    let resourceQuery = `insert ResourceTransactions (resource,amount,minercount,member,transaction) values`
+    let resourceQuery = `insert ResourceTransactions (resource,amount,minercount,member,transaction,extracode) values`
     let minerTransactionQuery = `insert MinerTransactions (transaction , member, minerlife , resourceamount , remainamount , offeramount , elcKRW , elcUSD , tileamount , mineramount ,name,miner) values`
     const createbulkQuery = await findMemberByMiner.map(async (data) => {
         const { transaction, member, extrastr2: minerCount, extracode1: tileCount, createdt, name, miner } = data;
@@ -215,7 +215,7 @@ WHERE
                 const memberOfferResourceDong = HourOfferResDong * minerCount;
                 const memberRemainAmount = (Number(MINERPRICE * minerCount) - Number(memberOfferAmount)).toFixed(2);
                 minerTransactionQuery += `(${transaction} , ${member} , ${day - 1} , ${memberOfferResourceDong} , ${memberRemainAmount} , ${memberOfferAmount},${toFixedKR},${elc_price},${tileCount},${minerCount} , '${name}',${miner}),`
-                resourceQuery += `(7507,${memberOfferResourceDong},${minerCount},${member},${transaction}),`
+                resourceQuery += `(7507,${memberOfferResourceDong},${minerCount},${member},${transaction},1),`
             } else {
                 const { transaction, member, minerlife, resourceamount, remainamount, offeramount, tileamount, mineramount } = validMemberList[0]
                 const memberOfferAmount = (HourOfferKRPrice * minerCount).toFixed(2);
@@ -225,12 +225,12 @@ WHERE
                 if (Number(memberOfferAmount) > Number(remainamount)) {
                     const memberFinishDong = Math.floor((remainamount / toFixedKR) * DONGDECIMAL)
                     minerTransactionQuery += `(${transaction} , ${member} , ${0} , ${memberFinishDong} , 0 , ${remainamount},${toFixedKR},${elc_price},${tileCount},${minerCount},'${name}',${miner}),`
-                    resourceQuery += `(7507,${memberOfferResourceDong},${minerCount},${member},${transaction}),`
+                    resourceQuery += `(7507,${memberOfferResourceDong},${minerCount},${member},${transaction},1),`
                     await instance.query(`update Transactions set action = 7236 ,extracode2 = ${99999999} where transaction = ${transaction}`)
                 } else if (minerlife === 1) {
                     const memberFinishDong = Math.floor((remainamount / toFixedKR) * DONGDECIMAL)
                     minerTransactionQuery += `(${transaction} , ${member} , ${0} , ${memberFinishDong} , 0 , ${remainamount},${toFixedKR},${elc_price},${tileCount},${minerCount},'${name}',${miner}),`
-                    resourceQuery += `(7507,${memberOfferResourceDong},${minerCount},${member},${transaction}),`
+                    resourceQuery += `(7507,${memberOfferResourceDong},${minerCount},${member},${transaction},1),`
                     await instance.query(`update Transactions set action = 7236 ,extracode2 = ${99999999} where transaction = ${transaction}`)
                 } else if (minerlife === 0 || remainamount === 0) {
                     await instance.query(`update Transactions set action = 7236 ,extracode2 = ${99999999} where transaction = ${transaction}`)
@@ -239,7 +239,7 @@ WHERE
                 else {
                     //존재시
                     minerTransactionQuery += `(${transaction} , ${member} , ${minerlife - 1} , ${memberOfferResourceDong} , ${memberRemainAmount} , ${memberOfferAmount},${toFixedKR},${elc_price},${tileCount},${minerCount},'${name}',${miner}),`
-                    resourceQuery += `(7507,${memberOfferResourceDong},${minerCount},${member},${transaction}),`
+                    resourceQuery += `(7507,${memberOfferResourceDong},${minerCount},${member},${transaction},1),`
                 }
             }
             count++;
@@ -388,6 +388,6 @@ WHERE
         }
     });
     // const instance = await dbPool.getConnection(async conn => conn)
-    // await interval_mining_v1_test({ instance })
+    // await interval_mining_v1({ instance })
 
 })()
