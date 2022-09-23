@@ -5,7 +5,7 @@ const sql = require("../config/sql");
 const { parseIndexNumberToArray, convertArrayToLocation } = require("../config/tiles");
 const { intergrateMSG } = resultMSG
 const router = require("express").Router()
-
+// @deprecated
 router.get("/ece9100", async (req, res) => {
     try {
         const { member } = req.query;
@@ -57,7 +57,7 @@ router.get("/ece9100_beta", async (req, res) => {
         FROM
             Transactions
         WHERE
-            action IN (7231,7232,7241,7242) AND member = ${member} order by transaction desc;
+            action IN (7231,7232,7241,7242,7233,7243) AND member = ${member} order by transaction desc;
         `)
         const data = await resoureTransactionList.reduce((prev, cur) => {
             if (prev.length === 0) {
