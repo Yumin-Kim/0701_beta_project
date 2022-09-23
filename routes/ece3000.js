@@ -189,6 +189,9 @@ router.get("/ece3610", async (req, res) => {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
     }
 })
+/**
+ * @Deprecated
+ */
 router.post("/ece3620", async (req, res) => {
     try {
         const { member } = req.query;
@@ -215,6 +218,28 @@ router.post("/ece3620", async (req, res) => {
         } else {
             throw new Error("")
         }
+    }
+    catch (error) {
+        res.send(resultResponseFormat({ status: 1320, msg: error.message }))
+    }
+})
+router.get("/ece3700", async (req, res) => {
+    try {
+
+        const { member } = req.query;
+        if (member === undefined) throw new Error(intergrateMSG.failure)
+        let data = await executeQuery(`select m.name,m.tileamount,t.action , min from Miners as m
+        left join
+        (select * from Transactions where action in (7235,7236)) as t
+        on t.miner = m.miner 
+        left join
+        (select min(remainamount) as min , miner from MinerTransactions where member =${member} group by miner) as mt
+        on mt.miner= m.miner
+        where m.member = ${member}`)
+        data = data.map((value) => {
+            value
+        })
+        res.send(resultResponseFormat({ status: 1310, msg: "사용자 채굴기 리스트 정보 제공", data }))
     }
     catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))

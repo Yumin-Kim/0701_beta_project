@@ -452,34 +452,33 @@ body {
 
       cursor: pointer;
     }
-    .sc-timeline-item.exchange {     
+    .sc-timeline-item.exchange {
       margin: 0px auto 1px auto;
-    display: block;
-    width: 40px;
-    text-align: center;
-    padding: 0 1em;
-    border-radius: 20px !important;
-    border-color: white;
-    font-size: 4px !important;
-    color: white;
-    line-height: 20px;
-    height: 20px;
-    border: 0.2px solid !important;
+      display: block;
+      width: 50px;
+      text-align: center;
+      padding: 0 1em;
+      border-radius: 20px !important;
+      border-color: white;
+      font-size: 4px !important;
+      color: white;
+      line-height: 20px;
+      height: 20px;
+      /* border: 0.2px solid !important; */
     }
-    .sc-sub-exchanges{
+    .sc-sub-exchanges {
       display: flex;
-    width: 56px;
-    height: 60px;
-    flex-wrap: wrap;
-    flex-direction: row;
-    align-items: center;
+      width: 56px;
+      height: 60px;
+      flex-wrap: wrap;
+      flex-direction: row;
+      align-items: center;
     }
-    .sc-timeline-item.exchange a{ 
-      font-size: 0.5em;
-      line-height: ;
+    .sc-timeline-item.exchange a {
+      font-size: 2.9em;
     }
-    .sc-timeline-item.exchange:after {  
-      content:'';
+    .sc-timeline-item.exchange:after {
+      content: "";
     }
     .sc-timeline-item:after {
       /* content: url("data:image/svg+xml,%3Csvg width='15' height='26' viewBox='0 0 15 26' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath opacity='0.2' d='M1 1L13 13L1 25' stroke='black' stroke-width='2'/%3E%3C/svg%3E%0A");
@@ -740,8 +739,9 @@ body {
     }
   </style>
   <style>
-    #popupchange{
+    #popupchange {
       position: absolute;
+<<<<<<< HEAD
     top: 0;
     left: 0;
     width: 100%;
@@ -761,47 +761,48 @@ body {
     background: #ffffffd1;
     }
     #popupchangeContents h2{
+=======
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #000000b3;
+      z-index: 100000;
+    }
+    #popupchangeContents {
+      color: #46506a;
+      position: absolute;
+      top: 40%;
+      width: 80%;
+      left: 12%;
+      border: 1px solid white;
+      border-radius: 20px;
+      padding: 7%;
+      background: #ffffffd1;
+    }
+    #popupchangeContents h2 {
+>>>>>>> 5bc76e076099db3ecde07adf67298382f0ebe4dd
       margin: 0 0 10px 0;
     }
 
-    #popupchangeContents a{
+    #popupchangeContents a {
       margin: 0 0 10px 0;
-    color: #3a8ed7;
-    font-size: 1em;
-    padding-left: 0.5em;
-    float: right;
+      color: #3a8ed7;
+      font-size: 1em;
+      /* padding-left: 0.5em; */
+      /* float: right; */
     }
-    #popupchangeContents a.cancel{
+    #popupchangeContents a.cancel {
       color: #cb894d;
 
-    padding-left: 0.5em;
+      padding-left: 0.5em;
     }
-    #popupchangeContents #qtySelect{
+    #popupchangeContents #qtySelect {
       border-radius: 20px;
-    background: #c0c1c2;
+      background: #c0c1c2;
     }
-    
   </style>
-  <script> 
-  $(function(){ 
-
-    $("#doClose").click( function(){ 
-        $("#popupchange").css("display","none")
-      })
-
-      $("#d2s").click( function(){ 
-        $("#popupchange").css("display","block")
-      })
-      $("#s2g").click( function(){ 
-        $("#popupchange").css("display","block")
-      })
-      $("#g2d").click( function(){ 
-        $("#popupchange").css("display","block")
-      })
-});
-  </script>
   <body>
-    
     <div class="resourceTag">
       <p>보유 자원</p>
       <p id="resourceText">0</p>
@@ -871,12 +872,16 @@ body {
               <h3 class="sc-timeline-title resourceitem">0</h3>
             </div>
             <div class="sc-sub-exchanges">
-              <div class="sc-timeline-item exchange" >
-                <a id="d2s">🔻변환</a>
+              <div class="sc-timeline-item exchange" id="d2s">
+                <a
+                  ><img
+                    style="width: 20px; height: 20px"
+                    src="./assets/plus.png"
+                /></a>
               </div>
             </div>
           </div>
-          
+
           <div class="sc-timeline-item" event="launch">
             <i
               class="sc-timeline-icon"
@@ -898,11 +903,22 @@ body {
             </div>
 
             <div class="sc-sub-exchanges">
-              <div class="sc-timeline-item exchange" >
-                <a id="s2g">🔻변환</a>
+              <div class="sc-timeline-item exchange" id="s2g">
+                <a
+                  ><img
+                    style="width: 20px; height: 20px"
+                    src="./assets/plus.png"
+                /></a>
+              </div>
+              <div class="sc-timeline-item exchange" id="s2d">
+                <a
+                  ><img
+                    style="width: 20px; height: 20px"
+                    src="./assets/minus.png"
+                /></a>
               </div>
             </div>
-          </div> 
+          </div>
           <div class="sc-timeline-item" event="launch">
             <i
               class="sc-timeline-icon"
@@ -923,14 +939,22 @@ body {
               <h3 class="sc-timeline-title resourceitem">0</h3>
             </div>
             <div class="sc-sub-exchanges">
-              <div class="sc-timeline-item exchange" >
-                <a id="g2d">🔺변환</a>
+              <div class="sc-timeline-item exchange" id="g2d">
+                <a
+                  ><img
+                    style="width: 20px; height: 20px"
+                    src="./assets/plus.png"
+                /></a>
               </div>
-              <div class="sc-timeline-item exchange" >
-                <a id="g2d">🔻변환</a>
+              <div class="sc-timeline-item exchange" id="g2s">
+                <a
+                  ><img
+                    style="width: 20px; height: 20px"
+                    src="./assets/minus.png"
+                /></a>
               </div>
             </div>
-          </div> 
+          </div>
           <div class="sc-timeline-item" event="launch">
             <i
               class="sc-timeline-icon"
@@ -951,6 +975,18 @@ body {
                 >
               </div>
               <h3 class="sc-timeline-title resourceitem">0</h3>
+            </div>
+            <div class="sc-sub-exchanges">
+              <!-- <div class="sc-timeline-item exchange">
+                <a id="g2d">🔺변환</a>
+              </div> -->
+              <div class="sc-timeline-item exchange" id="d2g">
+                <a
+                  ><img
+                    style="width: 20px; height: 20px"
+                    src="./assets/minus.png"
+                /></a>
+              </div>
             </div>
           </div>
           <!-- <div class="sc-timeline-item" event="launch">
@@ -977,30 +1013,40 @@ body {
       </div>
     </div>
     <div id="popupchange">
-     
       <div id="popupchangeContents">
-        <h2>변환하기</h2>
-        <span id="starttmetal">동</span>
+        <h2 id="ece5200_txt">변환하기</h2>
+        <span id="starttmetal"></span>
         <select id="qtySelect">
-          <optgroup>
-            <option value="10000">10000</option> 
-            <option value="20000">20000</option> 
-            <option value="30000">30000</option> 
-            <option value="40000">40000</option> 
-            <option value="50000">50000</option> 
-          </optgroup>
+          <optgroup id="optionBox"></optgroup>
         </select>
         개를
-        <span id="destmetal">은</span>
-        <span id="destmetalqty">35</span>
+        <span id="destmetal"></span>
+        <span id="destmetalqty"></span>
         로 변환
-
-        <a id="doClose" class="cancel">취소</a>
-        <a id="doExchange" >실행</a>
+        <div style="margin-top: 10px">
+          <a id="doExchange">실행</a>
+          <a id="doClose" class="cancel">취소</a>
+        </div>
       </div>
     </div>
     <script src="./main.js"></script>
     <script src="./src/jquery_main.js"></script>
     <script src="./src/eceFolder/ece5000.js"></script>
+    <script>
+      $("#popupchange").css("display", "none");
+    </script>
   </body>
 </html>
+<!-- margin: 0px auto 1px auto;
+    display: block;
+    width: 55px;
+    text-align: center;
+    margin-left: -11px;
+    padding: 0px 3em;
+    /* border-radius: 20px !important; */
+    /* border-color: white; */
+    font-size: 4px !important;
+    color: white;
+    line-height: 20px;
+    height: 20px;
+    /* border: 0.2px solid !important; -->

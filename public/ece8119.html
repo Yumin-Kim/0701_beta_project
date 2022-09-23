@@ -92,8 +92,8 @@
     .ece8210_history_template {
       overflow-x: hidden;
       overflow-y: scroll;
-      height: 25vh;
-      margin-bottom: 30px;
+      height: 13vh;
+      margin-bottom: 15px;
     }
     * {
       box-sizing: border-box;
@@ -271,6 +271,11 @@
             <p id="message_ece8119" style="margin-top: 10px; font-size: 12px">
               데이터 불러오는중...
             </p>
+            <p
+              id="message_ece8119_limit"
+              class="alert"
+              style="margin-top: 10px; font-size: 12px"
+            ></p>
           </div>
         </div>
         <h3 class="ece8210_title">* 입금 트론 지갑 주소명</h3>
@@ -292,6 +297,24 @@
             <p class="alert" id="erroraddress">
               입금할 트론 지갑 주소를 입력해주세요
             </p>
+          </div>
+        </div>
+        <h3 class="ece8210_title">추천인 코드</h3>
+        <div class="container">
+          <div class="group">
+            <input
+              id="minername"
+              placeholder="el123456"
+              type="text"
+              style="font-size: 12px"
+            />
+            <div
+              style="
+                background-color: #94e5ff;
+                height: 1px;
+                margin-bottom: 20px;
+              "
+            ></div>
           </div>
         </div>
         <h3 class="ece8210_title">타일 구매 기록</h3>
