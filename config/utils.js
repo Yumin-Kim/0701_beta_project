@@ -118,9 +118,12 @@ async function requestAPI_internationalCurrencyPrice_usdt() {
         if (data.length === 0) throw new Error("Error")
         currecyPrice_list = data
     } catch (error) {
-        if (currecyPrice_list === null || currecyPrice_list.length === 0) {
+        if (currecyPrice_list === null || currecyPrice_list.length < 2) {
             currecyPrice_list = [{ cur_unit: "USD", bkpr: "1,388.94" }]
         }
+    }
+    if (currecyPrice_list === null || currecyPrice_list.length < 2) {
+        currecyPrice_list = [{ cur_unit: "USD", bkpr: "1,388.94" }]
     }
     let usd_price = 0;
     currecyPrice_list.forEach(element => {
