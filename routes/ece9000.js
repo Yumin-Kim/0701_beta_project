@@ -57,8 +57,9 @@ router.get("/ece9100_beta", async (req, res) => {
         FROM
             Transactions
         WHERE
-            action IN (7231,7232,7241,7242,7233,7243) AND member = ${member} order by transaction desc;
+            action IN (7231,7232,7241,7242,7233,7243,8401) AND member = ${member} order by transaction desc;
         `)
+        console.log(resoureTransactionList);
         const data = await resoureTransactionList.reduce((prev, cur) => {
             if (prev.length === 0) {
                 prev.push({ createdt: cur.createdt, dayminingData: [cur] })
@@ -79,6 +80,18 @@ router.get("/ece9100_beta", async (req, res) => {
             return prev
         }, [])
         res.send(resultResponseFormat({ status: 1310, msg: "내 토지 조회 완료", data, extraData: adminInfo }))
+    } catch (error) {
+        res.send(resultResponseFormat({ status: 1320, msg: error.message }))
+    }
+})
+
+// 타일 현황
+router.get("/ece9101", async (req, res) => {
+    try {
+        const { member } = req.query;
+        if (member === undefined) throw new Error(intergrateMSG.notSendclientInfo)
+        const [data] = await executeQuery(`select sum(extracode1) as count from Transactions where action in (7235 , 7236 , 8401) and member = ${member}`)
+        res.send(resultResponseFormat({ status: 1310, msg: "내 토지 조회 완료", data }))
     } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
     }
