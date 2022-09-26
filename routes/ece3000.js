@@ -227,7 +227,10 @@ router.get("/ece3700", async (req, res) => {
     try {
         const { member } = req.query;
         if (member === undefined) throw new Error(intergrateMSG.failure)
-        let data = await executeQuery(`select m.name,m.tileamount,t.action , min,m.miner,m.createdt from Miners as m
+        let data = await executeQuery(`select 
+        m.name,m.tileamount,t.action , min,m.miner,m.createdt,
+        if(m.extracode is null ,"" ,m.extracode) as 'minerStat' 
+        from Miners as m
         left join
         (select * from Transactions where action in (7235,7236)) as t
         on t.miner = m.miner 
