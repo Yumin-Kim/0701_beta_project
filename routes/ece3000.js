@@ -149,7 +149,8 @@ router.get("/ece3500_beta", async (req, res) => {
     try {
         const { member } = req.query;
         if (member === undefined) throw new Error(intergrateMSG.failure)
-        const currentResoureList = await executeQuery(`SELECT resource , sum(amount) as 'amount' FROM wicfaie.ResourceTransactions where member = ${member} and extracode is not null group by resource order by resource desc;`);
+        const currentResoureList = await executeQuery(`SELECT resource , sum(amount) as 'amount' FROM wicfaie.ResourceTransactions where member = ${member} and 
+        extracode is not null group by resource order by resource desc;`);
         const getMemberTileAndMiner = await executeQuery(`select action , sum(extrastr2) as amount from Transactions where action = 7235 and member = ${member} group by action`)
         await res.send(resultResponseFormat({ data: { resoureList: currentResoureList, memberInfo: getMemberTileAndMiner }, status: 1310, msg: ece3000.ece3500.success }))
     }
@@ -323,6 +324,44 @@ router.get("/ece3720", async (req, res) => {
         res.send(resultResponseFormat({ status: 1310, msg: "사용자 채굴기 리스트 정보 제공", data }))
     }
     catch (error) {
+        res.send(resultResponseFormat({ status: 1320, msg: error.message }))
+    }
+})
+// 체굴기 별 자원 정보
+router.get("/ece3730", async (req, res) => {
+    try {
+        const { member, miner } = req.query;
+        const [selectData] = await executeQuery(`select transaction from Transactions where action in(7235,7236)  and miner = ${miner} and member = ${member}`)
+        console.log(selectData);
+        let data = await executeQuery(`select  if( 0 = 99, 0, 7507) as "resource", if(sum(amount) is null , 0 , sum(amount) )  as 'amount' from ResourceTransactions
+        where member = ${member} and resource = 7507 and extracode is not null and transaction = ${selectData.transaction}
+        union all
+        select  if( 0 = 99, 0, 7508) as "resource", if(sum(amount) is null , 0 , sum(amount) ) as 'amount' from ResourceTransactions
+        where member = ${member} and resource = 7508 and extracode is not null and transaction = ${selectData.transaction}
+        union all
+        select  if( 0 = 99, 0, 7509) as "resource", if(sum(amount) is null , 0 , sum(amount) ) as 'amount'  from ResourceTransactions
+        where member = ${member} and resource = 7509 and extracode is not null and transaction = ${selectData.transaction}
+        union all
+        select  if( 0 = 99, 0, 7602) as "resource", if(sum(amount) is null , 0 , sum(amount) ) as 'amount'  from ResourceTransactions
+        where member = ${member} and resource = 7602 and extracode is not null and transaction = ${selectData.transaction}`)
+
+        res.send(resultResponseFormat({ status: 1310, msg: "사용자 채굴기 리스트 정보 제공", data }))
+    }
+    catch (error) {
+        res.send(resultResponseFormat({ status: 1320, msg: error.message }))
+    }
+})
+
+router.post("/ece3740", async (req, res) => {
+    try {
+        const { member, miner } = req.query;
+        const { newResourceName, removeResourceName, removeResource, newResource } = req.body
+        const [selectData] = await executeQuery(`select transaction from Transactions where action in( 7235 , 7236) and miner = ${miner} and member = ${member}`)
+        await executeQuery(`insert ResourceTransactions (resource , amount ,member,extracode ,transaction) values 
+    (${removeResourceName},-${removeResource},${member},9910,${selectData.transaction}),
+    (${newResourceName},${newResource},${member},9910,${selectData.transaction});`);
+        await res.send(resultResponseFormat({ status: 1310, msg: "자원 반환 완료", data: null }))
+    } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
     }
 })
