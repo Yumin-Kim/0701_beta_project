@@ -132,6 +132,7 @@ router.post("/ece8120_beta", async (req, res) => {
             const insertData = await executeQuery(`insert  Transactions (action , status , extracode1, extrastr1 ,extrastr2,extrastr4,member ) values (7241,1310 , ${tileSet} , '${address}' , '${amount}','${minerName}',${member})`);
             insertId = insertData.insertId
             // 채굴기 이름
+            console.log(referMinerName);
             if (referMinerName.trim() !== "") {
                 if (insertId === 0) throw new Error("구매 요청 정보가 등록 되지 않았습니다.")
                 extraData = await insertReferMiner({ referMinerName, member, insertId });
@@ -250,7 +251,7 @@ router.post("/ece8220_beta", async (req, res) => {
 async function insertReferMiner({ referMinerName, member, insertId }) {
     const validMiner = await executeQuery(`select if(m.miner is null , "0",m.miner) as miner,m.member , m.name from Miners as m left outer join 
     (select * from Transactions where action = 7235) as t1
-    on t1.miner = m.miner where BINARY name = '${referMinerName}'`)
+    on t1.miner = m.miner where  name = '${referMinerName}'`)
     if (validMiner.length !== 0) {
         const { miner, member: minerOwner } = validMiner[0]
         console.log(Number(member) === minerOwner);
