@@ -357,9 +357,9 @@ router.post("/ece3740", async (req, res) => {
         const { member, miner } = req.query;
         const { newResourceName, removeResourceName, removeResource, newResource } = req.body
         const [selectData] = await executeQuery(`select transaction from Transactions where action in( 7235 , 7236) and miner = ${miner} and member = ${member}`)
-        await executeQuery(`insert ResourceTransactions (resource , amount ,member,extracode ,transaction) values 
-    (${removeResourceName},-${removeResource},${member},9910,${selectData.transaction}),
-    (${newResourceName},${newResource},${member},9910,${selectData.transaction});`);
+        await executeQuery(`insert ResourceTransactions (resource , amount ,member,extracode ,transaction,miner) values 
+    (${removeResourceName},-${removeResource},${member},9910,${selectData.transaction},${miner}),
+    (${newResourceName},${newResource},${member},9910,${selectData.transaction},${miner});`);
         await res.send(resultResponseFormat({ status: 1310, msg: "자원 반환 완료", data: null }))
     } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: error.message }))
