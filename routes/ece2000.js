@@ -218,8 +218,15 @@ router.post("/ece2323", async (req, res) => {
 router.post("/ece2324", async (req, res) => {
     try {
         const { member } = req.body
-        const [memberInfo] = await executeQuery(sql.ece2324({ member }))
-        await res.send(resultResponseFormat({ data: memberInfo, msg: ece2000.ece2324.success, status: 1310 }))
+        const [memberInfo] = await executeQuery(sql.ece2324({ member }));
+        let minerId = await executeQuery(`select miner from Transactions where action = 7235 and member = ${member} order by transaction desc limit 1;`)
+        console.log(minerId);
+        if (minerId.length !== 0) {
+            minerId = minerId[0].miner
+        } else {
+            minerId = 0
+        }
+        await res.send(resultResponseFormat({ data: memberInfo, msg: ece2000.ece2324.success, status: 1310, extraData: minerId }))
     } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: ece2000.ece2324.failure }))
     }
