@@ -12,7 +12,8 @@
     "tron_dev": "NODE_ENV=DEV TIME=1S nodemon ./tron.mainnet.js",
     "tron_prd": "NODE_ENV=PRD TIME=1S nodemon ./tron.mainnet.js",
     "xrpws_test": "NODE_ENV=PRD  nodemon ./xrp.ws.js",
-    "start": "NODE_ENV=PRD PORT=3000 node index.js"
+    "start": "NODE_ENV=PRD PORT=3000 node index.js",
+    "start_prd": "NODE_ENV=PRD PORT=3000 nodemon index.js"
   },
   "author": "",
   "license": "ISC",

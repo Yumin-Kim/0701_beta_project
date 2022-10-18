@@ -4,343 +4,187 @@
     <title>ELC_Project</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <!-- 1990년 이후 이 페이지의 캐시를 만료시킴. -->
-    <meta http-equiv="Expires" content="Mon, 06 Jan 1990 00:00:01 GMT" />
-
-    <!-- 캐시를 바로 만료시킴. -->
-    <meta http-equiv="Expires" content="-1" />
-
-    <!-- 페이지 로드시마다 페이지를 캐싱하지 않음. (HTTP 1.0) -->
-    <meta http-equiv="Pragma" content="no-cache" />
-
-    <!-- 페이지 로드시마다 페이지를 캐싱하지 않음. (HTTP 1.1) -->
-    <meta http-equiv="Cache-Control" content="no-cache" />
-
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js"></script>
     <link
       href="https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css"
       rel="stylesheet"
     />
+    <script src="./lib/maplibre-grid.min.js"></script>
+    <script src="./assets/js/vender/jquery.js"></script>
+    <script src="./src/global.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.35.4/apexcharts.min.css"
+      integrity="sha512-Ax++m07N1ygXmTSeRlQZnB5leVSw9eDeHQZ2ltn7oln1U3d+6d+/u1JEZ/zY/tLtmmEL741jEnDUlmWttBPLOA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.35.4/apexcharts.min.js"
+      integrity="sha512-oUoSexkALUPd0BQaO/0m029XijXQ7XlFbPIhDNvzD8r2XhUjidiRo/8YhJGpoevLZVRwRFBvygSc9jV2TagjfQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"
     />
 
-    <script src="./lib/maplibre-grid.min.js"></script>
-    <script src="./assets/js/vender/jquery.js"></script>
-    <script src="./src/global.js"></script>
-    <link href="./custom-style.css" rel="stylesheet" />
     <link href="./style.css" rel="stylesheet" />
-    <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/flickity@2/dist/flickity.min.css"
-    />
-    <style>
-      body {
-        background-color: #06131a;
-        height: 100vh;
-      }
-      .floatbutton {
-        position: fixed;
-        z-index: 1;
-        top: 10%;
-        right: 2%;
-      }
-      .floatDiv {
-        display: none;
-        box-sizing: border-box;
-        padding: 20px 20px;
-        width: 70vw;
-        /* background-color: #ffffff; */
-        color: #fff;
-        background-image: url("./assets/ecePageImage.png");
-        border-radius: 8px;
-        margin-top: 10px;
-      }
-      .floatDiv h3,
-      .floatDiv p {
-        margin: 0px;
-        margin-bottom: 10px;
-      }
-      .miningbox {
-        z-index: 10;
-        border: #1a1a1ae6 4px solid;
-        position: absolute;
-        right: 0;
-        margin-top: 79px;
-        margin-right: 10px;
-        width: 60px;
-        height: 60px;
-        border-radius: 70%;
-        overflow: hidden;
-        box-shadow: 3px 5px 5px 1px black;
-      }
-      .profile {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-      .cardviewbtn_index {
-        font-size: 12px;
-        font-family: Helvetica, Arial, sans-serif;
-        font-weight: normal;
-        color: #ffffff;
-        text-decoration: none;
-        background-color: #57f5ff33;
-        border: 0px;
-        border-radius: 3px;
-        -webkit-border-radius: 3px;
-        -moz-border-radius: 3px;
-        display: inline-block;
-      }
-      #snackbar {
-        visibility: hidden;
-        width: 80vw;
-        background-color: rgba(51, 51, 51, 0.9);
-        color: #fff;
-        text-align: center;
-        border-radius: 2px;
-        padding: 16px;
-        position: fixed;
-        z-index: 1;
-        left: 10%;
-        bottom: 30px;
-        font-size: 17px;
-        border-radius: 10px;
-      }
-      #snackbar p {
-        font-size: 16px;
-      }
-      #snackbar p,
-      #snackbar h3 {
-        margin: 0;
-        margin-bottom: 10px;
-      }
-      #snackbar.show {
-        visibility: visible;
-        -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-        animation: fadein 0.5s, fadeout 0.5s 2.5s;
-      }
-
-      @-webkit-keyframes fadein {
-        from {
-          bottom: 0;
-          opacity: 0;
-        }
-        to {
-          bottom: 30px;
-          opacity: 1;
-        }
-      }
-
-      @keyframes fadein {
-        from {
-          bottom: 0;
-          opacity: 0;
-        }
-        to {
-          bottom: 30px;
-          opacity: 1;
-        }
-      }
-
-      @-webkit-keyframes fadeout {
-        from {
-          bottom: 30px;
-          opacity: 1;
-        }
-        to {
-          bottom: 0;
-          opacity: 0;
-        }
-      }
-
-      @keyframes fadeout {
-        from {
-          bottom: 30px;
-          opacity: 1;
-        }
-        to {
-          bottom: 0;
-          opacity: 0;
-        }
-      }
-      #topBar {
-        background-image: url("./assets/ece2000.png");
-      }
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        font-family: sans-serif;
-      }
-
-      .carousel {
-        background: #eee;
-      }
-      .referbtn {
-        z-index: 10;
-        border: #1a1a1ae6 4px solid;
-        position: absolute;
-        right: 0;
-        margin-top: -8px;
-        margin-right: 10px;
-        width: 60px;
-        height: 60px;
-        border-radius: 70%;
-        overflow: hidden;
-        box-shadow: 3px 5px 5px 1px black;
-        margin-top: 61px;
-        background: #1a1a1ae6;
-        color: #fff;
-        text-align: center;
-        box-sizing: border-box;
-        padding: 11px 8px;
-        font-size: 30px;
-      }
-      /* 
-      .carousel-cell {
-        width: 66%;
-        height: 200px;
-        margin-right: 10px;
-        background: #8c8;
-        border-radius: 5px;
-        counter-increment: gallery-cell;
-      } */
-
-      /* cell number */
-      /* .carousel-cell:before {
-        display: block;
-        text-align: center;
-        content: counter(gallery-cell);
-        line-height: 200px;
-        font-size: 80px;
-        color: white;
-      } */
-      .flickity-viewport {
-        height: 92vh !important;
-      }
-      .carousel-cell {
-        height: 100%;
-      }
-      .flickity-button {
-        display: none;
-      }
-      .flickity-page-dots .dot {
-        background-color: #57f4ffa3;
-      }
-      .flickity-page-dots {
-        bottom: 19px;
-      }
-      .floatbutton1 {
-        position: fixed;
-        z-index: 1;
-        top: 10%;
-        right: 2%;
-      }
-    </style>
-    <style>
-      * {
-        box-sizing: border-box;
-      }
-
-      /* Slideshow container */
-      .slideshow-container {
-        max-width: 1000px;
-        position: relative;
-        margin: auto;
-      }
-
-      /* Hide the images by default */
-      .mySlides {
-        display: none;
-      }
-
-      /* Next & previous buttons */
-      .prev,
-      .next {
-        cursor: pointer;
-        position: absolute;
-        top: 50%;
-        width: auto;
-        margin-top: -22px;
-        padding: 16px;
-        color: white;
-        font-weight: bold;
-        font-size: 18px;
-        transition: 0.6s ease;
-        border-radius: 0 3px 3px 0;
-        user-select: none;
-      }
-
-      /* Position the "next button" to the right */
-      .next {
-        right: 0;
-        border-radius: 3px 0 0 3px;
-      }
-
-      /* On hover, add a black background color with a little bit see-through */
-      .prev:hover,
-      .next:hover {
-        background-color: rgba(0, 0, 0, 0.8);
-      }
-
-      /* Caption text */
-      .text {
-        color: #f2f2f2;
-        font-size: 15px;
-        padding: 8px 12px;
-        position: absolute;
-        bottom: 8px;
-        width: 100%;
-        text-align: center;
-      }
-
-      /* Number text (1/3 etc) */
-      .numbertext {
-        color: #f2f2f2;
-        font-size: 12px;
-        padding: 8px 12px;
-        position: absolute;
-        top: 0;
-      }
-
-      /* The dots/bullets/indicators */
-      .dot {
-        cursor: pointer;
-        height: 15px;
-        width: 15px;
-        margin: 0 2px;
-        background-color: #bbb;
-        border-radius: 50%;
-        display: inline-block;
-        transition: background-color 0.6s ease;
-      }
-
-      .active,
-      .dot:hover {
-        background-color: #717171;
-      }
-
-      /* Fading animation */
-      .fade {
-        animation-name: fade;
-        animation-duration: 1.5s;
-        /* height: 89vh; */
-      }
-
-      @keyframes fade {
-        from {
-          opacity: 0.4;
-        }
-        to {
-          opacity: 1;
-        }
-      }
-    </style>
   </head>
+  <link rel="stylesheet" href="./ece7000.css" />
+  <script src="./lib/gauge.min.js"></script>
+  <style>
+    .cardviewbtn_index {
+      font-size: 12px;
+      font-family: Helvetica, Arial, sans-serif;
+      font-weight: normal;
+      color: #ffffff;
+      text-decoration: none;
+      background-color: #57f5ff33;
+      border: 0px;
+      border-radius: 3px;
+      -webkit-border-radius: 3px;
+      -moz-border-radius: 3px;
+      display: inline-block;
+    }
+    .sc-searchbox {
+      position: relative;
+    }
+    .sc-searchbox-field {
+      border-radius: 0;
+      height: 42px;
+      width: 100%;
+      background-color: #57f5ff75;
+      border: 0;
+      outline: aliceblue;
+      color: #fff;
+    }
+    .sc-searchbox-placeholder {
+      position: absolute;
+      color: #fff;
+      display: flex;
+
+      height: 100%;
+      width: 100%;
+      align-items: center;
+      justify-content: center;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      transition: ease-in-out 0.2s;
+    }
+    .selectBtn {
+      border: #bcfff3 2px solid;
+    }
+    .alert {
+      color: #57f5ff;
+      display: none;
+    }
+    body {
+      background-image: url("./assets/ecePageImage.png");
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+      background-size: cover;
+      width: 100vw;
+      height: 100vh;
+    }
+    .profile {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    h1 {
+      font-size: 24px;
+      color: #ffffff;
+    }
+    h3,
+    p {
+      color: #ffffff;
+    }
+    .ece8210_history {
+      color: #fff;
+      overflow: hidden;
+      margin-bottom: 4px;
+      background: #57f5ff6b;
+      padding: 10px 10px;
+    }
+    .ece8210_history span,
+    .ece8210_history h4 {
+      display: inline-block;
+      margin: 0;
+    }
+    .ece8210_history_template {
+      overflow-x: hidden;
+      overflow-y: scroll;
+      height: 16vh;
+      margin-bottom: 30px;
+    }
+
+    #snackbar {
+      visibility: hidden;
+      width: 80vw;
+      background-color: rgba(51, 51, 51, 0.9);
+      color: #fff;
+      text-align: center;
+      border-radius: 2px;
+      padding: 16px;
+      position: fixed;
+      z-index: 1;
+      left: 10%;
+      bottom: 30px;
+      font-size: 17px;
+      border-radius: 10px;
+    }
+    .floatbutton {
+      position: fixed;
+      z-index: 1;
+      top: 10%;
+      right: 2%;
+    }
+    .floatDiv {
+      display: none;
+      box-sizing: border-box;
+      padding: 20px 20px;
+      width: 70vw;
+      /* background-color: #ffffff; */
+      color: #fff;
+      background-image: url("./assets/ecePageImage.png");
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+    .floatDiv h3,
+    .floatDiv p {
+      margin: 0px;
+      margin-bottom: 10px;
+    }
+    .miningbox {
+      z-index: 10;
+      border: #1a1a1ae6 4px solid;
+      position: absolute;
+      right: 0;
+      margin-top: 79px;
+      margin-right: 10px;
+      width: 60px;
+      height: 60px;
+      border-radius: 70%;
+      overflow: hidden;
+      box-shadow: 3px 5px 5px 1px black;
+    }
+    #snackbar p {
+      font-size: 16px;
+    }
+    #snackbar p,
+    #snackbar h3 {
+      margin: 0;
+      margin-bottom: 10px;
+    }
+    #snackbar.show {
+      visibility: visible;
+      -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+      animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    }
+  </style>
   <body>
     <div class="resourceTag">
       <p>보유 자원</p>
@@ -361,10 +205,10 @@
           <i class="sc-searchbox-placeholder-icon fas fa-chart-pie"></i>
           <a class="manuLinkTag" href="./ece5000.html">채굴 통계</a>
         </li>
-        <li>
+        <!-- <li>
           <i class="sc-searchbox-placeholder-icon fas fa-pen-square"></i
           ><a class="manuLinkTag" href="./ece6000.html">채굴 기록</a>
-        </li>
+        </li> -->
         <li>
           <i class="sc-searchbox-placeholder-icon fas fa-credit-card"></i>
           <a class="manuLinkTag" href="./ece8210.html">구매하기</a>
@@ -383,168 +227,1060 @@
         </li>
       </ul>
     </div>
-    <div class="floatbutton">
-      <div style="overflow: hidden">
-        <a class="manuLinkTag" href="./ece3600.html">
-          <div class="miningbox">
-            <img class="profile" src="./assets/minin.gif" alt="" />
-          </div>
-        </a>
-      </div>
-    </div>
-    <!-- <div class="floatbutton">
-      <div style="overflow: hidden">
-        <div class="miningbox">
-          <img class="profile" src="./assets/minin.gif" alt="" />
-        </div>
-      </div>
-      <div class="floatDiv">
-        <h3>ELC 제주 아일랜드 채굴기</h3>
-        <p style="font-size: 11px" id="timer">채굴 완료 까지 00:00 입니다</p>
-        <button id="mining" class="cardviewbtn_index">채굴 완료</button>
-      </div>
-    </div> -->
-
-    <!-- <div class="floatbutton1">
-      <div style="overflow: hidden">
-        <a class="manuLinkTag" href="./ece3600.html">
-          <div class="referbtn">
-            <i class="fa fa-users" aria-hidden="true"></i>
-          </div>
-        </a>
-      </div>
-    </div>
     <div id="snackbar">
       <h3>채굴 완료</h3>
       <p></p>
       <p></p>
-    </div> -->
-    <div id="map" style="display: none"></div>
-    <!-- <div id="map"></div> -->
-    <div>
-      <div class="slideshow-container">
-        <!-- Full-width images with number and caption text -->
-        <div
-          class="mySlides fade"
-          style="
-            position: relative;
-            width: 100%;
-            height: 100vh;
-            padding-bottom: 56.26%;
-            overflow: hidden;
-          "
-        >
-          <img
-            src="./assets/slide_1.jpg"
+    </div>
+    <div id="contents">
+      <div class="row_margin">
+        <h1 style="margin: 10px 0 0">채굴기 현황</h1>
+        <h3
+          class="ece8210_referName"
+          id="txt_title"
+          style="color: #fff; font-size: 17px; margin: 0; margin-top: 10px"
+        ></h3>
+        <div style="margin: 0 auto; text-align: center" id="guages">
+          <canvas id="foo"></canvas>
+          <h3
+            id="title"
             style="
-              position: absolute;
-              top: 0;
-              left: 0;
-              width: 100%;
-              height: 100%;
+              text-align: center;
+              margin: 0px;
+              margin-top: -25px;
+              margin-bottom: 25px;
+              font-size: 25px;
             "
-          />
-          <!-- <div
+          ></h3>
+          <p
+            id="notMiner"
+            style="display: none; text-align: center; margin-top: 20px"
+          >
+            채굴기를 구매하셔야합니다.
+          </p>
+          <h4
             style="
-              height: 100vh;
-              background-image: url('./assets/slide_1.jpg');
-              background-size: cover;
+              text-align: center;
+              color: #fff;
+              margin: 10px 0;
+              font-size: 12px;
+              display: none;
             "
-          ></div> -->
+          >
+            "추천인을 늘려 더욱 빠른 채굴을 즐기세요"
+          </h4>
+          <!-- <button id="mining" style="display: none" class="cardviewbtn_index">
+            채굴 하기
+          </button> -->
+          <!-- <button id="mining1" class="cardviewbtn_index">채굴 하기</button> -->
         </div>
-
-        <div
-          class="mySlides fade"
-          style="
-            position: relative;
-            width: 100%;
-            height: 100vh;
-            padding-bottom: 56.26%;
-            overflow: hidden;
-          "
-        >
-          <img
-            src="./assets/slide_2.jpg"
-            style="
-              position: absolute;
-              top: 0;
-              left: 0;
-              width: 100%;
-              height: 100%;
-            "
-          />
-        </div>
-
-        <!-- <div class="mySlides fade">
-          <div class="numbertext">3 / 3</div>
-          <img src="img3.jpg" style="width: 100%" />
-          <div class="text">Caption Three</div>
+        <!-- <h3>추천인 코드</h3>
+        <div class="sc-searchbox" style="overflow: hidden">
+          <div style="width: 70%; float: left; margin-right: 10px">
+            <input type="text" id="ece3620_txt" class="sc-searchbox-field" />
+            <div class="sc-searchbox-placeholder"></div>
+            <div style="background-color: #94e5ff; height: 1px"></div>
+            <p class="alert" id="errornickname">추천인 닉네임을 입력해주세요</p>
+          </div>
+          <div>
+            <button
+              class="cardviewbtn_w100"
+              id="ece3620"
+              style="width: 25%; float: left; margin: 0 !important"
+            >
+              등록
+            </button>
+          </div>
         </div> -->
 
-        <!-- Next and previous buttons -->
-        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-        <a class="next" onclick="plusSlides(1)">&#10095;</a>
-      </div>
-    </div>
-    <!-- The dots/circles -->
-    <!-- <div style="text-align: center">
-      <span class="dot" onclick="currentSlide(1)"></span>
-      <span class="dot" onclick="currentSlide(2)"></span>
-      <span class="dot" onclick="currentSlide(3)"></span>
-    </div> -->
-    <!-- <div class="carousel" data-flickity='{ "freeScroll": true }'>
-      <div class="carousel-cell">
-        <img
-          src="./assets/slide_1.jpg"
-          style="width: 100%; height: 100vh"
-          alt=""
-        />
-      </div>
-      <div class="carousel-cell">
-        <img
-          src="./assets/slide_2.jpg"
-          style="width: 100%; height: 100vh"
-          alt=""
-        />
-      </div>
-    </div> -->
-    <div style="display: none" id="top-bar">
-      <div class="selected-row">
-        <div class="left-part">
-          <img class="tiles-img" src="./assets/icons/tiles.svg" />
-          <span class="selected-head selected-show" id="no-selected"
-            >No Tiles Selected</span
+        <h2
+          class="ece8210_referName"
+          id="referName"
+          style="
+            color: #fff;
+            display: none;
+            font-size: 17px;
+            margin: 0;
+            margin-top: 10px;
+          "
+        >
+          추천한 채굴기 : cd123456
+        </h2>
+        <div style="overflow: hidden">
+          <h3
+            class="ece8210_title"
+            style="float: left; margin: 10px 0; float: left"
           >
-          <span class="selected-head" id="has-selected">
-            <span class="selected-count">
-              <span id="tile-counts">0</span>
-              /
-              <span>1000</span>
-            </span>
-            <span class="selected">Tiles Selected</span>
-          </span>
+            추천인 현황
+          </h3>
+          <h3
+            class="ece8210_title"
+            id="referLevel"
+            style="float: right; margin: 10px 0"
+          ></h3>
         </div>
-        <!-- <img class="arrow-up" src="./assets/icons/arrow-up.svg" /> -->
-      </div>
-      <div class="detail-row" id="has-details">
-        <button class="details-button" id="show-details">DETAILS</button>
-        <button class="clear-selection" id="remove-selected">
-          <img src="./assets/icons/trash.svg" />
-          clear selection
-        </button>
-      </div>
-      <div class="resource-container" id="has-resource">
-        <div class="first-row" id="resources-btn"></div>
+        <div class="ece8210_history_template">
+          <div class="ece8210_history">
+            <span style="text-align: center; display: block"
+              >추천인 내역이 존재하지 않습니다.</span
+            >
+          </div>
+          <!-- <div class="ece8210_history">
+            <span style="float: left">2022.07.04</span>
+            <span style="float: right">
+              <span>Guest001</span>
+              <h4>추천인 승인 완료</h4>
+            </span>
+          </div> -->
+        </div>
+        <div class="floatbutton">
+          <div style="overflow: hidden">
+            <a class="manuLinkTag" href="./ece3600.html">
+              <div class="miningbox">
+                <img class="profile" src="./assets/minin.gif" alt="" />
+              </div>
+            </a>
+          </div>
+        </div>
+        <div style="height: 70vh" id="contents">
+          <h1>채굴 통계</h1>
+          <div id="chart"></div>
+          <!-- <div class="row_margin" style="height: 55vh"> -->
+          <h1>채굴 정보</h1>
+          <div style="margin-bottom: 30px">
+            <div class="sc-timeline-item" event="launch">
+              <i
+                class="sc-timeline-icon"
+                style="
+                  background-image: url('./assets/aa.png');
+                  background-repeat: no-repeat;
+                  background-position: 63% 23%;
+                  background-size: 137%;
+                "
+              ></i>
+              <div
+                class="sc-timeline-info"
+                style="background: #bf7c5b57; color: #ffffff"
+              >
+                <div class="sc-timeline-details">
+                  <span class="sc-timeline-time resourceitemtitle">동</span>
+                </div>
+                <h3 class="sc-timeline-title resourceitem">0</h3>
+              </div>
+              <div class="sc-sub-exchanges">
+                <div class="sc-timeline-item exchange" id="d2s">
+                  <a
+                    ><img
+                      style="width: 20px; height: 20px"
+                      src="./assets/plus.png"
+                  /></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="sc-timeline-item" event="launch">
+              <i
+                class="sc-timeline-icon"
+                style="
+                  background-image: url('./assets/sliver.png');
+                  background-repeat: no-repeat;
+                  background-position: 63% 23%;
+                  background-size: 137%;
+                "
+              ></i>
+              <div
+                class="sc-timeline-info"
+                style="background: #bbbbbb3d; color: #ffffff"
+              >
+                <div class="sc-timeline-details">
+                  <span class="sc-timeline-time resourceitemtitle">은</span>
+                </div>
+                <h3 class="sc-timeline-title resourceitem">0</h3>
+              </div>
+
+              <div class="sc-sub-exchanges">
+                <div class="sc-timeline-item exchange" id="s2g">
+                  <a
+                    ><img
+                      style="width: 20px; height: 20px"
+                      src="./assets/plus.png"
+                  /></a>
+                </div>
+                <div class="sc-timeline-item exchange" id="s2d">
+                  <a
+                    ><img
+                      style="width: 20px; height: 20px"
+                      src="./assets/minus.png"
+                  /></a>
+                </div>
+              </div>
+            </div>
+            <div class="sc-timeline-item" event="launch">
+              <i
+                class="sc-timeline-icon"
+                style="
+                  background-image: url('./assets/gold.png');
+                  background-repeat: no-repeat;
+                  background-position: 63% 23%;
+                  background-size: 137%;
+                "
+              ></i>
+              <div
+                class="sc-timeline-info"
+                style="background: #cfaf3d3d; color: #ffffff"
+              >
+                <div class="sc-timeline-details">
+                  <span class="sc-timeline-time resourceitemtitle">금</span>
+                </div>
+                <h3 class="sc-timeline-title resourceitem">0</h3>
+              </div>
+              <div class="sc-sub-exchanges">
+                <div class="sc-timeline-item exchange" id="g2d">
+                  <a
+                    ><img
+                      style="width: 20px; height: 20px"
+                      src="./assets/plus.png"
+                  /></a>
+                </div>
+                <div class="sc-timeline-item exchange" id="g2s">
+                  <a
+                    ><img
+                      style="width: 20px; height: 20px"
+                      src="./assets/minus.png"
+                  /></a>
+                </div>
+              </div>
+            </div>
+            <div class="sc-timeline-item" event="launch">
+              <i
+                class="sc-timeline-icon"
+                style="
+                  background-image: url('./assets/dia.png');
+                  background-repeat: no-repeat;
+                  background-position: center;
+                  background-size: 119%;
+                "
+              ></i>
+              <div
+                class="sc-timeline-info"
+                style="background: #ffffff49; color: #ffffff"
+              >
+                <div class="sc-timeline-details">
+                  <span class="sc-timeline-time resourceitemtitle"
+                    >다이아몬드</span
+                  >
+                </div>
+                <h3 class="sc-timeline-title resourceitem">0</h3>
+              </div>
+              <div class="sc-sub-exchanges">
+                <!-- <div class="sc-timeline-item exchange">
+                    <a id="g2d">🔺변환</a>
+                  </div> -->
+                <div class="sc-timeline-item exchange" id="d2g">
+                  <a
+                    ><img
+                      style="width: 20px; height: 20px"
+                      src="./assets/minus.png"
+                  /></a>
+                </div>
+              </div>
+            </div>
+            <!-- <div class="sc-timeline-item" event="launch">
+                <i
+                  class="sc-timeline-icon"
+                  style="
+                    background-image: url('./assets/cr.png');
+                    background-repeat: no-repeat;
+                    background-position: 63% 23%;
+                    background-size: cover;
+                  "
+                ></i>
+                <div
+                  class="sc-timeline-info"
+                  style="background: #41d22b43; color: #ffffff"
+                >
+                  <div class="sc-timeline-details">
+                    <span class="sc-timeline-time">크립토나이트</span>
+                  </div>
+                  <h3 class="sc-timeline-title resourceitem">100</h3>
+                </div>
+              </div> -->
+          </div>
+          <!-- </div> -->
+        </div>
+        <div id="popupchange" style="display: none">
+          <div id="popupchangeContents">
+            <h2 id="ece5200_txt">변환하기</h2>
+            <form id="myForm">
+              <span id="starttmetal"></span>
+              <!-- <select id="qtySelect">
+              <optgroup id="optionBox"></optgroup>
+            </select> -->
+              <input type="number" id="resourceInput" />
+              개를
+              <span id="destmetal"></span>
+              <span id="destmetalqty"></span>
+              로 변환
+              <div style="margin-top: 10px">
+                <!-- <a id="doExchange">실행</a> -->
+                <input type="submit" id="doExchange" />
+                <a id="doClose" class="cancel">취소</a>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
-
     <script src="./main.js"></script>
     <script src="./src/jquery_main.js"></script>
+    <script src="./src/eceFolder/ece3600.js"></script>
+    <script src="./src/eceFolder/ece3000.js"></script>
+    <script src="./src/eceFolder/ece5001.js"></script>
+    <script src="./src/global.js"></script>
+    <style>
+      #popupchange {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #000000b3;
+        z-index: 100000;
+      }
+      #popupchangeContents {
+        color: #46506a;
+        position: absolute;
+        top: 40%;
+        width: 80%;
+        left: 12%;
+        border: 1px solid white;
+        border-radius: 20px;
+        padding: 7%;
+        background: #ffffffd1;
+      }
+      #popupchangeContents h2 {
+        margin: 0 0 10px 0;
+      }
+
+      #popupchangeContents a {
+        margin: 0 0 10px 0;
+        color: #3a8ed7;
+        font-size: 1em;
+        /* padding-left: 0.5em; */
+        /* float: right; */
+      }
+      #popupchangeContents a.cancel {
+        color: #cb894d;
+
+        padding-left: 0.5em;
+      }
+      #popupchangeContents #qtySelect {
+        border-radius: 20px;
+        background: #c0c1c2;
+      }
+      body,
+/* html {
+	width: 100%;
+	height: 150%;
+} */
+body {
+        background: #f1f1f1;
+      }
+      .row {
+        text-align: center;
+      }
+      @font-face {
+        font-family: Roboto;
+        src: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/565097/Roboto-Regular.woff2")
+            format("woff2"),
+          url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/565097/Roboto-Regular.woff")
+            format("woff"),
+          url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/565097/Roboto-Regular.ttf")
+            format("ttf");
+        font-weight: 400;
+        font-style: normal;
+      }
+
+      /* The Collapsing Parallax */
+      .collapsing-parallax {
+        position: fixed;
+        height: 350px;
+        width: 100%;
+        background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/565097/background.png")
+          center center no-repeat;
+        background-color: rgb(33, 14, 61);
+        background-size: cover;
+        z-index: 99;
+      }
+      .toolbar-collapsing-parallax {
+        height: 100%;
+        width: 100%;
+      }
+      /* Collapsing Title */
+      .title-collapsing-parallax {
+        position: absolute;
+        display: table;
+        height: 8vh;
+        width: 50%;
+        bottom: 0;
+        left: 0;
+        margin: 0 2em;
+      }
+      .title-collapsing-parallax .avatar {
+        position: relative;
+        display: table-cell;
+        float: left;
+        width: 52px;
+        height: 52px;
+        background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/565097/profile.jpeg")
+          center center no-repeat;
+        background-size: cover;
+        border-radius: 50%;
+        margin-right: 0.9em;
+      }
+      .title-container {
+        position: relative;
+        display: table-cell;
+        float: left;
+      }
+      title {
+        display: block;
+        height: auto;
+        width: auto;
+        color: white;
+        -webkit-transform-origin: bottom left;
+        transform-origin: bottom left;
+        -webkit-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        -webkit-transition-property: color, bottom, transform;
+        transition-property: color, bottom, transform;
+      }
+      title.main {
+        font-size: 1.5em;
+      }
+      title.secondary {
+        font-size: 0.9em;
+      }
+      .fab {
+        position: absolute;
+        bottom: -1.5em;
+        right: 5vw;
+      }
+      /* The Fab */
+      .fab-button {
+        display: table;
+        cursor: pointer;
+        background: #00cc99;
+        border-radius: 50%;
+        color: #fff;
+        box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.16),
+          0px 2px 10px 0px rgba(0, 0, 0, 0.12);
+      }
+
+      .fab-button:hover {
+        box-shadow: 0px 5px 11px 0px rgba(0, 0, 0, 0.18),
+          0px 4px 15px 0px rgba(0, 0, 0, 0.15);
+      }
+      .fab-button i {
+        width: 10px;
+        display: table-cell;
+        left: 0;
+        right: 0;
+        vertical-align: middle;
+        margin: 0 auto;
+        transform: translateX(30%);
+      }
+      .fixed-button {
+        position: fixed;
+        top: 70%;
+        right: 45%;
+      }
+      .fab-button.xSmall {
+        width: 1.75rem;
+        height: 1.75rem;
+        font-size: 0.75rem;
+      }
+
+      .fab-button.small {
+        width: 2.45rem;
+        height: 2.45rem;
+        font-size: 1.2rem;
+      }
+
+      .fab-button.medium {
+        width: 2.85rem;
+        height: 2.85rem;
+        font-size: 1.2rem;
+      }
+
+      .fab-button.large {
+        width: 3.45rem;
+        height: 3.45rem;
+        font-size: 1.6rem;
+      }
+
+      .fab-button.xLarge {
+        width: 3.75rem;
+        height: 3.75rem;
+        font-size: 1.8rem;
+      }
+      /* Navigation Button w/ Animation */
+      .menu-trigger {
+        cursor: pointer;
+        position: absolute;
+        top: 25px;
+        left: 30px;
+        width: 26px;
+        height: 20px;
+        -webkit-transition: 0.35s ease all;
+        -moz-transition: 0.35s ease all;
+        -o-transition: 0.35s ease all;
+        transition: 0.35s ease all;
+      }
+      .menu-trigger > .bar {
+        position: absolute;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: 2.3px;
+        background-color: white;
+        -webkit-transition: 0.36s ease-out all;
+        -moz-transition: 0.36s ease-out all;
+        -o-transition: 0.36s ease-out all;
+        transition: 0.36s ease-out all;
+      }
+      .menu-trigger > .bar:first-child {
+        top: 0;
+      }
+      .menu-trigger > .bar:nth-child(2) {
+        top: 8px;
+      }
+      .menu-trigger > .bar:nth-child(3) {
+        top: 16px;
+      }
+      .menu-trigger.active {
+        transform: rotate(180deg);
+      }
+      .menu-trigger.active > .bar:first-child {
+        transform-origin: 60% bottom;
+        transform: rotate(40deg) scaleX(0.7) translateX(8px);
+      }
+      .menu-trigger.active > .bar:nth-child(3) {
+        transform-origin: 60% top;
+        transform: rotate(-40deg) scaleX(0.7) translateX(8px);
+      }
+
+      /* body content */
+      header.collapsing-parallax + .site-main {
+        padding-top: 428px;
+      }
+      .site-main .inner {
+        text-align: center;
+      }
+      .row {
+      }
+      .row::after,
+      .row::before {
+        content: "";
+        display: block;
+        clear: both;
+        height: 0;
+      }
+      .cardview {
+        display: inline-block;
+        text-align: left;
+        position: relative;
+        width: 28%;
+        max-height: 380px;
+        margin: 0 15px 20px 15px;
+        box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.18),
+          0px 4px 14px 0px rgba(0, 0, 0, 0.15);
+      }
+      .cardview img {
+        display: block;
+        position: relative;
+        background-position: center center;
+        background-size: cover;
+        height: 180px;
+        width: 100%;
+        top: 0;
+      }
+      .cardview .content {
+        position: relative;
+        padding: 15px 20px;
+      }
+      .cardview h1 {
+        font-size: 19px;
+        font-weight: 500;
+        margin: 0 0 12px 0;
+      }
+      .cardview p {
+        font-size: 14px;
+        margin: 0 15px 15px 0;
+      }
+      .cardview a {
+        font-size: 14px;
+        position: relative;
+        text-decoration: none;
+        color: #9e9ea2;
+        text-transform: uppercase;
+        padding: 10px 6px;
+        -webkit-transition: 0.3s ease-in-out background;
+        -moz-transition: 0.3s ease-in-out background;
+        -o-transition: 0.3s ease-in-out background;
+        transition: 0.3s ease-in-out background;
+      }
+      .cardviewbtn {
+        font-size: 16px;
+        font-family: Helvetica, Arial, sans-serif;
+        font-weight: normal;
+        color: #ffffff;
+        text-decoration: none;
+        background-color: #5d9cec;
+        border-top: 8px solid #5d9cec;
+        border-bottom: 8px solid #5d9cec;
+        border-left: 25px solid #5d9cec;
+        border-right: 25px solid #5d9cec;
+        border-radius: 3px;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        display: inline-block;
+      }
+      .row_margin {
+        margin-left: 30px;
+        margin-right: 30px;
+        margin-bottom: 30px;
+      }
+      .cardviewbtn_right {
+        float: right;
+        font-size: 16px;
+        font-family: Helvetica, Arial, sans-serif;
+        font-weight: normal;
+        color: #ffffff;
+        text-decoration: none;
+        background-color: #5d9cec;
+        border-top: 8px solid #5d9cec;
+        border-bottom: 8px solid #5d9cec;
+        border-left: 25px solid #5d9cec;
+        border-right: 25px solid #5d9cec;
+        border-radius: 3px;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        display: inline-block;
+      }
+      .cardview a:hover {
+        background: rgba(0, 0, 0, 0.04);
+        border-radius: 6px;
+      }
+      @media screen and (max-width: 830px) {
+        .cardview {
+          width: 44%;
+        }
+      }
+      @media screen and (max-width: 590px) {
+        .cardview {
+          width: 80%;
+        }
+        @media screen and (max-width: 530px) {
+          .cardview {
+            width: 85%;
+            margin: 15px auto;
+          }
+        }
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      body,
+      html {
+        margin: 0;
+        color: var(--fore-color);
+      }
+      body {
+        font-family: "Roboto";
+        font-size: 14px;
+        background-color: var(--accent-color);
+      }
+      button,
+      a {
+        cursor: pointer;
+      }
+      .sc-box {
+        position: relative;
+        width: 375px;
+        margin: 36px auto;
+
+        background-color: #f6f8fa;
+        border-radius: 35px;
+        box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.08),
+          0px 6px 16px rgba(0, 0, 0, 0.12);
+
+        overflow: hidden;
+      }
+      .sc-container {
+        padding: 36px;
+      }
+
+      .sc-main-title {
+        --fore-color: #000000;
+
+        margin-bottom: 42px;
+
+        color: var(--fore-color);
+        text-align: center;
+      }
+      .sc-searchbox {
+        position: relative;
+      }
+      .sc-searchbox-field {
+        height: 42px;
+        width: 100%;
+        padding: 16px 16px 16px 48px;
+
+        background-color: rgba(0, 0, 0, 0.05);
+        border-radius: 40px;
+        border: 0;
+        outline: none;
+      }
+      .sc-searchbox-placeholder {
+        position: absolute;
+        display: flex;
+
+        height: 100%;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        left: 0;
+
+        color: rgba(0, 0, 0, 0.6);
+
+        pointer-events: none;
+        transition: ease-in-out 0.2s;
+      }
+      .sc-searchbox-placeholder-text {
+        margin: 0;
+        transition: ease-in-out 0.2s;
+      }
+      .sc-searchbox-placeholder-icon {
+        margin-right: 12px;
+      }
+
+      .sc-searchbox-field:focus ~ .sc-searchbox-placeholder,
+      .sc-searchbox-field:valid ~ .sc-searchbox-placeholder {
+        transform: translate3d(-22%, 0px, 0px);
+      }
+      .sc-searchbox-field:focus
+        ~ .sc-searchbox-placeholder
+        .sc-searchbox-placeholder-text,
+      .sc-searchbox-field:valid
+        ~ .sc-searchbox-placeholder
+        .sc-searchbox-placeholder-text {
+        opacity: 0;
+      }
+
+      .sc-timeline {
+        padding-top: 0;
+        padding-bottom: 64px;
+      }
+      .sc-timeline-item {
+        display: flex;
+
+        width: 100%;
+        align-items: flex-start;
+        margin-bottom: 20px;
+
+        cursor: pointer;
+      }
+      .sc-timeline-item.exchange {
+        margin: 0px auto 1px auto;
+        display: block;
+        width: 50px;
+        text-align: center;
+        padding: 0 1em;
+        border-radius: 20px !important;
+        border-color: white;
+        font-size: 4px !important;
+        color: white;
+        line-height: 20px;
+        height: 20px;
+        /* border: 0.2px solid !important; */
+      }
+      .sc-sub-exchanges {
+        display: flex;
+        width: 56px;
+        height: 60px;
+        flex-wrap: wrap;
+        flex-direction: row;
+        align-items: center;
+      }
+      .sc-timeline-item.exchange a {
+        font-size: 2.9em;
+      }
+      .sc-timeline-item.exchange:after {
+        content: "";
+      }
+      .sc-timeline-item:after {
+        /* content: url("data:image/svg+xml,%3Csvg width='15' height='26' viewBox='0 0 15 26' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath opacity='0.2' d='M1 1L13 13L1 25' stroke='black' stroke-width='2'/%3E%3C/svg%3E%0A");
+      align-self: center;
+      margin-left: 16px; */
+      }
+      .sc-timeline-item:last-child {
+        margin-bottom: 0;
+      }
+      .sc-timeline-icon {
+        display: flex;
+        position: relative;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+        height: 60px;
+        font-size: 24px;
+        color: #ffffff;
+        background-color: #fff;
+        border-radius: 50%;
+        z-index: 2;
+      }
+      .sc-timeline-icon {
+        margin-right: 16px;
+        flex: none;
+      }
+      .sc-timeline .sc-timeline-icon:after {
+        content: "";
+        position: absolute;
+
+        top: 100%;
+        height: 100%;
+        width: 2px;
+
+        background-color: #dbe0e8;
+
+        z-index: -1;
+      }
+      .sc-timeline-item:last-child .sc-timeline-icon:after {
+        display: none;
+      }
+
+      .sc-timeline-info {
+        padding-top: 8px;
+        padding-left: 10px;
+        flex-grow: 1;
+      }
+      .sc-timeline-title {
+        margin: 0;
+        color: #ffffff;
+        font-weight: 600;
+        padding-bottom: 8px;
+      }
+      .sc-timeline-details {
+        display: flex;
+
+        justify-content: space-between;
+      }
+      .sc-timeline-time {
+        line-height: 1.6;
+        color: #ffffff;
+      }
+
+      .sc-timeline-duration {
+        line-height: 1.6;
+      }
+
+      .sc-bottom-bar {
+        display: flex;
+
+        padding: 16px 36px;
+        justify-content: space-between;
+
+        font-size: 26px;
+        background-image: radial-gradient(
+          circle at center 6px,
+          transparent 36px,
+          #ffffff 36px
+        );
+        filter: drop-shadow(0px -1px 6px rgba(0, 0, 0, 0.08))
+          drop-shadow(0px -2px 12px rgba(0, 0, 0, 0.12));
+      }
+
+      .sc-fab {
+        position: absolute;
+        display: flex;
+
+        justify-content: center;
+        align-items: center;
+        width: 56px;
+        height: 56px;
+        bottom: 28px;
+        margin: auto;
+        left: 0;
+        right: 0;
+
+        color: #ffffff;
+        background-color: #000000;
+        box-shadow: var(--main-cast-shadow);
+        border-radius: 50%;
+      }
+      .sc-menu-item {
+        opacity: 0.6;
+      }
+      .sc-current {
+        opacity: 1;
+      }
+      .sc-actionsheet-container {
+        position: absolute;
+
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+
+        z-index: 9;
+        pointer-events: none;
+      }
+      .sc-actionsheet {
+        position: absolute;
+
+        width: 100%;
+        bottom: 0;
+
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(20px);
+        border-radius: 40px 40px 0px 0px;
+
+        transition: ease-in-out 0.3s;
+        transform: translate3d(0px, 100%, 0px);
+
+        z-index: 9;
+      }
+      .sc-actionsheet-container.sc-show .sc-overlay {
+        opacity: 1;
+        pointer-events: all;
+      }
+      .sc-actionsheet-container.sc-show .sc-actionsheet {
+        transform: translate3d(0px, 0px, 0px);
+        pointer-events: all;
+      }
+      .sc-overlay {
+        position: absolute;
+
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+
+        background-color: rgba(0, 0, 0, 0.25);
+        opacity: 0;
+
+        transition: ease-in-out 0.3s;
+        pointer-events: none;
+      }
+
+      .sc-actionsheet-title {
+        display: grid;
+
+        padding: 16px 36px;
+        margin-top: 24px;
+        grid-template-columns: 1fr 2fr 1fr;
+        grid-template-areas: ". title close";
+        align-items: center;
+      }
+      .sc-actionsheet[type*="event"] .sc-actionsheet-title {
+        grid-template-areas: "duration title close";
+      }
+      .sc-actionsheet-info {
+        grid-area: duration;
+      }
+      .sc-actionsheet-title-text {
+        display: flex;
+
+        width: 100%;
+        justify-content: center;
+        grid-area: title;
+        margin: 0;
+      }
+      .sc-actionsheet-close {
+        display: inline-flex;
+
+        justify-content: center;
+        align-items: center;
+        grid-area: close;
+        width: 34px;
+        height: 34px;
+
+        color: var(--fore-color);
+        text-decoration: none;
+        justify-self: end;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.1);
+      }
+      .sc-event-details {
+        display: flex;
+
+        justify-content: center;
+        margin-top: 24px;
+      }
+      .sc-event-details-items {
+        display: inline-flex;
+        flex-direction: column;
+      }
+      .sc-event-details-items > span {
+        margin-bottom: 8px;
+      }
+
+      .sc-flex-row {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .sc-justify-center {
+        justify-content: center;
+      }
+
+      button {
+        padding: 12px 16px;
+
+        text-align: center;
+        border-radius: 40px;
+      }
+      button[sc-style*="secondary"] {
+        background-color: transparent;
+        border: 1px solid var(--primary-color);
+        color: var(--primary-color);
+      }
+      button[sc-style*="flat"] {
+        padding: 8px 16px;
+
+        background-color: transparent;
+        color: var(--fore-color);
+        border: none;
+      }
+      button[sc-style*="danger"] {
+        --fore-color: var(--danger-color);
+      }
+      button[sc-style*="block"] {
+        width: 100%;
+      }
+      body {
+        background-image: url("./assets/ecePageImage.png");
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        background-size: cover;
+        width: 100vw;
+        height: 100vh;
+      }
+      h1 {
+        font-size: 24px;
+        color: #ffffff;
+      }
+      h3 {
+        color: #ffffff;
+      }
+      .apexcharts-text-title {
+        color: #fff !important;
+      }
+    </style>
     <script>
-      $(".miningbox").click(() => {
-        $(".floatDiv").fadeToggle(1000);
-      });
-      $(".cardviewbtn_index").click(() => {
+      $("#mining").click(() => {
         myFunction();
       });
       function myFunction() {
@@ -555,65 +1291,116 @@
           x.className = x.className.replace("show", "");
         }, 3000);
       }
-      let slideIndex = 1;
-      showSlides(slideIndex);
+      window.onload = async () => {
+        const locationList = location.search.split("=");
+        if (locationList.length < 3) {
+          const { data: minerIdList } = await AJAXRequestMethod({
+            method: "GET",
+            requestURL: `${serverURL}/ece1000/ece1000?member=${member}`,
+          });
+          if (minerIdList.length !== 0) {
+            let minerId = minerIdList[0].miner;
+            AJAXRequestMethod({
+              method: "GET",
+              requestURL: `${serverURL}/ece3000/ece3710?member=${member}&miner=${minerId}`,
+            }).then(({ data }) => {
+              const { count, doReferCode, minerInfo } = data;
+              console.log(doReferCode);
+              if (doReferCode !== null) {
+                $("#referName").html(`추천한 채굴기 : ${doReferCode}`);
+                $("#referName").css("display", "block");
+              }
+              $("#txt_title").html(`채굴기 명 : ${minerInfo.name}`);
+              AJAXRequestMethod;
+            });
+            AJAXRequestMethod({
+              method: "GET",
+              requestURL: `${serverURL}/ece3000/ece3720?member=${member}&miner=${minerId}`,
+            }).then(({ data: referList }) => {
+              $("#referLevel").text(`현황 : ${referList.length}명 `);
+              if (referList.length !== 0) {
+                let referListHTML = referList.map((v) => {
+                  return innerHTML_MinerHistory({
+                    createdt: v.createdt.split("T")[0],
+                    nickname: v.name,
+                  });
+                });
+                referListHTML = referListHTML.join(",").replaceAll(",", "");
+                $(".ece8210_history_template").html(referListHTML);
+              }
+            });
+          }
+        } else {
+          let [miner, minerId] = location.search.split("&")[1].split("=");
+          AJAXRequestMethod({
+            method: "GET",
+            requestURL: `${serverURL}/ece3000/ece3710?member=${member}&miner=${minerId}`,
+          }).then(({ data }) => {
+            const { count, doReferCode, minerInfo } = data;
+            console.log(doReferCode);
+            if (doReferCode !== null) {
+              $("#referName").html(`추천한 채굴기 : ${doReferCode}`);
+              $("#referName").css("display", "block");
+            }
+            $("#txt_title").html(`채굴기 명 : ${minerInfo.name}`);
+            AJAXRequestMethod;
+          });
+          AJAXRequestMethod({
+            method: "GET",
+            requestURL: `${serverURL}/ece3000/ece3720?member=${member}&miner=${minerId}`,
+          }).then(({ data: referList }) => {
+            $("#referLevel").text(`현황 : ${referList.length}명 `);
+            if (referList.length !== 0) {
+              let referListHTML = referList.map((v) => {
+                return innerHTML_MinerHistory({
+                  createdt: v.createdt.split("T")[0],
+                  nickname: v.name,
+                });
+              });
+              referListHTML = referListHTML.join(",").replaceAll(",", "");
+              $(".ece8210_history_template").html(referListHTML);
+            }
+          });
+        }
 
-      // Next/previous controls
-      function plusSlides(n) {
-        showSlides((slideIndex += n));
+        const aLinkTag = document.getElementsByClassName("manuLinkTag");
+        Array(aLinkTag.length)
+          .fill()
+          .forEach((v, i) => {
+            aLinkTag[i].setAttribute(
+              "href",
+              `${aLinkTag[i].getAttribute("href")}?member=${member}`
+            );
+          });
+        const btn8000 = document.getElementsByClassName("btn8000");
+        if (btn8000.length !== 0) {
+          Array(btn8000.length)
+            .fill()
+            .forEach((v, i) => {
+              if (btn8000[i].value.trim() !== "") {
+                btn8000[i].setAttribute(
+                  "onclick",
+                  `location.href='${btn8000[i].getAttribute(
+                    "value"
+                  )}?member=${member}'`
+                );
+              }
+            });
+        }
+
+        $("#btn").click(() => {
+          location.href = `./ece3600.html?member=${member}`;
+        });
+      };
+      function innerHTML_MinerHistory({ createdt, nickname }) {
+        return `<div class="ece8210_history">
+                <span style="float: left">[${createdt}]</span>
+                <h4 style="font-size:14px; margin-left:11px">${nickname}</h4>
+                <span style="float: right">
+                  <h4>추천인 등록 완료</h4>
+                </span>
+              </div>`;
       }
-
-      // Thumbnail image controls
-      function currentSlide(n) {
-        showSlides((slideIndex = n));
-      }
-
-      function showSlides(n) {
-        let i;
-        let slides = document.getElementsByClassName("mySlides");
-        let dots = document.getElementsByClassName("dot");
-        if (n > slides.length) {
-          slideIndex = 1;
-        }
-        if (n < 1) {
-          slideIndex = slides.length;
-        }
-        for (i = 0; i < slides.length; i++) {
-          slides[i].style.display = "none";
-        }
-        for (i = 0; i < dots.length; i++) {
-          dots[i].className = dots[i].className.replace(" active", "");
-        }
-        slides[slideIndex - 1].style.display = "block";
-        // dots[slideIndex - 1].className += " active";
-      }
-      // showSlides();
-
-      // function showSlides() {
-      //   let i;
-      //   let slides = document.getElementsByClassName("mySlides");
-      //   let dots = document.getElementsByClassName("dot");
-      //   for (i = 0; i < slides.length; i++) {
-      //     slides[i].style.display = "none";
-      //   }
-      //   slideIndex++;
-      //   if (slideIndex > slides.length) {
-      //     slideIndex = 1;
-      //   }
-      //   for (i = 0; i < dots.length; i++) {
-      //     dots[i].className = dots[i].className.replace(" active", "");
-      //   }
-      //   slides[slideIndex - 1].style.display = "block";
-      //   // dots[slideIndex - 1].className += " active";
-      //   setTimeout(showSlides, 10000); // Change image every 2 seconds
-      // }
-      // $(".main-carousel").flickity({
-      //   // options
-      //   cellAlign: "left",
-      //   contain: true,
-      // });
     </script>
-    <script src="./src/map_script.js"></script>
-    <script src="./src/eceFolder/ece3000.js"></script>
   </body>
 </html>

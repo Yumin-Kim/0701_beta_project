@@ -219,6 +219,7 @@ router.post("/ece2324", async (req, res) => {
     try {
         const { member } = req.body
         const [memberInfo] = await executeQuery(sql.ece2324({ member }));
+        console.log(memberInfo);
         await res.send(resultResponseFormat({ data: memberInfo, msg: ece2000.ece2324.success, status: 1310 }))
     } catch (error) {
         res.send(resultResponseFormat({ status: 1320, msg: ece2000.ece2324.failure }))

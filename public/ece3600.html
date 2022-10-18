@@ -206,6 +206,9 @@
           </tfoot>
           <tbody id="minerList"></tbody>
         </table>
+        <!-- <button id="mining" style="display: none" class="cardviewbtn_w100">
+          채굴 하기
+        </button> -->
         <button
           type="button"
           value="./index.html"
@@ -287,9 +290,20 @@
           } else {
             console.log(data.length);
             list = data.map((v) => {
-              const { name, createdt, min, miner } = v;
+              let { name, createdt, min, miner, action, minerStat } = v;
+              // let txt = "채굴중"
+              // if(action === 7236){
+              //   min =
+              // }
               const [first, secound] = createdt.split("T");
-              return `<tr onclick="Alertclick('${miner}')">
+              let txt;
+              if (minerStat.trim() !== "") {
+                min = "정산 완료";
+                txt = "";
+              } else {
+                txt = `onclick="Alertclick('${miner}')"`;
+              }
+              return `<tr ${txt}>
               <td>${name}</td>
               <td>${first} ${secound.split(".")[0]}</td>
               <td>${min}</td>

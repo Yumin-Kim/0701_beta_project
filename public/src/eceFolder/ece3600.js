@@ -119,7 +119,7 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                 gauge.set(0);
                 clearTimer = setInterval(() => {
                     if (minerCount !== null) {
-                        var rnd = Math.round(2500 + Math.floor(Math.random() * 100));
+                        var rnd = Math.round(100 + Math.floor(Math.random() * 100));
                         title.innerHTML = rnd + "%";
                         gauge.set(rnd); // set actual value
                     } else {
@@ -214,31 +214,79 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
         gauge.setMinValue(0); // Prefer setter over gauge.minValue = 0
         gauge.animationSpeed = 32; // set animation speed (32 is default value)
         gauge.set(2000); // set actual value
+        console.log("asafasdfasd");
 
         var title = document.getElementById("title");
         var notMiner = document.getElementById("notMiner");
         gauge.set(0);
-        clearTimer = setInterval(() => {
-            if (minerCount !== null) {
-                var rnd = Math.round(2500 + Math.floor(Math.random() * 100));
-                title.innerHTML = rnd + "%";
-                gauge.set(rnd); // set actual value
+
+
+        const locationList = location.search.split("=");
+        if (locationList.length == 2) {
+            const { data: minerIdList } = await AJAXRequestMethod({
+                method: "GET",
+                requestURL: `${serverURL}/ece1000/ece1000?member=${member}`,
+            });
+            if (minerIdList.length !== 0) {
+                let minerId = minerIdList[0].miner;
+                AJAXRequestMethod({
+                    method: "GET",
+                    requestURL: `${serverURL}/ece3000/ece3720?member=${member}&miner=${minerId}`,
+                }).then(({ data: referList }) => {
+                    clearTimer = setInterval(() => {
+                        if (minerCount !== null) {
+                            var rnd = Math.round((380 * (referList.length + 1)) + Math.floor(Math.random() * 100));
+                            var rnd1 = Math.round((100 + (referList.length * 20)) + Math.floor(Math.random() * 10));
+                            // title.innerHTML = rnd + "%";
+                            title.innerHTML = rnd1 + "%";
+                            gauge.set(rnd); // set actual value
+                        } else {
+                            title.style.display = "none";
+                            notMiner.style.display = "block";
+                        }
+                    }, 500);
+                })
             } else {
-                title.style.display = "none";
-                notMiner.style.display = "block";
+                // 
             }
-        }, 500);
+        } else {
+            let [miner, minerId] = location.search.split("&")[1].split("=");
+            AJAXRequestMethod({
+                method: "GET",
+                requestURL: `${serverURL}/ece3000/ece3720?member=${member}&miner=${minerId}`,
+            }).then(({ data: referList }) => {
+                let length = 0;
+                if (referList !== null) {
+                    length = referList.length
+                }
+                clearTimer = setInterval(() => {
+                    if (minerCount !== null) {
+                        var rnd = Math.round((380 * (length + 1)) + Math.floor(Math.random() * 100));
+                        var rnd1 = Math.round((100 + (length * 20)) + Math.floor(Math.random() * 10));
+                        // title.innerHTML = rnd + "%";
+                        title.innerHTML = rnd1 + "%";
+                        gauge.set(rnd); // set actual value
+                    } else {
+                        title.style.display = "none";
+                        notMiner.style.display = "block";
+                    }
+                }, 500);
+            })
+        }
+
+    });
 
 
-        // if (referMemberList.length !== 0) {
-        //     let referList = referMemberList.map((v) => {
-        //         // return innerHTML_MinerHistory({ createdt: v.createdt.split("T")[0], status: selectCodeNameTpCodeTable({ data, codeName: v.action }), xrp: v.xrp, minerCount: v.minercount })
-        //         return innerHTML_MinerHistory({ createdt: v.createdt.split("T")[0], nickname: v.referNickname })
-        //     })
-        //     referList = referList.join(",").replaceAll(",", "")
-        //     $(".ece8210_history_template").html(referList)
-        // }
-    })
+
+// if (referMemberList.length !== 0) {
+//     let referList = referMemberList.map((v) => {
+//         // return innerHTML_MinerHistory({ createdt: v.createdt.split("T")[0], status: selectCodeNameTpCodeTable({ data, codeName: v.action }), xrp: v.xrp, minerCount: v.minercount })
+//         return innerHTML_MinerHistory({ createdt: v.createdt.split("T")[0], nickname: v.referNickname })
+//     })
+//     referList = referList.join(",").replaceAll(",", "")
+//     $(".ece8210_history_template").html(referList)
+// }
+// })
 
 
 function innerHTML_MinerHistory({ createdt, nickname }) {

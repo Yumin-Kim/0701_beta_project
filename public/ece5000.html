@@ -4,19 +4,6 @@
     <title>ELC_Project</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <!-- 1990년 이후 이 페이지의 캐시를 만료시킴. -->
-    <meta http-equiv="Expires" content="Mon, 06 Jan 1990 00:00:01 GMT" />
-
-    <!-- 캐시를 바로 만료시킴. -->
-    <meta http-equiv="Expires" content="-1" />
-
-    <!-- 페이지 로드시마다 페이지를 캐싱하지 않음. (HTTP 1.0) -->
-    <meta http-equiv="Pragma" content="no-cache" />
-
-    <!-- 페이지 로드시마다 페이지를 캐싱하지 않음. (HTTP 1.1) -->
-    <meta http-equiv="Cache-Control" content="no-cache" />
-
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js"></script>
     <link
       href="https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css"
@@ -752,68 +739,46 @@ body {
     }
   </style>
   <style>
-        #popupchange {
-          position: absolute;
-    <<<<<<< HEAD
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 200%;
-        background-color: #000000b3;
-        z-index: 100000;
-        }
-        #popupchangeContents{
-          color: #46506a;
-        position: absolute;
-        top: 10%;
-        width: 80%;
-        left: 12%;
-        border: 1px solid white;
-        border-radius: 20px;
-        padding: 7%;
-        background: #ffffffd1;
-        }
-        #popupchangeContents h2{
-    =======
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-color: #000000b3;
-          z-index: 100000;
-        }
-        #popupchangeContents {
-          color: #46506a;
-          position: absolute;
-          top: 40%;
-          width: 80%;
-          left: 12%;
-          border: 1px solid white;
-          border-radius: 20px;
-          padding: 7%;
-          background: #ffffffd1;
-        }
-        #popupchangeContents h2 {
-    >>>>>>> 5bc76e076099db3ecde07adf67298382f0ebe4dd
-          margin: 0 0 10px 0;
-        }
+    #popupchange {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #000000b3;
+      z-index: 100000;
+    }
+    #popupchangeContents {
+      color: #46506a;
+      position: absolute;
+      top: 40%;
+      width: 80%;
+      left: 12%;
+      border: 1px solid white;
+      border-radius: 20px;
+      padding: 7%;
+      background: #ffffffd1;
+    }
+    #popupchangeContents h2 {
+      margin: 0 0 10px 0;
+    }
 
-        #popupchangeContents a {
-          margin: 0 0 10px 0;
-          color: #3a8ed7;
-          font-size: 1em;
-          /* padding-left: 0.5em; */
-          /* float: right; */
-        }
-        #popupchangeContents a.cancel {
-          color: #cb894d;
+    #popupchangeContents a {
+      margin: 0 0 10px 0;
+      color: #3a8ed7;
+      font-size: 1em;
+      /* padding-left: 0.5em; */
+      /* float: right; */
+    }
+    #popupchangeContents a.cancel {
+      color: #cb894d;
 
-          padding-left: 0.5em;
-        }
-        #popupchangeContents #qtySelect {
-          border-radius: 20px;
-          background: #c0c1c2;
-        }
+      padding-left: 0.5em;
+    }
+    #popupchangeContents #qtySelect {
+      border-radius: 20px;
+      background: #c0c1c2;
+    }
   </style>
   <body>
     <div class="resourceTag">
@@ -835,10 +800,10 @@ body {
           <i class="sc-searchbox-placeholder-icon fas fa-chart-pie"></i>
           <a class="manuLinkTag" href="./ece5000.html">채굴 통계</a>
         </li>
-        <li>
+        <!-- <li>
           <i class="sc-searchbox-placeholder-icon fas fa-pen-square"></i
           ><a class="manuLinkTag" href="./ece6000.html">채굴 기록</a>
-        </li>
+        </li> -->
         <li>
           <i class="sc-searchbox-placeholder-icon fas fa-credit-card"></i>
           <a class="manuLinkTag" href="./ece8210.html">구매하기</a>
@@ -884,15 +849,6 @@ body {
               </div>
               <h3 class="sc-timeline-title resourceitem">0</h3>
             </div>
-            <div class="sc-sub-exchanges">
-              <div class="sc-timeline-item exchange" id="d2s">
-                <a
-                  ><img
-                    style="width: 20px; height: 20px"
-                    src="./assets/plus.png"
-                /></a>
-              </div>
-            </div>
           </div>
 
           <div class="sc-timeline-item" event="launch">
@@ -914,23 +870,6 @@ body {
               </div>
               <h3 class="sc-timeline-title resourceitem">0</h3>
             </div>
-
-            <div class="sc-sub-exchanges">
-              <div class="sc-timeline-item exchange" id="s2g">
-                <a
-                  ><img
-                    style="width: 20px; height: 20px"
-                    src="./assets/plus.png"
-                /></a>
-              </div>
-              <div class="sc-timeline-item exchange" id="s2d">
-                <a
-                  ><img
-                    style="width: 20px; height: 20px"
-                    src="./assets/minus.png"
-                /></a>
-              </div>
-            </div>
           </div>
           <div class="sc-timeline-item" event="launch">
             <i
@@ -950,22 +889,6 @@ body {
                 <span class="sc-timeline-time resourceitemtitle">금</span>
               </div>
               <h3 class="sc-timeline-title resourceitem">0</h3>
-            </div>
-            <div class="sc-sub-exchanges">
-              <div class="sc-timeline-item exchange" id="g2d">
-                <a
-                  ><img
-                    style="width: 20px; height: 20px"
-                    src="./assets/plus.png"
-                /></a>
-              </div>
-              <div class="sc-timeline-item exchange" id="g2s">
-                <a
-                  ><img
-                    style="width: 20px; height: 20px"
-                    src="./assets/minus.png"
-                /></a>
-              </div>
             </div>
           </div>
           <div class="sc-timeline-item" event="launch">
@@ -988,18 +911,6 @@ body {
                 >
               </div>
               <h3 class="sc-timeline-title resourceitem">0</h3>
-            </div>
-            <div class="sc-sub-exchanges">
-              <!-- <div class="sc-timeline-item exchange">
-                <a id="g2d">🔺변환</a>
-              </div> -->
-              <div class="sc-timeline-item exchange" id="d2g">
-                <a
-                  ><img
-                    style="width: 20px; height: 20px"
-                    src="./assets/minus.png"
-                /></a>
-              </div>
             </div>
           </div>
           <!-- <div class="sc-timeline-item" event="launch">
@@ -1028,18 +939,22 @@ body {
     <div id="popupchange">
       <div id="popupchangeContents">
         <h2 id="ece5200_txt">변환하기</h2>
-        <span id="starttmetal"></span>
-        <select id="qtySelect">
+        <form>
+          <span id="starttmetal"></span>
+          <!-- <select id="qtySelect">
           <optgroup id="optionBox"></optgroup>
-        </select>
-        개를
-        <span id="destmetal"></span>
-        <span id="destmetalqty"></span>
-        로 변환
-        <div style="margin-top: 10px">
-          <a id="doExchange">실행</a>
-          <a id="doClose" class="cancel">취소</a>
-        </div>
+        </select> -->
+          <input type="number" id="resourceInput" />
+          개를
+          <span id="destmetal"></span>
+          <span id="destmetalqty"></span>
+          로 변환
+          <div style="margin-top: 10px">
+            <!-- <a id="doExchange">실행</a> -->
+            <input type="submit" id="doExchange" />
+            <a id="doClose" class="cancel">취소</a>
+          </div>
+        </form>
       </div>
     </div>
     <script src="./main.js"></script>

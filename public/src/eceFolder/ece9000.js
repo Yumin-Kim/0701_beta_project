@@ -23,7 +23,13 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
             const unixtime = Math.floor(new Date().getTime() / 1000)
             $("#resourceTrick").text(`${trickResource}.${String(unixtime).slice(5, 10)}`)
         }, 1000)
-
+        // 
+        const { data: tileCurrentCount } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece9000/ece9101?member=${member}` })
+        if (tileCurrentCount.count === null) {
+            $("#tileCount").html(`현재 타일 수량 :0 Tiles`)
+        } else {
+            $("#tileCount").html(`현재 타일 수량 :${tileCurrentCount.count} Tiles`)
+        }
         const { data: requestReceipt, extraData } = await AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece9000/ece9100_beta?member=${member}` })
         if (requestReceipt.length !== 0) {
             let innerHTMLText = requestReceipt.map((historyList) => {
@@ -39,13 +45,22 @@ AJAXRequestMethod({ method: "GET", requestURL: `${serverURL}/ece1000` })
                     if (action < 7240) {
                         toggleName = "채굴기"
                         per = "대"
+                        console.log("asdddddd");
+                        return textInnerHTML({ action: actionName, adminWallet: extraData[0].walletaddress, toggleName, amount, count: minerCount, per, wallet })
+
+                    } else if (action === 8401) {
+                        toggleName = "타일"
+                        per = "Tiles"
+                        minerCount = Number(minerCount)
+                        return textInnerHTML_event({ action: actionName, toggleName, count: minerCount, per, wallet })
                     } else {
                         toggleName = "타일"
                         per = "Tiles"
                         minerCount = Number(minerCount) * 1000
-                    }
+                        return textInnerHTML({ action: actionName, adminWallet: extraData[0].walletaddress, toggleName, amount, count: minerCount, per, wallet })
 
-                    return textInnerHTML({ action: actionName, adminWallet: extraData[0].walletaddress, toggleName, amount, count: minerCount, per, wallet })
+                    }
+                    // return textInnerHTML({ action: actionName, adminWallet: extraData[0].walletaddress, toggleName, amount, count: minerCount, per, wallet })
                     // resoureInner = resoureInner.join(",").replaceAll(",", "").replace("undefined", "TestTest");
                     // let innerHTML_1 = textInnerHTML({ minerCount: defaultInfo.minerCount, tileCount: defaultInfo.tileCount, spAmount })
                     // // innerHTML_1 += resoureInner;
@@ -129,6 +144,15 @@ function textInnerHTML({ action, toggleName, wallet, adminWallet, amount, count,
       >
     </p>
   
+  </li>
+    `
+}
+function textInnerHTML_event({ action, toggleName, count, per }) {
+    return `<li>
+    <div style="overflow: hidden">
+      <h3 style="float: left" id="status">${action}</h3>
+    </div>
+    <p class="ece9000_txt" id="amount">${toggleName} : ${count} ${per}</p>
   </li>
     `
 }
