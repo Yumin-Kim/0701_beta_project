@@ -58,6 +58,8 @@ const executeQueryList = async (sqlList) => {
     } catch (error) {
         await instance.rollback();
         return { error }
+    } finally {
+        instance.release()
     }
 }
 

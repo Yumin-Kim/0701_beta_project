@@ -20,7 +20,6 @@ router.post("/ece2310", async (req, res) => {
         if (email === undefined) throw new Error(ece2000.ece2310.failure)
         const [data] = await executeQuery(sql.ece2310.findByMember({ email }))
         const code = generateRandomCode(6);
-        console.log(code)
         if (data !== undefined) {
             const { member, email: validEmail } = data
             await executeQuery(sql.ece2310.insertEmailAuthCodeOnMember({ member, validEmail, code }))

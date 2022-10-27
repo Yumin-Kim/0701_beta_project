@@ -1,14 +1,7 @@
 const emailLimitCount = 600;
 module.exports = {
-    utils: {
-        findByMember: ({ member }) => `select * from Members where member = ${member}`
-    },
     ece2310: {
         findByMember: ({ email }) => `select member,email from Members where email = '${email}' limit 1`,
-        /**
-         * action 이메일 승인 번호 요청
-         * status 회원 상태 회원, 비회원
-         */
         insertEmailAuthCodeOnMember: ({ member, validEmail, code }) => `insert into Transactions (action, status , member, extrastr1, extrastr2) values (9314 ,9120, ${member} ,'${validEmail}', '${code}');`,
         insertEmailAuthCode: ({ email, code }) => `insert into Transactions (action, status , extrastr1, extrastr2) values (9314 ,9110,'${email}', '${code}');`,
     },

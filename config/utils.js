@@ -78,7 +78,6 @@ async function requestAPI_https(url) {
         https
             .request({
                 url,
-                // timeout: 3000,
             }, function (response) {
                 var serverData = "";
                 response.on("data", function (chunk) {
@@ -95,13 +94,8 @@ async function requestAPI_https(url) {
                 response.on("error", () => {
                     if (err.code === "ECONNRESET") {
                         console.log("Timeout occurs");
-                        //specific error treatment
                     }
                 })
-                // request.on('timeout', () => {
-                //     request.abort();
-                //     // rej(new Error("시간 제한 "))
-                // });
             })
             .end();
 

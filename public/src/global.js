@@ -4,8 +4,7 @@
 const querystring = location.search.split("?")[1];
 let member = querystring.split("=")[1].split("&")[0];
 let centerLocation = { lng: null, lat: null }
-let centerPoint = [126.46573,
-    33.50650];
+let centerPoint = [126.46573, 33.50650];
 let center, locationIndexingList;
 
 // 타일 확인 시 동작
